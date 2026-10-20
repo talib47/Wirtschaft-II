@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wirtschaft II</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+/* Layout: eine schmale Lernspalte (max. 42rem) mit fester Tableiste unten, wie die W&G-I-App; eigene Akzentfarbe für Wirtschaft II */
+:root{
+  --bg:#EDEFF2; --surface:#F9FAFB; --ink:#1B2433; --muted:#5A6576; --line:#CBD1DA;
+  --accent:#2D4F86; --accent-ink:#FFFFFF; --accent-soft:#DCE4F1;
+  --good:#2F7A4A; --good-soft:#DDEEE2; --bad:#A3392B; --bad-soft:#F4DEDA; --gold:#A87B1F;
+  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ color-scheme:dark;
+    --bg:#12161D; --surface:#1B212B; --ink:#E3E7EE; --muted:#9AA4B3; --line:#323C4A;
+    --accent:#8FB1E3; --accent-ink:#0E1626; --accent-soft:#25324A;
+    --good:#6CC28B; --good-soft:#1E3327; --bad:#E58373; --bad-soft:#3A2420; --gold:#D9AE55; }
+}
+:root[data-theme="dark"]{ color-scheme:dark;
+  --bg:#12161D; --surface:#1B212B; --ink:#E3E7EE; --muted:#9AA4B3; --line:#323C4A;
+  --accent:#8FB1E3; --accent-ink:#0E1626; --accent-soft:#25324A;
+  --good:#6CC28B; --good-soft:#1E3327; --bad:#E58373; --bad-soft:#3A2420; --gold:#D9AE55; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+main{max-width:42rem;margin:0 auto;padding-block:20px 120px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0 0 .4em;text-wrap:balance}
+h1{font-size:1.75rem} h2{font-size:1.3rem} h3{font-size:1.05rem}
+p{margin:0 0 .8em}
+.muted{color:var(--muted)} .small{font-size:.875rem}
+.eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 .3em}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 14px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.between{justify-content:space-between}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:12px 18px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.small{padding:8px 12px;font-size:.9rem}
+.btn.warn{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chip{display:inline-block;font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.l1{color:var(--gold);border-color:var(--gold)}
+.chip.l2{color:var(--accent);border-color:var(--accent)}
+.chip.l3{color:var(--good);border-color:var(--good)}
+.chip.soon{border-style:dashed}
+
+/* Klausuraufbau */
+.parts{display:grid;grid-template-columns:12fr 24fr 24fr;gap:4px;margin:10px 0 8px}
+.parts div{height:10px;border-radius:3px;background:var(--line)}
+.parts div.on{background:var(--accent)}
+.partlist{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;font-size:.92rem}
+.partlist b{font-variant-numeric:tabular-nums}
+
+/* Aufgabenliste */
+.tlist{display:flex;flex-direction:column}
+.titem{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:12px 2px;border-top:1px solid var(--line);text-align:left;background:none;border-left:0;border-right:0;border-bottom:0;width:100%}
+.titem:first-child{border-top:0}
+.titem .t{font-weight:600}
+.titem .d{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;grid-column:1/-1}
+.bar i{display:block;height:100%;background:var(--good)}
+
+/* Aufgabe */
+.data{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
+.data th,.data td{border:1px solid var(--line);padding:6px 8px;text-align:center}
+.data th{font-weight:600;color:var(--muted);font-size:.8rem}
+.data td{font-family:var(--mono)}
+.tablewrap{overflow-x:auto;margin:8px 0 2px}
+.eq{font-family:var(--mono);font-size:.92rem;background:var(--bg);border-radius:8px;padding:8px 10px;overflow-x:auto;white-space:nowrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:none;border:0;padding:7px 12px;font-size:.85rem;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.step{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface)}
+.step.ok{border-color:var(--good);background:var(--good-soft)}
+.step.no{border-color:var(--bad);background:var(--bad-soft)}
+.step .lab{font-weight:600}
+.step .why{font-size:.88rem;color:var(--muted);margin:2px 0 8px}
+.inp{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.inp input{width:9.5rem;max-width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-family:var(--mono);font-size:1.05rem}
+.inp input:focus{border-color:var(--accent)}
+.res{font-size:.9rem;margin-top:8px}
+.res.good{color:var(--good)} .res.bad{color:var(--bad)}
+.hint{font-size:.88rem}
+.check{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+.check input{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--accent)}
+
+/* Schmierzettel */
+.pad{position:relative;border:1px solid var(--line);border-radius:12px;background:var(--bg);overflow:hidden}
+.pad canvas{display:block;width:100%;height:240px;touch-action:none}
+.pad .tools{position:absolute;right:8px;top:8px;display:flex;gap:6px}
+.pad .tools button{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:.8rem}
+.pad .ph{position:absolute;left:12px;top:10px;font-size:.8rem;color:var(--muted);pointer-events:none}
+
+/* Statistik */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:90px;margin:10px 0 4px}
+.week div{background:var(--accent);border-radius:4px 4px 0 0;min-height:2px}
+.weekl{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;font-size:.75rem;color:var(--muted);text-align:center}
+.srow{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:.92rem}
+.srow:first-of-type{border-top:0}
+.srow span{font-variant-numeric:tabular-nums}
+
+/* Tableiste */
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;gap:4px;padding:8px max(16px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));z-index:5}
+nav button{flex:1;max-width:9rem;background:none;border:0;border-radius:10px;padding:9px 6px;font-weight:600;font-size:.9rem;color:var(--muted)}
+nav button[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom, 0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;z-index:9;max-width:calc(100% - 32px)}
+@media (prefers-reduced-motion:no-preference){ .step{transition:background .2s,border-color .2s} }
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px)}</style>
+</head>
+<body>
+<main id="app"></main>
+<nav id="nav"></nav>
+
+<script>
+"use strict";
+/* ================= Speicher (eigene Schlüssel, damit nichts mit anderen Apps unter talib47.github.io kollidiert) ================= */
+const KEY="w2-lernapp-v1";
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+let state;
+try{ state=JSON.parse(lsGet(KEY)||"null"); }catch(e){ state=null; }
+if(!state||typeof state!=="object") state={};
+function norm(){ state.lvl=state.lvl||{}; state.streak=state.streak||{}; state.hist=state.hist||{}; state.days=state.days||{}; }
+norm();
+function save(){ state.updated=Date.now(); lsSet(KEY,JSON.stringify(state)); schedulePush(); }
+
+/* ===== Geräte-Abgleich über GitHub (Datei fortschritt.json im Zweig "fortschritt", wie in der W&G-I-App) ===== */
+const GH={repo:"https://api.github.com/repos/talib47/Wirtschaft-II", file:"fortschritt.json", branch:"fortschritt", tokenKey:"w2-gh-token"};
+GH.api=GH.repo+"/contents/"+GH.file;
+let ghToken=null, remoteSha=null, syncStatus="aus", lastSync=null, pushTimer=null, pushing=false, pushAgain=false;
+function initToken(){
+  const m=location.hash.match(/[#&]t=([A-Za-z0-9_]+)/);
+  if(m){ lsSet(GH.tokenKey,m[1]); try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){} }
+  ghToken=lsGet(GH.tokenKey);
+}
+const ghHeaders=()=>({"Authorization":"Bearer "+ghToken,"Accept":"application/vnd.github+json"});
+const b64enc=str=>btoa(unescape(encodeURIComponent(str)));
+const b64dec=str=>decodeURIComponent(escape(atob(str.replace(/\n/g,""))));
+async function ensureBranch(){
+  const r=await fetch(GH.repo+"/git/ref/heads/"+GH.branch,{headers:ghHeaders(),cache:"no-store"});
+  if(r.ok) return true;
+  const base=await fetch(GH.repo,{headers:ghHeaders(),cache:"no-store"}); if(!base.ok) return false;
+  const def=(await base.json()).default_branch||"main";
+  const h=await fetch(GH.repo+"/git/ref/heads/"+def,{headers:ghHeaders(),cache:"no-store"}); if(!h.ok) return false;
+  const sha=(await h.json()).object.sha;
+  const c=await fetch(GH.repo+"/git/refs",{method:"POST",headers:ghHeaders(),body:JSON.stringify({ref:"refs/heads/"+GH.branch,sha})});
+  return c.ok;
+}
+async function pull(){
+  if(!ghToken) return null;
+  const r=await fetch(GH.api+"?ref="+GH.branch+"&_="+Date.now(),{headers:ghHeaders(),cache:"no-store"});
+  if(r.status===404){ remoteSha=null; return {}; }
+  if(r.status===401){ syncStatus="schluessel"; return null; }
+  if(!r.ok) throw new Error(r.status);
+  const d=await r.json(); remoteSha=d.sha;
+  return JSON.parse(b64dec(d.content));
+}
+async function push(){
+  if(!ghToken) return;
+  if(pushing){ pushAgain=true; return; }
+  pushing=true;
+  try{
+    for(let attempt=0;attempt<3;attempt++){
+      const body={message:"Lernstand",branch:GH.branch,content:b64enc(JSON.stringify(state))};
+      if(remoteSha) body.sha=remoteSha;
+      const r=await fetch(GH.api,{method:"PUT",headers:ghHeaders(),body:JSON.stringify(body)});
+      if(r.ok){ const d=await r.json(); remoteSha=d.content.sha; syncStatus="ok"; lastSync=new Date(); break; }
+      if(r.status===401){ syncStatus="schluessel"; break; }
+      if(r.status===404){ if(!(await ensureBranch())){ syncStatus="fehler"; break; } continue; }  // Zweig fehlt noch: anlegen
+      if(r.status===409||r.status===422){ await pull(); continue; }  // veraltete Version: neu holen und nochmal
+      syncStatus="fehler"; break;
+    }
+  }catch(e){ syncStatus="fehler"; }
+  pushing=false;
+  if(pushAgain){ pushAgain=false; push(); }
+}
+function schedulePush(){ if(!ghToken) return; clearTimeout(pushTimer); pushTimer=setTimeout(()=>{ pushTimer=null; push(); },1500); }
+function flushPush(){ if(pushTimer){ clearTimeout(pushTimer); pushTimer=null; push(); } }
+/* Neuerer Stand gewinnt (Zeitstempel "updated") */
+async function syncFromRemote(){
+  if(!ghToken) return false;
+  try{
+    const remote=await pull();
+    if(remote===null) return false;
+    if(remote.updated && remote.updated>(state.updated||0)){ state=Object.assign(state,remote); norm(); lsSet(KEY,JSON.stringify(state)); syncStatus="ok"; lastSync=new Date(); return true; }
+    if((state.updated||0)>(remote.updated||0)) await push();
+    else { syncStatus="ok"; lastSync=new Date(); }
+  }catch(e){ syncStatus="fehler"; }
+  return false;
+}
+async function autoPull(){
+  if(!ghToken||document.visibilityState!=="visible"||view==="task"||pushTimer||pushing) return;
+  if(await syncFromRemote()) render();
+}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") flushPush(); else autoPull(); });
+window.addEventListener("pagehide",flushPush);
+window.addEventListener("focus",autoPull);
+setInterval(autoPull,30000);
+function syncBox(){
+  if(!ghToken) return `<div class="block"><h3>Geräte verbinden</h3>
+    <p class="small muted">Damit iPad, iPhone und Laptop denselben Stand haben, verbinde jedes Gerät einmal. Am einfachsten öffnest du dafür deinen Verbindungslink (Adresse der App mit #t=Schlüssel am Ende).</p>
+    <label class="small muted" for="tkIn">Oder füge hier deinen GitHub-Schlüssel ein (beginnt mit github_pat_):</label>
+    <textarea id="tkIn" style="width:100%;min-height:70px;margin-top:6px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:8px;font-family:var(--mono);font-size:.85rem"></textarea>
+    <button class="btn" id="tkGo" style="margin-top:8px">Gerät verbinden</button></div>`;
+  const msg={ok:`Dieses Gerät ist verbunden und gleicht automatisch ab${lastSync?", zuletzt um "+lastSync.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}):""}.`,
+    fehler:"Abgleich gerade nicht möglich, etwa ohne Internet. Dein Stand bleibt auf diesem Gerät und wird später abgeglichen.",
+    schluessel:"Der Schlüssel funktioniert nicht. Prüfe, ob er Zugriff auf das Repository Wirtschaft-II hat, oder verbinde mit einem neuen Schlüssel.",
+    aus:"Wird abgeglichen …"}[syncStatus];
+  return `<div class="block"><h3>Geräte-Abgleich</h3>
+    <p class="small" ${syncStatus==="ok"?'style="color:var(--muted)"':'style="color:var(--bad)"'}>${msg}</p>
+    <div class="row"><button class="btn ghost small" id="syNow">Jetzt abgleichen</button><button class="btn ghost small" id="syOff">Gerät trennen</button></div></div>`;
+}
+function bindSync(){
+  const goB=$("#tkGo");
+  if(goB) goB.onclick=async()=>{
+    const t=$("#tkIn").value.trim();
+    if(!/^github_pat_\w+$/.test(t)){ toast("Das sieht nicht nach einem Schlüssel aus. Er beginnt mit github_pat_."); return; }
+    lsSet(GH.tokenKey,t); ghToken=t; toast("Verbinde …");
+    await syncFromRemote(); toast(syncStatus==="ok"?"Gerät verbunden":"Verbinden hat nicht geklappt"); render();
+  };
+  const now=$("#syNow");
+  if(now) now.onclick=async()=>{ flushPush(); await syncFromRemote(); toast(syncStatus==="ok"?"Abgeglichen":"Abgleich hat nicht geklappt"); render(); };
+  const off=$("#syOff");
+  if(off) off.onclick=()=>{ if(!off.dataset.armed){ off.dataset.armed="1"; off.textContent="Wirklich trennen"; return; } lsDel(GH.tokenKey); ghToken=null; syncStatus="aus"; render(); };
+}
+
+/* ================= Helfer ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const isInt=x=>Math.abs(x-Math.round(x))<1e-9;
+const nice=(x,dec)=>Math.abs(x*10**dec-Math.round(x*10**dec))<1e-7;
+const r=x=>Math.round(x*1e6)/1e6;
+function fmt(x){
+  x=r(x); if(Object.is(x,-0)) x=0;
+  let s=String(Math.abs(x)); if(s.includes("e")) s=Math.abs(x).toFixed(6).replace(/0+$/,"");
+  s=s.replace(".",","); return (x<0?"−":"")+s;
+}
+const par=x=>x<0?"("+fmt(x)+")":fmt(x);
+function toast(t){ const d=document.createElement("div"); d.className="toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2200); }
+function today(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function parseNum(v){
+  let t=String(v).trim().replace(/\s|€/g,"").replace(/−|–/g,"-");
+  const pct=t.includes("%"); t=t.replace("%","");
+  if(t.includes(",")) t=t.replace(/\./g,"").replace(",",".");
+  if(t===""||t==="-"||isNaN(+t)) return null;
+  return {v:+t,pct};
+}
+const close=(a,b)=>Math.abs(a-b)<=Math.max(0.011,Math.abs(b)*0.005);
+function judge(step,raw){
+  const p=parseNum(raw); if(!p) return null;
+  let v=p.v;
+  if(step.rate){ if(p.pct) v=v/100; return close(v,step.ans)||close(v/100,step.ans); }
+  if(step.pct){ return close(v,step.ans)||close(v*100,step.ans); }
+  return close(v,step.ans);
+}
+
+/* ================= Modellbausteine (Schreibweise wie Kap. 5, van Treeck) ================= */
+function baseModel(){
+  for(let t=0;t<2000;t++){
+    const c1=pick([.5,.6,.75,.8]), k=1/(1-c1), mT=c1*k;
+    const n=pick([50,100,200]), i=pick([.02,.03,.04,.05,.06]);
+    if(!isInt(n*i)) continue;
+    const I=rint(2,8), d=I+n*i, c0=rint(1,6), T=rint(1,5), G=rint(1,5);
+    const A=r(c0-c1*T+I+G), Y=r(k*A);
+    if(A<=0||!isInt(Y)) continue;
+    return {c1,k,mT,n,i,I,d,c0,T,G,A,Y};
+  }
+}
+const MODEL_TXT=`Geschlossene Volkswirtschaft mit Staat: C = c<sub>0</sub> + c<sub>1</sub>(Y − T), I = d − n·i. Das Güterangebot Y<sup>A</sup> passt sich der Güternachfrage Y<sup>N</sup> an.`;
+function modelTable(m,Ypot){
+  const h=["c<sub>0</sub>","c<sub>1</sub>","T","d","n","i","G"], v=[m.c0,m.c1,m.T,m.d,m.n,m.i,m.G];
+  if(Ypot!=null){ h.push("Y<sub>POT</sub>"); v.push(Ypot); }
+  return `<div class="tablewrap"><table class="data"><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr><tr>${v.map(x=>`<td>${fmt(x)}</td>`).join("")}</tr></table></div>`;
+}
+function stepsY(m){
+  return [
+    {lab:"Investitionen I", why:"Zuerst die zinsabhängigen Investitionen einsetzen.", f:"I = d − n·i", calc:`I = ${fmt(m.d)} − ${m.n}·${fmt(m.i)} = ${fmt(m.I)}`, ans:m.I},
+    {lab:"Klammer: autonome Nachfrage", why:"Alles, was nicht vom Einkommen abhängt. Steuern wirken nur mit c₁.", f:"c₀ − c₁·T + I + G", calc:`${fmt(m.c0)} − ${fmt(m.c1)}·${fmt(m.T)} + ${fmt(m.I)} + ${fmt(m.G)} = ${fmt(m.A)}`, ans:m.A},
+    {lab:"Multiplikator 1/(1 − c₁)", why:"Jeder zusätzliche Euro Nachfrage erzeugt Einkommen, das zum Teil wieder konsumiert wird.", f:"1 / (1 − c₁)", calc:`1 / (1 − ${fmt(m.c1)}) = ${fmt(m.k)}`, ans:m.k},
+    {lab:"Gleichgewichtiges Einkommen Y*", why:"Multiplikator mal Klammer.", f:"Y* = 1/(1 − c₁) · (c₀ − c₁T + d − n·i + G)", calc:`Y* = ${fmt(m.k)} · ${fmt(m.A)} = ${fmt(m.Y)}`, ans:m.Y, final:true}
+  ];
+}
+function stepGap(m,Ypot){
+  const gap=r(m.Y-Ypot);
+  return {lab:"Output-Lücke Y* − Y<sub>POT</sub>", why:"Negativ heißt: die Wirtschaft produziert unter ihrem Potenzial (Unterbeschäftigung).", f:"Lücke = Y* − Y_POT", calc:`${fmt(m.Y)} − ${fmt(Ypot)} = ${fmt(gap)}`, ans:gap, final:true};
+}
+function dGSteps(m,gap){
+  const dG=r(-gap/m.k);
+  return [{lab:"Nötige Änderung ΔG", why:"Die Lücke muss geschlossen werden: ΔY = −Lücke. Staatsausgaben wirken mit dem vollen Multiplikator.", f:"ΔG = −Lücke / [1/(1 − c₁)]", calc:`ΔG = ${fmt(-gap)} / ${fmt(m.k)} = ${fmt(dG)}`, ans:dG, final:true}];
+}
+function dTSteps(m,gap){
+  const dT=r(gap/m.mT);
+  return [
+    {lab:"Steuermultiplikator c₁/(1 − c₁)", why:"Eine Steuersenkung erhöht das verfügbare Einkommen, davon wird aber nur der Anteil c₁ konsumiert.", f:"m_T = c₁ / (1 − c₁)", calc:`${fmt(m.c1)} / (1 − ${fmt(m.c1)}) = ${fmt(m.mT)}`, ans:m.mT},
+    {lab:"Nötige Änderung ΔT (Senkung negativ)", why:"ΔY = −m_T · ΔT, also ΔT = −ΔY / m_T.", f:"ΔT = Lücke / m_T", calc:`ΔT = ${fmt(gap)} / ${fmt(m.mT)} = ${fmt(dT)}`, ans:dT, final:true, sign:true}
+  ];
+}
+function diSteps(m,gap){
+  const dI=r(-gap/m.k), di=r(-dI/m.n), inew=r(m.i+di);
+  return [
+    {lab:"Nötige Änderung der Investitionen ΔI", why:"Investitionen wirken wie G mit dem vollen Multiplikator.", f:"ΔI = −Lücke / [1/(1 − c₁)]", calc:`ΔI = ${fmt(-gap)} / ${fmt(m.k)} = ${fmt(dI)}`, ans:dI},
+    {lab:"Nötige Zinsänderung Δi", why:"Aus I = d − n·i folgt ΔI = −n·Δi. Antwort als Dezimalzahl (0,01 = 1 Prozentpunkt).", f:"Δi = −ΔI / n", calc:`Δi = −${par(dI)} / ${m.n} = ${fmt(di)}  (= ${fmt(di*100)} Prozentpunkte)`, ans:di, final:true, rate:true},
+    {lab:"Neuer Zinssatz i", why:"Alter Zins plus Änderung.", f:"i_neu = i + Δi", calc:`${fmt(m.i)} + ${par(di)} = ${fmt(inew)}`, ans:inew, rate:true}
+  ];
+}
+
+/* ================= Aufgabentypen ================= */
+const TYPES={
+  gg:{name:"Gleichgewicht und Output-Lücke", short:"Y* und Lücke", desc:"Klausur 6b: Y* aus dem Modell mit Staat und Zins berechnen, Lücke zum Potenzial angeben.", kap:5, gen(){
+    const m=baseModel(); const Ypot=Math.random()<.8? m.Y+rint(2,8) : m.Y-rint(2,5);
+    return {intro:MODEL_TXT, table:modelTable(m,Ypot), q:"Berechnen Sie das gleichgewichtige Einkommen Y* und geben Sie die Output-Lücke an.", steps:[...stepsY(m),stepGap(m,Ypot)]};
+  }},
+  dG:{name:"Lücke schließen mit Staatsausgaben", short:"ΔG", desc:"Klausur 6c: Um wie viel muss G steigen, damit die Lücke verschwindet?", kap:5, gen(){
+    for(;;){ const m=baseModel(), mm=pick([.5,1,1.5,2,2.5,3]), s=Math.random()<.85?-1:1, gap=r(s*m.k*mm), Ypot=r(m.Y-gap);
+      if(!isInt(Ypot)) continue;
+      return {intro:MODEL_TXT, table:modelTable(m,Ypot), q:`Berechnen Sie Y*, die Output-Lücke und die notwendige Änderung der staatlichen Nachfrage G, um die Lücke zu schließen.`, steps:[...stepsY(m),stepGap(m,Ypot),...dGSteps(m,gap)]}; }
+  }},
+  dT:{name:"Lücke schließen mit Steuern", short:"ΔT", desc:"Klausur 6d: Um wie viel müssen die Steuern T sinken? Kleinerer Multiplikator als bei G.", kap:5, gen(){
+    for(;;){ const m=baseModel(), mm=pick([.5,1,1.5,2,2.5,3]), s=Math.random()<.85?-1:1, gap=r(s*m.mT*mm), Ypot=r(m.Y-gap);
+      if(!isInt(Ypot)) continue;
+      return {intro:MODEL_TXT, table:modelTable(m,Ypot), q:`Berechnen Sie Y*, die Output-Lücke und die notwendige Änderung der Steuern T, um die Lücke zu schließen.`, steps:[...stepsY(m),stepGap(m,Ypot),...dTSteps(m,gap)]}; }
+  }},
+  di:{name:"Lücke schließen mit dem Zins", short:"Δi", desc:"Zweittermin 6c: Welche Zinssenkung der Zentralbank schließt die Lücke?", kap:5, gen(){
+    for(;;){ const m=baseModel(), a=pick([.005,.01,.015,.02,.025]); if(a>=m.i) continue;
+      const s=Math.random()<.85?-1:1, gap=r(s*m.n*m.k*a), Ypot=r(m.Y-gap);
+      if(!isInt(Ypot)) continue;
+      return {intro:MODEL_TXT, table:modelTable(m,Ypot), q:`Berechnen Sie Y*, die Output-Lücke und die notwendige Änderung des Zinssatzes i, um die Lücke zu schließen.`, steps:[...stepsY(m),stepGap(m,Ypot),...diSteps(m,gap)]}; }
+  }},
+  mult:{name:"Multiplikatoren G und T", short:"Multiplikatoren", desc:"Aufgabenblatt 5, Aufg. 1: Wirkung von +1 Mrd. G gegenüber −1 Mrd. T.", kap:5, gen(){
+    const c1=pick([.5,.6,.75,.8,.9]), k=1/(1-c1), mT=c1*k, x=rint(1,5);
+    return {intro:`Geschlossene Volkswirtschaft: Y<sup>N</sup> = c<sub>0</sub> + c<sub>1</sub>(Y − T) + I + G, marginale Konsumneigung c<sub>1</sub> = ${fmt(c1)}.`, table:"",
+      q:`Um wie viel steigt das BIP, wenn a) die Staatsausgaben um ${x} Mrd. € steigen, b) die Steuereinnahmen um ${x} Mrd. € sinken?`,
+      steps:[
+        {lab:"Staatsausgabenmultiplikator m<sub>G</sub>", why:"G geht vollständig in die Nachfrage ein.", f:"m_G = 1 / (1 − c₁)", calc:`1 / (1 − ${fmt(c1)}) = ${fmt(k)}`, ans:r(k)},
+        {lab:"Steuermultiplikator m<sub>T</sub> (Betrag)", why:"Von der Steuersenkung wird ein Teil gespart, nur c₁ wird konsumiert.", f:"m_T = c₁ / (1 − c₁)", calc:`${fmt(c1)} / (1 − ${fmt(c1)}) = ${fmt(mT)}`, ans:r(mT)},
+        {lab:"a) ΔY bei ΔG = +"+x, why:"Multiplikator mal Impuls.", f:"ΔY = m_G · ΔG", calc:`${fmt(k)} · ${x} = ${fmt(k*x)} Mrd. €`, ans:r(k*x), final:true},
+        {lab:"b) ΔY bei ΔT = −"+x, why:"m_G − m_T ist immer genau 1: Ausgaben wirken stärker als gleich große Steuersenkungen.", f:"ΔY = m_T · |ΔT|", calc:`${fmt(mT)} · ${x} = ${fmt(mT*x)} Mrd. €`, ans:r(mT*x), final:true}
+      ]};
+  }},
+  bs:{name:"Budgetsaldo des Staates", short:"Budgetsaldo", desc:"Aufgabenblatt 5, Aufg. 2: Y* und BS = T − G vor und nach einem Impuls.", kap:5, gen(){
+    for(;;){
+      const c1=pick([.5,.6,.75,.8]), k=1/(1-c1), mT=c1*k, c0=rint(1,5), I=rint(1,5), G=rint(1,4), T=rint(1,4);
+      const A=r(c0-c1*T+I+G), Y=r(k*A); if(!isInt(Y*2)) continue;
+      const viaG=Math.random()<.5, dY=viaG?k:mT, Y2=r(Y+dY), BS=T-G, BS2=viaG?T-(G+1):(T-1)-G;
+      return {intro:`Geschlossene Volkswirtschaft: Y<sup>N</sup> = c<sub>0</sub> + c<sub>1</sub>(Y − T) + I + G.`,
+        table:`<div class="tablewrap"><table class="data"><tr><th>c<sub>0</sub></th><th>c<sub>1</sub></th><th>I</th><th>G</th><th>T</th></tr><tr><td>${c0}</td><td>${fmt(c1)}</td><td>${I}</td><td>${G}</td><td>${T}</td></tr></table></div>`,
+        q:`Berechnen Sie Y* und den Budgetsaldo. Danach ${viaG?"erhöht der Staat die Ausgaben um 1":"senkt der Staat die Steuern um 1"}: Wie hoch sind Y* und der Budgetsaldo jetzt?`,
+        steps:[
+          {lab:"Y* vorher", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = 1/(1 − c₁) · (c₀ − c₁T + I + G)", calc:`${fmt(k)} · (${c0} − ${fmt(c1)}·${T} + ${I} + ${G}) = ${fmt(k)} · ${fmt(A)} = ${fmt(Y)}`, ans:Y, final:true},
+          {lab:"Budgetsaldo vorher", why:"Positiv = Überschuss, negativ = Defizit.", f:"BS = T − G", calc:`${T} − ${G} = ${fmt(BS)}`, ans:BS, final:true},
+          {lab:"ΔY durch den Impuls", why:viaG?"Ausgabenmultiplikator.":"Steuermultiplikator, kleiner als bei G.", f:viaG?"ΔY = 1/(1 − c₁) · 1":"ΔY = c₁/(1 − c₁) · 1", calc:`ΔY = ${fmt(dY)}`, ans:r(dY)},
+          {lab:"Y* nachher", why:"Altes Gleichgewicht plus Wirkung.", f:"Y*neu = Y* + ΔY", calc:`${fmt(Y)} + ${fmt(dY)} = ${fmt(Y2)}`, ans:Y2, final:true},
+          {lab:"Budgetsaldo nachher", why:"Hier sind die Steuern ein fester Betrag: der Saldo verschlechtert sich in beiden Fällen genau um 1, das Einkommen steigt aber unterschiedlich stark.", f:"BS = T − G", calc:viaG?`${T} − ${G+1} = ${fmt(BS2)}`:`${T-1} − ${G} = ${fmt(BS2)}`, ans:BS2, final:true}
+        ]};
+    }
+  }},
+  schuld:{name:"Langfristige Schuldenstandquote", short:"Schuldenquote", desc:"Ersttermin 4: Die Quote konvergiert gegen Defizitquote durch nominales Wachstum.", kap:5, gen(){
+    if(Math.random()<.6){
+      for(;;){ const d=pick([1,1.5,2,2.5,3,4]), g=pick([2,2.5,3,4,5]), D=r(d/g*100); if(!nice(D,1)) continue;
+        return {intro:"Schuldenmechanik: d = Defizit in % des BIP, g = Wachstum des nominalen BIP, D = Schuldenstandquote.", table:"",
+          q:`Berechnen Sie die langfristige Schuldenstandquote, wenn das jährliche BIP-Wachstum langfristig ${fmt(g)} % beträgt und die jährliche Neuverschuldung ${fmt(d)} % des BIP.`,
+          steps:[{lab:"Langfristige Schuldenstandquote D (in %)", why:"Die Quote bleibt stabil, wenn die Schulden genauso schnell wachsen wie das BIP.", f:"D = d / g", calc:`D = ${fmt(d/100)} / ${fmt(g/100)} = ${fmt(D/100)} = ${fmt(D)} %`, ans:D, final:true, pct:true}]}; }
+    }
+    const D=pick([40,50,60,80,100]), g=pick([1,2,3,4,5]), d=r(D*g/100);
+    return {intro:"Schuldenmechanik: d = Defizit in % des BIP, g = Wachstum des nominalen BIP, D = Schuldenstandquote.", table:"",
+      q:`Das nominale BIP wächst langfristig um ${g} % pro Jahr. Welche jährliche Defizitquote ist mit einer dauerhaft stabilen Schuldenstandquote von ${D} % vereinbar?`,
+      steps:[{lab:"Defizitquote d (in %)", why:"Umgestellt aus D = d/g. Das ist die Logik hinter 60 % und 3 % im Stabilitätspakt (bei g = 5 %).", f:"d = D · g", calc:`d = ${fmt(D/100)} · ${fmt(g/100)} = ${fmt(d/100)} = ${fmt(d)} %`, ans:d, final:true, pct:true}]};
+  }},
+  herl:{name:"Y* allgemein herleiten", short:"Herleitung", desc:"Klausur 6a, 2 Punkte: Die Herleitung kommt in jeder Klausur. Mit Stift auf dem Schmierzettel üben.", kap:5, self:true, gen(){
+    const staat=Math.random()<.75;
+    return staat?{intro:MODEL_TXT, table:"", q:"Leiten Sie das gleichgewichtige gesamtwirtschaftliche Einkommen Y* allgemein her.", steps:[
+      {lab:"Nachfrage aufstellen", f:"Y^N = C + I + G"},
+      {lab:"Verhaltensgleichungen einsetzen", f:"Y^N = c₀ + c₁(Y − T) + d − n·i + G"},
+      {lab:"Gleichgewichtsbedingung", f:"Y^A = Y^N = Y"},
+      {lab:"Ausmultiplizieren", f:"Y = c₀ + c₁Y − c₁T + d − n·i + G"},
+      {lab:"Y-Terme auf eine Seite", f:"Y − c₁Y = c₀ − c₁T + d − n·i + G  ⇔  Y(1 − c₁) = …"},
+      {lab:"Durch (1 − c₁) teilen", f:"Y* = 1/(1 − c₁) · (c₀ − c₁T + d − n·i + G)"}
+    ]}:{intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I fest. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:"", q:"Leiten Sie unter Zuhilfenahme der VGR-Definitionen die Formel für das gleichgewichtige BIP Y* ab.", steps:[
+      {lab:"Nachfrage aufstellen", f:"Y^N = C + I"},
+      {lab:"Konsumfunktion einsetzen", f:"Y^N = c₀ + c₁Y^VT + I"},
+      {lab:"Gleichgewicht: Y^A = Y^N = Y^VT = Y", f:"Y = c₀ + c₁Y + I"},
+      {lab:"Y-Terme auf eine Seite", f:"Y(1 − c₁) = c₀ + I"},
+      {lab:"Durch (1 − c₁) teilen", f:"Y* = 1/(1 − c₁) · (c₀ + I)   1/(1 − c₁) = Multiplikator"}
+    ]};
+  }},
+  klausur:{name:"Klausur-Kombi", short:"Kombi", desc:"Wie Aufgabe 6b–d: Y*, Lücke und zwei Instrumente in einem Durchgang.", kap:5, gen(){
+    for(;;){ const m=baseModel(), gap=-pick([2,3,4,5,6,8,10]), Ypot=r(m.Y-gap);
+      const dG=-gap/m.k, dT=gap/m.mT, di=gap/(m.k*m.n);
+      if(!nice(dG,2)||!nice(dT,2)||!nice(di,4)||m.i+di<0) continue;
+      const two=pick([["dG","dT"],["di","dT"],["dG","di"]]);
+      const map={dG:()=>dGSteps(m,gap),dT:()=>dTSteps(m,gap),di:()=>diSteps(m,gap)};
+      const nm={dG:"der staatlichen Nachfrage G",dT:"der Steuern T",di:"des Zinssatzes i"};
+      return {intro:MODEL_TXT, table:modelTable(m,Ypot), q:`b) Berechnen Sie Y* und geben Sie die Output-Lücke an. c) Berechnen Sie die notwendige Änderung ${nm[two[0]]}, d) die notwendige Änderung ${nm[two[1]]}, um die Lücke zu schließen.`,
+        steps:[...stepsY(m),stepGap(m,Ypot),...map[two[0]](),...map[two[1]]()]}; }
+  }}
+};
+const ORDER=["herl","mult","gg","dG","dT","di","klausur","bs","schuld"];
+const LVL={1:"Vorgerechnet",2:"Geführt",3:"Frei"};
+const lvlOf=t=>state.lvl[t]||1;
+
+/* ================= Navigation ================= */
+let view="home", task=null;
+const TABS=[["home","Übersicht"],["calc","Rechnen"],["stats","Statistik"]];
+function renderNav(){
+  $("#nav").innerHTML=TABS.map(([k,l])=>`<button data-v="${k}"${(view===k||(view==="task"&&k==="calc"))?' aria-current="page"':""}>${l}</button>`).join("");
+  $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+function go(v){ view=v; render(); window.scrollTo(0,0); }
+function render(){ renderNav(); ({home:renderHome,calc:renderCalc,task:renderTask,stats:renderStats})[view](); }
+
+/* ================= Übersicht ================= */
+function acc(t){ const h=state.hist[t]; return h&&h.n? h.r/h.n : null; }
+function recommend(){
+  // schwächster begonnener Typ, sonst nächster unbegonnener in Lernreihenfolge
+  const started=ORDER.filter(t=>state.hist[t]&&state.hist[t].n);
+  const fresh=ORDER.find(t=>!started.includes(t));
+  const weak=started.filter(t=>acc(t)<.7).sort((a,b)=>acc(a)-acc(b))[0];
+  return weak||fresh||ORDER[Math.floor(Math.random()*ORDER.length)];
+}
+function renderHome(){
+  const rec=recommend(), tot=Object.values(state.hist).reduce((s,h)=>s+h.n,0);
+  $("#app").innerHTML=`
+    <p class="eyebrow">Wirtschaft II · Makroökonomik</p>
+    <h1>Wirtschaft II</h1>
+    <p class="muted">Einführung in die Makroökonomik (Bank, Fr 10–12), Folien nach van Treeck. Mikro kommt im Sommersemester dazu.</p>
+    <div class="block">
+      <h2>So ist die Klausur gebaut</h2>
+      <p class="small muted">Beide Altklausuren 2024: 60 Punkte, immer derselbe Aufbau.</p>
+      <div class="parts" aria-hidden="true"><div></div><div class="on"></div><div></div></div>
+      <div class="partlist">
+        <span>Teil I</span><span>Kurzfragen: Begriffe, BIP-Kritik, Salden, Schuldenquote</span><b>12 P.</b>
+        <span>Teil II</span><span>Rechnen: VGR-Tabelle, Modell mit Staat, eine Grafik</span><b>24 P.</b>
+        <span>Teil III</span><span>Essay: These aus mehreren Paradigmen diskutieren</span><b>24 P.</b>
+      </div>
+    </div>
+    <div class="block">
+      <p class="eyebrow">Als Nächstes</p>
+      <h2>${TYPES[rec].name}</h2>
+      <p class="small muted">${TYPES[rec].desc}</p>
+      <div class="row"><button class="btn" id="goRec">Starten</button><button class="btn ghost" id="goMix">Gemischt üben</button></div>
+      ${tot?`<p class="small muted" style="margin:10px 0 0">${tot} Aufgaben gerechnet.</p>`:""}
+    </div>
+    <div class="block">
+      <h2>Lernmodi</h2>
+      <div class="stack small">
+        <div class="row between"><span><b>Rechnen</b> · Teil II, Zahlen ändern sich bei jedem Durchgang</span><span class="chip l3">bereit</span></div>
+        <div class="row between"><span><b>Karten</b> · Teil I, Begriffe und Kurzfragen</span><span class="chip soon">folgt</span></div>
+        <div class="row between"><span><b>Grafiken</b> · Teil II, mit dem Stift zeichnen</span><span class="chip soon">folgt</span></div>
+        <div class="row between"><span><b>Essay</b> · Teil III, Paradigmen und Erwartungshorizont</span><span class="chip soon">folgt</span></div>
+        <div class="row between"><span><b>Probeklausur</b> · alle Teile mit Timer</span><span class="chip soon">folgt</span></div>
+      </div>
+    </div>`;
+  $("#goRec").onclick=()=>startTask(rec,false);
+  $("#goMix").onclick=()=>startTask(recommend(),true);
+}
+
+/* ================= Rechnen: Liste ================= */
+function renderCalc(){
+  $("#app").innerHTML=`
+    <p class="eyebrow">Teil II · Kapitel 5</p>
+    <h1>Rechnen</h1>
+    <p class="muted">Jede Aufgabe läuft in drei Stufen: erst vorgerechnet, dann Schritt für Schritt geführt, dann frei wie in der Klausur. Die Stufe steigt, sobald du zweimal fehlerfrei warst.</p>
+    <button class="btn" id="mix" style="width:100%;margin:4px 0 14px">Gemischt üben (empfohlen)</button>
+    <div class="block"><div class="tlist">${ORDER.map(t=>{
+      const h=state.hist[t], a=acc(t), l=lvlOf(t);
+      return `<button class="titem" data-t="${t}">
+        <span class="t">${TYPES[t].name}</span><span class="chip l${l}">${LVL[l]}</span>
+        <span class="d">${TYPES[t].desc}${h&&h.n?` · ${h.n}× gerechnet, ${Math.round(a*100)} % richtig`:""}</span>
+        ${h&&h.n?`<span class="bar"><i style="width:${Math.round(a*100)}%"></i></span>`:""}
+      </button>`;}).join("")}</div></div>
+    <p class="small muted">Gemischt üben wechselt die Aufgabentypen ab und bevorzugt, was dir schwerfällt. Das ist anstrengender als blockweises Üben, bleibt aber deutlich besser hängen.</p>`;
+  document.querySelectorAll(".titem").forEach(b=>b.onclick=()=>startTask(b.dataset.t,false));
+  $("#mix").onclick=()=>startTask(recommend(),true);
+}
+
+/* ================= Aufgabe ================= */
+function startTask(t,mix){
+  task={t,mix,lvl:lvlOf(t),data:TYPES[t].gen(),cur:0,shown:0,first:{},done:false,checks:{}};
+  view="task"; render(); window.scrollTo(0,0);
+}
+function nextTask(){
+  if(task.mix){ const pool=ORDER.filter(x=>x!==task.t); const w=pool.map(x=>{const a=acc(x);return a==null?2:1.5-a;}); let s=Math.random()*w.reduce((a,b)=>a+b,0); let i=0; for(;i<pool.length;i++){ s-=w[i]; if(s<=0) break; } startTask(pool[Math.min(i,pool.length-1)],true); }
+  else startTask(task.t,false);
+}
+function record(ok){
+  const t=task.t; state.hist[t]=state.hist[t]||{n:0,r:0}; state.hist[t].n++; if(ok) state.hist[t].r++;
+  const k=today(); state.days[k]=(state.days[k]||0)+1;
+  const l=lvlOf(t), st=state.streak[t]||0;
+  if(l===2){ state.streak[t]= ok? st+1 : 0; if(state.streak[t]>=2){ state.lvl[t]=3; state.streak[t]=0; toast("Stufe Frei freigeschaltet"); } }
+  else if(l===3){ state.streak[t]= ok? 0 : st+1; if(state.streak[t]>=2){ state.lvl[t]=2; state.streak[t]=0; toast("Zurück zu Geführt, um den Weg zu festigen"); } }
+  save();
+}
+function head(){
+  const T=TYPES[task.t], d=task.data;
+  return `<div class="row between" style="margin-bottom:8px">
+      <button class="btn ghost small" id="back">← Liste</button>
+      <div class="seg" role="group" aria-label="Stufe">${[1,2,3].map(l=>`<button data-l="${l}" aria-pressed="${task.lvl===l}">${LVL[l]}</button>`).join("")}</div>
+    </div>
+    <p class="eyebrow">${task.mix?"Gemischt · ":""}${T.name}</p>
+    <div class="block">
+      <p class="small">${d.intro}</p>
+      ${d.table}
+      <p style="margin:10px 0 0"><b>${d.q}</b></p>
+    </div>`;
+}
+function bindHead(){
+  $("#back").onclick=()=>go("calc");
+  document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{ const l=+b.dataset.l; state.lvl[task.t]=l; state.streak[task.t]=0; save(); task.lvl=l; task.cur=0; task.shown=0; task.first={}; task.done=false; task.checks={}; render(); });
+}
+function renderTask(){
+  const T=TYPES[task.t];
+  if(T.self) return renderSelf();
+  if(task.lvl===1) return renderWorked();
+  if(task.lvl===2) return renderGuided();
+  return renderFree();
+}
+const eqLine=s=>`<div class="eq">${esc(s.calc)}</div>`;
+
+/* Stufe 1: vorgerechnet, Schritt für Schritt aufdecken */
+function renderWorked(){
+  const S=task.data.steps, n=task.shown;
+  $("#app").innerHTML=head()+`
+    <div class="stack">${S.slice(0,n+1).map((s,i)=>`<div class="step">
+      <div class="lab">${i+1}. ${s.lab}</div><div class="why">${s.why}</div>${eqLine(s)}</div>`).join("")}</div>
+    <div class="row" style="margin-top:14px">${n<S.length-1?`<button class="btn" id="more">Nächster Schritt</button>`:`<button class="btn" id="self">Jetzt selbst rechnen</button>`}</div>`;
+  bindHead();
+  if($("#more")) $("#more").onclick=()=>{ task.shown++; renderWorked(); };
+  if($("#self")) $("#self").onclick=()=>{ state.lvl[task.t]=2; state.streak[task.t]=0; save(); startTask(task.t,task.mix); };
+}
+
+/* Stufe 2: geführt, ein Schritt nach dem anderen mit Eingabe */
+function renderGuided(){
+  const S=task.data.steps, cur=task.cur;
+  const html=S.map((s,i)=>{
+    if(i>cur) return "";
+    if(i<cur){ const ok=task.first[i]; return `<div class="step ${ok?"ok":"no"}"><div class="lab">${i+1}. ${s.lab}</div>${eqLine(s)}</div>`; }
+    return `<div class="step" id="curStep"><div class="lab">${i+1}. ${s.lab}</div><div class="why">${s.why}</div>
+      <div class="inp"><input id="in" inputmode="decimal" autocomplete="off" aria-label="${esc(s.lab.replace(/<[^>]+>/g,""))}"><button class="btn small" id="chk">Prüfen</button><button class="btn ghost small" id="hint">Formel</button></div>
+      <div id="out"></div></div>`;
+  }).join("");
+  $("#app").innerHTML=head()+`<div class="stack">${html}</div>
+    ${task.done?finishBox():padHTML()}`;
+  bindHead(); bindPad();
+  if(task.done){ bindFinish(); return; }
+  const inp=$("#in"); inp.focus({preventScroll:true});
+  const s=S[cur];
+  const check=()=>{
+    const res=judge(s,inp.value);
+    if(res===null){ $("#out").innerHTML=`<p class="res bad">Bitte eine Zahl eingeben, Komma oder Punkt geht beides.</p>`; return; }
+    if(!(cur in task.first)) task.first[cur]=res;
+    if(res){ task.cur++; if(task.cur>=S.length){ task.done=true; record(Object.values(task.first).every(Boolean)); } renderGuided(); }
+    else{ $("#out").innerHTML=`<p class="res bad">Noch nicht. ${s.sign?"Achte auch aufs Vorzeichen. ":""}Versuch es nochmal oder lass dir den Schritt zeigen.</p><button class="btn ghost small" id="reveal">Schritt zeigen</button>`;
+      $("#reveal").onclick=()=>{ task.first[cur]=false; task.cur++; if(task.cur>=S.length){ task.done=true; record(false); } renderGuided(); }; }
+  };
+  $("#chk").onclick=check; inp.onkeydown=e=>{ if(e.key==="Enter") check(); };
+  $("#hint").onclick=()=>{ $("#out").innerHTML=`<p class="hint muted">Formel:</p><div class="eq">${esc(s.f)}</div>`; };
+}
+
+/* Stufe 3: frei, nur die Klausurgrößen */
+function renderFree(){
+  const S=task.data.steps, F=S.map((s,i)=>[s,i]).filter(([s])=>s.final);
+  $("#app").innerHTML=head()+`
+    ${padHTML()}
+    <div class="block stack">${F.map(([s,i])=>`<div>
+      <label class="lab" for="f${i}" style="font-weight:600">${s.lab}</label>
+      <div class="inp" style="margin-top:4px"><input id="f${i}" inputmode="decimal" autocomplete="off" ${task.done?"disabled":""}></div>
+      <div id="o${i}"></div></div>`).join("")}
+      ${task.done?"":`<button class="btn" id="chkAll">Abgeben</button>`}
+    </div>
+    <div id="sol"></div>`;
+  bindHead(); bindPad();
+  if(task.done) return;
+  $("#chkAll").onclick=()=>{
+    let all=true, empty=false;
+    F.forEach(([s,i])=>{ const v=$("#f"+i).value; const res=judge(s,v); if(res===null) empty=true; });
+    if(empty && !task.confirmEmpty){ task.confirmEmpty=true; toast("Noch leere Felder. Nochmal tippen zum Abgeben."); return; }
+    F.forEach(([s,i])=>{ const el=$("#f"+i), res=judge(s,el.value); if(!res) all=false;
+      el.disabled=true; $("#o"+i).innerHTML=`<p class="res ${res?"good":"bad"}">${res?"Richtig":"Richtig wäre "+fmt(s.ans)+(s.rate?" (= "+fmt(s.ans*100)+" Prozentpunkte)":"")+(s.pct?" %":"")}</p>`; });
+    task.done=true; record(all); $("#chkAll").remove();
+    $("#sol").innerHTML=`<div class="block"><h3>Lösungsweg</h3><div class="stack">${S.map((s,i)=>`<div><div class="small" style="font-weight:600">${i+1}. ${s.lab}</div>${eqLine(s)}</div>`).join("")}</div></div>`+finishBox(all);
+    bindFinish();
+  };
+}
+
+/* Herleitung: selbst schreiben, dann aufdecken und abhaken */
+function renderSelf(){
+  const S=task.data.steps, guided=task.lvl===2, worked=task.lvl===1;
+  const n= worked? S.length : (guided? task.shown : (task.done? S.length : 0));
+  $("#app").innerHTML=head()+`
+    ${worked?"":`<p class="small muted">${guided?"Schreib den nächsten Schritt auf den Schmierzettel, dann deck ihn auf.":"Schreib die komplette Herleitung auf den Schmierzettel. Danach vergleichen und abhaken, welche Schritte du hattest."}</p>${padHTML()}`}
+    <div class="block">${S.slice(0,n).map((s,i)=>`
+      <div class="check">${worked?"":`<input type="checkbox" id="c${i}" ${task.checks[i]?"checked":""} aria-label="Schritt ${i+1} gehabt">`}
+      <div style="min-width:0;flex:1"><div class="small" style="font-weight:600">${i+1}. ${s.lab}</div><div class="eq">${esc(s.f)}</div></div></div>`).join("")||`<p class="small muted" style="margin:0">${S.length} Schritte warten auf dich.</p>`}
+    </div>
+    <div class="row">
+      ${worked?`<button class="btn" id="self">Jetzt selbst schreiben</button>`:
+        (n<S.length?`<button class="btn" id="more">${guided?"Nächsten Schritt aufdecken":"Lösung aufdecken"}</button>`:
+        (task.saved?"":`<button class="btn" id="sv">Ergebnis speichern</button>`))}
+    </div>
+    <div id="fin">${task.saved?finishBox(task.savedOk):""}</div>`;
+  bindHead(); if(!worked) bindPad();
+  document.querySelectorAll(".check input").forEach(c=>c.onchange=()=>{ task.checks[+c.id.slice(1)]=c.checked; });
+  if($("#self")) $("#self").onclick=()=>{ state.lvl[task.t]=2; save(); startTask(task.t,task.mix); };
+  if($("#more")) $("#more").onclick=()=>{ if(guided) task.shown++; else task.done=true; renderSelf(); };
+  if($("#sv")) $("#sv").onclick=()=>{ const ok=S.every((_,i)=>task.checks[i]); task.saved=true; task.savedOk=ok; record(ok); renderSelf(); };
+  if(task.saved) bindFinish();
+}
+
+function finishBox(ok){
+  if(ok===undefined) ok=Object.values(task.first).every(Boolean);
+  const l=lvlOf(task.t);
+  return `<div class="block" style="margin-top:14px">
+    <h3>${ok?"Fehlerfrei":"Geschafft, mit Fehlern"}</h3>
+    <p class="small muted">${ok?"Gut so.":"Schau dir den markierten Schritt nochmal an, die nächste Aufgabe hat neue Zahlen."} Stufe jetzt: ${LVL[l]}.</p>
+    <div class="row"><button class="btn" id="next">${task.mix?"Nächste Aufgabe":"Neue Zahlen"}</button><button class="btn ghost" id="list">Zur Liste</button></div></div>`;
+}
+function bindFinish(){ if($("#next")) $("#next").onclick=nextTask; if($("#list")) $("#list").onclick=()=>go("calc"); }
+
+/* ================= Schmierzettel für den Apple Pencil ================= */
+let padStrokes=[];
+function padHTML(){ return `<div class="pad" style="margin:0 0 14px"><span class="ph">Schmierzettel</span><canvas id="pad" aria-label="Schmierzettel zum Rechnen mit dem Stift"></canvas><div class="tools"><button id="padUndo">Zurück</button><button id="padClr">Leeren</button></div></div>`; }
+function bindPad(){
+  const c=$("#pad"); if(!c) return;
+  const ctx=c.getContext("2d"); let penSeen=false, cur=null;
+  const size=()=>{ const r=c.getBoundingClientRect(), dpr=window.devicePixelRatio||1; c.width=r.width*dpr; c.height=r.height*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); draw(); };
+  const color=()=>getComputedStyle(document.documentElement).getPropertyValue("--ink").trim()||"#1B2433";
+  function draw(){ ctx.clearRect(0,0,c.width,c.height); ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle=color();
+    for(const s of padStrokes){ for(let i=1;i<s.length;i++){ ctx.lineWidth=s[i][2]; ctx.beginPath(); ctx.moveTo(s[i-1][0],s[i-1][1]); ctx.lineTo(s[i][0],s[i][1]); ctx.stroke(); } } }
+  const pt=e=>{ const r=c.getBoundingClientRect(); const p=e.pressure&&e.pointerType==="pen"? e.pressure : .5; return [e.clientX-r.left,e.clientY-r.top,1+p*2.4]; };
+  c.onpointerdown=e=>{ if(e.pointerType==="pen") penSeen=true; if(penSeen&&e.pointerType==="touch") return; cur=[pt(e)]; padStrokes.push(cur); c.setPointerCapture(e.pointerId); };
+  c.onpointermove=e=>{ if(!cur) return; const evs=e.getCoalescedEvents?e.getCoalescedEvents():[e]; for(const ev of evs) cur.push(pt(ev)); draw(); };
+  c.onpointerup=c.onpointercancel=()=>{ cur=null; };
+  $("#padUndo").onclick=()=>{ padStrokes.pop(); draw(); };
+  $("#padClr").onclick=()=>{ padStrokes=[]; draw(); };
+  size(); window.onresize=size;
+}
+
+/* ================= Statistik ================= */
+function renderStats(){
+  const days=[...Array(7)].map((_,i)=>{ const d=new Date(); d.setDate(d.getDate()-6+i); const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); return [d,state.days[k]||0]; });
+  const mx=Math.max(1,...days.map(x=>x[1]));
+  const wd=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  const any=ORDER.some(t=>state.hist[t]&&state.hist[t].n);
+  $("#app").innerHTML=`<h1>Statistik</h1>
+    <div class="block"><h2>Letzte 7 Tage</h2>
+      <div class="week">${days.map(([d,n])=>`<div style="height:${Math.round(n/mx*100)}%" title="${n} Aufgaben"></div>`).join("")}</div>
+      <div class="weekl">${days.map(([d,n])=>`<span>${wd[d.getDay()]}<br>${n}</span>`).join("")}</div></div>
+    <div class="block"><h2>Nach Aufgabentyp</h2>
+      ${any?ORDER.map(t=>{const h=state.hist[t]; return `<div class="srow"><span>${TYPES[t].short}</span><span class="chip l${lvlOf(t)}">${LVL[lvlOf(t)]}</span><span>${h&&h.n?`${h.r}/${h.n}`:"–"}</span></div>`;}).join(""):`<p class="small muted" style="margin:0">Noch keine Aufgaben gerechnet. Ab der ersten Aufgabe erscheint hier dein Stand.</p>`}
+    </div>
+    ${syncBox()}
+    <div class="block"><h3>Fortschritt zurücksetzen</h3><p class="small muted">Löscht Stufen und Statistik auf diesem Gerät.</p>
+      <button class="btn warn" id="rst">${statsArmed?"Wirklich zurücksetzen":"Zurücksetzen"}</button></div>`;
+  bindSync();
+  $("#rst").onclick=()=>{ if(!statsArmed){ statsArmed=true; renderStats(); return; } state={lvl:{},streak:{},hist:{},days:{}}; save(); flushPush(); statsArmed=false; toast("Zurückgesetzt"); renderStats(); };
+}
+let statsArmed=false;
+
+/* Start: erst sofort zeigen, dann mit den anderen Geräten abgleichen */
+initToken();
+render();
+syncFromRemote().then(changed=>{ if(changed&&view!=="task") render(); else if(view==="stats") render(); });
+</script>
+
+</body>
+</html>
