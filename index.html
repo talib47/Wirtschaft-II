@@ -37,6 +37,8 @@ html{font-size:calc(100% * var(--z,1))}
 .tag{display:inline-block;font-family:var(--sans);font-size:.68rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:999px;vertical-align:middle;white-space:nowrap}
 .tag.core{color:var(--accent);border:1px solid var(--accent)}
 .tag.bg{color:var(--muted);border:1px dashed var(--line)}
+.cinfo{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:.82rem;line-height:1.45;color:var(--muted)}
+.cinfo .ci{flex:none;width:18px;height:18px;border-radius:50%;border:1px solid var(--muted);font:600 .7rem/16px var(--serif);font-style:italic;text-align:center;margin-top:1px}
 .wlink{color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem;line-height:1.4}
 .wlink:hover{text-decoration:underline}
 .mc .idk{border-style:dashed;color:var(--muted);text-align:center}
@@ -1793,6 +1795,27 @@ function wipoccBox(id){
     <div class="stack">${L.map(([t,u,ex])=>`<a class="wlink" href="${u.startsWith("http")?u:W+u}" target="_blank" rel="noopener">${ex?'<span class="tag core">Expert:innen</span> ':""}${t} ↗</a>`).join("")}</div></div>`;
 }
 
+/* ================= Kleine Erklärhilfen zu Karten (Herkunft von Kürzeln, Begriffen) ================= */
+const CARD_INFO={
+ "c2-01":"Bild dazu: Ein Strom ist das Wasser, das pro Minute aus dem Hahn fließt. Ein Bestand ist der Wasserstand in der Badewanne zu einem bestimmten Zeitpunkt.",
+ "c2-02":"Identität von lateinisch idem, „dasselbe“: Beide Seiten der Gleichung sind per Definition dasselbe, nur anders berechnet.",
+ "c2-03":"Y ist in der VWL das übliche Symbol für Produktion und Einkommen. Die hochgestellten Buchstaben sind deutsche Abkürzungen: A = Angebot, N = Nachfrage, VT = Verteilung.",
+ "c2-04":"Nominal von lateinisch nomen, „Name“: der Wert dem Namen nach, also in Euro. Real: was man dafür wirklich an Gütern bekommt. Inflation (lateinisch inflare, „aufblähen“) ist der allgemeine Anstieg der Preise.",
+ "c2-05":"Italienisch: brutto = „roh“, unbereinigt; netto = „rein“, bereinigt. Abschreibungen sind der Wert, den Maschinen und Gebäude durch Verschleiß verlieren.",
+ "c2-07":"H steht für hours, also Arbeitsstunden. Y/H heißt dann: Output je Stunde.",
+ "c2-08":"Die Kürzel kommen aus dem Englischen: C = consumption (Konsum), I = investment, G = government (Staat), X = exports, M = imports.",
+ "c2-09":"W = wages (Löhne). Π ist das griechische P und steht für Profit, also Gewinne.",
+ "c2-10":"HH = Haushalte, F = firms (Unternehmen), St = Staat. „Verfügbar“ heißt: was nach Steuern und Transfers tatsächlich zum Ausgeben übrig bleibt.",
+ "c2-11":"H = hours, also gearbeitete Stunden.",
+ "c2-12":"Saldo (italienisch für „Rest“): Einnahmen minus Ausgaben. Positiv = Überschuss, negativ = Defizit.",
+ "c2-13":"S = saving (Ersparnis), I = investment.",
+ "c2-15":"Merkhilfe: Wenn einer mehr einnimmt, als er ausgibt, muss ein anderer mehr ausgeben, als er einnimmt. Es gibt keine schwarzen Löcher.",
+ "c2-16":"Die Leistungsbilanz erfasst den Handel mit Waren und Dienstleistungen mit dem Ausland. In der Vorlesung gilt vereinfacht: Leistungsbilanz = X − M.",
+ "c2-20":"ILO = International Labour Organization, die Arbeitsorganisation der Vereinten Nationen. BA = Bundesagentur für Arbeit.",
+ "c2-22":"Decoupling = „Entkopplung“ von Wachstum und Emissionen. Degrowth = „Wachstumsrücknahme“, bewusst weniger produzieren.",
+ "c6-07":"Stagnation = Stillstand, die Wirtschaft wächst kaum, die Arbeitslosigkeit steigt. Inflation = allgemeiner Anstieg der Preise. Stagflation ist ein Kofferwort aus beidem: beides gleichzeitig."
+};
+
 /* ================= Grafiken (SVG, Raster 400 × 300) ================= */
 const tri=(x,y,dir,cls)=>{ const s=7, p={up:[[x,y],[x-s/1.6,y+s],[x+s/1.6,y+s]],right:[[x,y],[x-s,y-s/1.6],[x-s,y+s/1.6]],down:[[x,y],[x-s/1.6,y-s],[x+s/1.6,y-s]]}[dir]; return `<polygon class="${cls}" points="${p.map(q=>q.join(",")).join(" ")}"/>`; };
 const ln=(x1,y1,x2,y2,cls)=>`<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
@@ -2017,7 +2040,7 @@ function renderCards(){
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${cur.flip?`<div class="back">${c.b}</div>`:""}</div>
+    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${cur.flip?`<div class="back">${c.b}</div>${CARD_INFO[c.id]?`<p class="cinfo"><span class="ci">i</span>${CARD_INFO[c.id]}</p>`:""}`:""}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
   bindCrumb(()=>go(n?"chapter":"practice"));
