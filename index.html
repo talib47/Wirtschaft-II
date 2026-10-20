@@ -31,6 +31,13 @@
   --accent:#8FB1E3; --accent-ink:#0E1626; --accent-soft:#25324A;
   --good:#6CC28B; --good-soft:#1E3327; --bad:#E58373; --bad-soft:#3A2420; --gold:#D9AE55; }
 *{box-sizing:border-box}
+html{font-size:calc(100% * var(--z,1))}
+.zoom{position:fixed;right:max(12px, env(safe-area-inset-right, 0px));bottom:calc(72px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:8px;z-index:6}
+.zoom button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:22px;line-height:1;opacity:.9;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.tag{display:inline-block;font-family:var(--sans);font-size:.68rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:999px;vertical-align:middle;white-space:nowrap}
+.tag.core{color:var(--accent);border:1px solid var(--accent)}
+.tag.bg{color:var(--muted);border:1px dashed var(--line)}
+.mc .idk{border-style:dashed;color:var(--muted);text-align:center}
 body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 main{max-width:42rem;margin:0 auto;padding-block:20px 120px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0 0 .4em;text-wrap:balance}
@@ -184,6 +191,7 @@ svg .sarrow{fill:var(--accent)}
 <body>
 <main id="app"></main>
 <nav id="nav"></nav>
+<div class="zoom" role="group" aria-label="Schriftgröße"><button id="zIn" aria-label="Größer">+</button><button id="zOut" aria-label="Kleiner">−</button></div>
 
 <script>
 "use strict";
@@ -1853,8 +1861,8 @@ function renderChapter(){
       ${G.length?`<button class="mode" id="mG"><span class="t">Grafiken</span><span class="n">${ng}/${G.length}</span><span class="d">Mit dem Stift zeichnen, dann die Musterlösung darüberlegen.</span></button>`:""}
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
     </div></div>
-    <div class="block"><h3>Lektionen</h3><div class="tlist">${L.map((x,i)=>{ const s=lessonState(x.id);
-      return `<button class="titem" data-i="${i}"><span class="t">${i+1}. ${x.t}</span><span class="chip ${s?(s.ok?"l3":"l2"):""}">${s?(s.ok?"sicher":"gelesen"):"offen"}</span></button>`;}).join("")}</div></div>`;
+    <div class="block"><h3>Lektionen</h3><p class="small muted" style="margin:0 0 6px">${tagOf("")} brauchst du für die Klausur. ${tagOf("1-1")} einmal lesen und abhaken.</p><div class="tlist">${L.map((x,i)=>{ const s=lessonState(x.id);
+      return `<button class="titem" data-i="${i}"><span class="t">${i+1}. ${x.t} ${tagOf(x.id)}</span><span class="chip ${s?(s.ok?"l3":"l2"):""}">${s?(s.ok?"sicher":"gelesen"):"offen"}</span></button>`;}).join("")}</div></div>`;
   bindCrumb(()=>go("home"));
   $("#mL").onclick=()=>openLesson(n,Math.max(0,L.findIndex(x=>!lessonState(x.id))));
   if($("#mK")) $("#mK").onclick=()=>openCards(n);
@@ -1871,13 +1879,14 @@ function renderLesson(){
   const html=x.html.replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
   const allAns=x.check.every((_,j)=>cur.ans[j]!==undefined);
   $("#app").innerHTML=`${backTo("Kapitel "+n)}
-    <p class="eyebrow">Kapitel ${n} · Lektion ${cur.li+1} von ${L.length}</p>
+    <p class="eyebrow">Kapitel ${n} · Lektion ${cur.li+1} von ${L.length} ${tagOf(x.id)}</p>
     <article class="block lesson"><h1>${x.t}</h1>${html}</article>
     <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>{ const a=cur.ans[j];
       return `<div style="margin-top:${j?16:4}px"><p style="margin:0"><b>${c.q}</b></p><div class="mc">${c.o.map((o,k)=>{
         const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
-        return `<button data-j="${j}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${o}</button>`;}).join("")}</div>
-        ${a!==undefined?`<p class="ex ${a===c.a?"res good":"res bad"}">${a===c.a?"Richtig. ":"Nicht ganz. "}<span style="color:var(--ink)">${c.ex}</span></p>`:""}</div>`;}).join("")}
+        return `<button data-j="${j}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${o}</button>`;}).join("")}
+        ${a===undefined?`<button data-j="${j}" data-k="-1" class="idk">Weiß ich nicht</button>`:""}</div>
+        ${a!==undefined?`<p class="ex ${a===c.a?"res good":"res bad"}">${a===c.a?"Richtig. ":a===-1?"Gut, dass du ehrlich bist. Die Lektion kommt später wieder. ":"Nicht ganz. "}<span style="color:var(--ink)">${c.ex}</span></p>`:""}</div>`;}).join("")}
     </div>
     <div class="lnav">
       ${cur.li>0?`<button class="btn ghost" id="prev">← Vorherige</button>`:"<span></span>"}
@@ -1887,13 +1896,16 @@ function renderLesson(){
   document.querySelectorAll(".mc button").forEach(b=>b.onclick=()=>{
     const j=+b.dataset.j, k=+b.dataset.k; if(cur.ans[j]!==undefined) return; cur.ans[j]=k;
     if(x.check.every((_,q)=>cur.ans[q]!==undefined)){ state.lessons=state.lessons||{}; const ok=x.check.every((c,q)=>cur.ans[q]===c.a);
-      const prev=state.lessons[x.id]; state.lessons[x.id]={ok:ok||(prev&&prev.ok)||false, t:Date.now()}; logDay(); save(); }
+      state.lessons[x.id]={ok, t:Date.now()}; logDay(); save(); }
     const y=window.scrollY; renderLesson(); window.scrollTo(0,y);
   });
   if($("#prev")) $("#prev").onclick=()=>openLesson(n,cur.li-1);
   if($("#next")) $("#next").onclick=()=>openLesson(n,cur.li+1);
   if($("#fin")) $("#fin").onclick=()=>go("chapter");
 }
+/* Klausurkern oder Hintergrund (laut Altklausuren 2024 und Aufgabenblättern) */
+const HINTERGRUND=new Set(["1-1","1-3","1-4","1-5","2-7","2-8","2-9","2-10","3-6","6-1","7-1","8-1","8-2","8-3","8-4"]);
+const tagOf=id=>HINTERGRUND.has(id)?'<span class="tag bg">Hintergrund</span>':'<span class="tag core">Klausurkern</span>';
 function logDay(){ const k=today(); state.days[k]=(state.days[k]||0)+1; }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
@@ -2433,6 +2445,13 @@ function bindPad(){
 
 
 /* Start: erst sofort zeigen, dann mit den anderen Geräten abgleichen */
+/* Zoom gilt pro Gerät (nicht synchronisiert) */
+(function(){ let z=parseFloat(lsGet("w2-zoom"))||1;
+  const apply=()=>{ document.documentElement.style.setProperty("--z",z); lsSet("w2-zoom",String(z)); };
+  apply();
+  document.getElementById("zIn").onclick=()=>{ z=Math.min(1.8,Math.round((z+.1)*10)/10); apply(); };
+  document.getElementById("zOut").onclick=()=>{ z=Math.max(.8,Math.round((z-.1)*10)/10); apply(); };
+})();
 initToken();
 render();
 syncFromRemote().then(changed=>{ if(changed&&!["task","essay","graph","lesson","cards"].includes(view)) render(); });
