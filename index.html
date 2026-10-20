@@ -37,6 +37,7 @@ html{font-size:calc(100% * var(--z,1))}
 .tag{display:inline-block;font-family:var(--sans);font-size:.68rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:999px;vertical-align:middle;white-space:nowrap}
 .tag.core{color:var(--accent);border:1px solid var(--accent)}
 .tag.bg{color:var(--muted);border:1px dashed var(--line)}
+.cctx{margin:-4px 0 0;font-size:.82rem;color:var(--muted)}
 .cinfo{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:.82rem;line-height:1.45;color:var(--muted)}
 .cinfo .cl{display:block}
 .cinfo .cl+.cl{margin-top:3px}
@@ -1889,6 +1890,83 @@ function cardInfoHTML(id){
   return `<div class="cinfo"><span class="ci">i</span><div>${lines}</div></div>`;
 }
 
+/* Kontext auf der Vorderseite: worum es bei der Frage überhaupt geht */
+const CARD_CTX={
+ "c1-05":"Politische Bildung im Schulunterricht",
+ "c1-06":"Wie die Vorlesung den NRW-Lehrplan für Sozialwissenschaften einordnet",
+ "c1-10":"Denkschulen gegen Keynes ab den 1960er Jahren",
+ "c1-11":"Heutiger Mainstream der Makroökonomik",
+ "c1-12":"Weiterentwicklung von Keynes",
+ "c1-13":"Warum die Vorlesung mehrere Denkschulen vergleicht",
+ "c2-02":"Grundlagen der Volkswirtschaftlichen Gesamtrechnung (VGR)",
+ "c2-03":"Das BIP lässt sich von drei Seiten berechnen",
+ "c2-06":"Das reale BIP soll Wachstum über Jahrzehnte vergleichbar machen",
+ "c2-07":"Eine der drei Seiten des BIP: wie die Produktion entsteht",
+ "c2-08":"Eine der drei Seiten des BIP: wofür die Produktion verwendet wird",
+ "c2-09":"Eine der drei Seiten des BIP: an wen die Einkommen gehen",
+ "c2-15":"Privatsektor, Staat, Ausland: wer gibt mehr aus, als er einnimmt?",
+ "c2-18":"Belasten Staatsschulden künftige Generationen?",
+ "c2-19":"Euro-Schuldenkrise ab 2010",
+ "c2-21":"Klimaschutz: wie viel CO₂ noch ausgestoßen werden darf",
+ "c2-22":"Wie lassen sich die CO₂-Emissionen senken?",
+ "c3-01":"Jede Denkschule kritisiert das BIP aus ihrer Sicht",
+ "c3-02":"Jede Denkschule kritisiert das BIP aus ihrer Sicht",
+ "c3-03":"Jede Denkschule kritisiert das BIP aus ihrer Sicht",
+ "c3-04":"Jede Denkschule kritisiert das BIP aus ihrer Sicht",
+ "c3-05":"Jede Denkschule kritisiert das BIP aus ihrer Sicht",
+ "c3-06":"Grundsatz der Neoklassik, 19. Jahrhundert",
+ "c3-08":"Welcher Markt bestimmt Produktion und Beschäftigung?",
+ "c3-10":"Was passiert mit den privaten Ausgaben, wenn der Staat mehr ausgibt?",
+ "c3-11":"Was passiert mit den privaten Ausgaben, wenn der Staat mehr ausgibt?",
+ "c3-12":"Welches Gesellschaftsbild steckt hinter der Neoklassik?",
+ "c3-15":"Welche Rolle spielt Geld in der Wirtschaft?",
+ "c3-16":"Welches Gesellschaftsbild hatte Keynes?",
+ "c3-17":"Ein Essay von Keynes über die Zukunft der Arbeit",
+ "c3-18":"Smith, Ricardo, Malthus, Marx im 18. und 19. Jahrhundert",
+ "c3-20":"Zwei Begriffe von Karl Marx",
+ "c3-22":"Ricardos Modell mit drei Klassen: Arbeiter, Kapitalisten, Grundbesitzer",
+ "c4-06":"Das Diagramm zum keynesianischen Modell",
+ "c4-07":"Die Investitionen hängen jetzt auch von der Nachfrage ab",
+ "c4-10":"Wo schneidet die Nachfragegerade die 45°-Linie, verglichen mit dem Vollbeschäftigungsoutput?",
+ "c4-15":"Zitat aus der Vorlesung zur Kausalität von Sparen und Investieren",
+ "c5-01":"Wirtschaftspolitische Ziele im deutschen Stabilitäts- und Wachstumsgesetz von 1967",
+ "c5-02":"Die vier wirtschaftspolitischen Ziele des Stabilitäts- und Wachstumsgesetzes (1967) werden als Viereck dargestellt",
+ "c5-03":"Wie der Staat mit Ausgaben und Steuern auf Auf- und Abschwung reagiert",
+ "c5-05":"Im Modell steht G nur für die staatliche Nachfrage nach Gütern",
+ "c5-08":"Staatsquote = alle Ausgaben des Staates im Verhältnis zum BIP",
+ "c5-12":"Der Staat will die Konjunktur ankurbeln",
+ "c5-14":"Wie entwickelt sich die Staatsschuld im Verhältnis zum BIP langfristig?",
+ "c5-17":"Investitionsfunktion im Modell mit Zentralbank",
+ "c5-18":"Wann wirkt eine Zinssenkung der Zentralbank nicht?",
+ "c5-19":"Wann wirkt eine Zinssenkung der Zentralbank nicht?",
+ "c5-23":"Regel im Grundgesetz seit 2009",
+ "c6-02":"Mainstream nach dem Zweiten Weltkrieg",
+ "c6-03":"Zusammenhang zwischen Arbeitslosigkeit und Inflation",
+ "c6-04":"Zitat von Bundeskanzler Helmut Schmidt, 1970er Jahre",
+ "c6-06":"Milton Friedman, Monetarismus",
+ "c6-08":"Schlussfolgerung von Monetarismus und Neuklassik",
+ "c6-09":"Arbeitsmarktmodell mit Reallohn und Beschäftigung",
+ "c6-11":"Wirtschaftspolitik etwa von 1990 bis 2008",
+ "c6-12":"Wann ist das Modell langfristig stabil?",
+ "c6-16":"Wie lässt sich mehr Beschäftigung ohne Inflation erreichen?",
+ "c6-17":"Wie lässt sich mehr Beschäftigung ohne Inflation erreichen?",
+ "c6-19":"Euroraum: eine gemeinsame Zentralbank für viele Länder",
+ "c7-02":"Vorwurf an Neoklassische Synthese und Neuen Konsens",
+ "c7-03":"Postkeynesianische Sicht auf die Staatsfinanzen",
+ "c7-07":"Wie Ökonom:innen Potenzial und strukturelle Arbeitslosigkeit schätzen",
+ "c7-09":"Wie der Postkeynesianismus Beschäftigung und Inflation verbindet",
+ "c7-10":"Wie lassen sich Lohn-Preis-Spiralen ohne Arbeitslosigkeit vermeiden?",
+ "c7-11":"Der Konsum hängt davon ab, wer das Einkommen bekommt",
+ "c8-01":"Vergleich von Ländertypen („Spielarten des Kapitalismus“)",
+ "c8-02":"Vergleich von Ländertypen („Spielarten des Kapitalismus“)",
+ "c8-05":"Wachstumsmodell der Nachkriegszeit",
+ "c8-06":"Ende des Nachkriegsbooms",
+ "c8-07":"Wie Länder seit den 1980er Jahren Nachfrage erzeugten, obwohl die Löhne stagnierten",
+ "c8-08":"Wie Länder seit den 1980er Jahren Nachfrage erzeugten, obwohl die Löhne stagnierten",
+ "c8-09":"Woher kommen gesamtwirtschaftlich die Gewinne?",
+ "c8-10":"Gewinne steigen, obwohl kaum investiert wird"
+};
+
 /* ================= Grafiken (SVG, Raster 400 × 300) ================= */
 const tri=(x,y,dir,cls)=>{ const s=7, p={up:[[x,y],[x-s/1.6,y+s],[x+s/1.6,y+s]],right:[[x,y],[x-s,y-s/1.6],[x-s,y+s/1.6]],down:[[x,y],[x-s/1.6,y-s],[x+s/1.6,y-s]]}[dir]; return `<polygon class="${cls}" points="${p.map(q=>q.join(",")).join(" ")}"/>`; };
 const ln=(x1,y1,x2,y2,cls)=>`<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
@@ -2113,7 +2191,7 @@ function renderCards(){
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${cur.flip?`<div class="back">${c.b}</div>${cardInfoHTML(c.id)}`:""}</div>
+    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${CARD_CTX[c.id]?`<p class="cctx">${CARD_CTX[c.id]}</p>`:""}${cur.flip?`<div class="back">${c.b}</div>${cardInfoHTML(c.id)}`:""}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
   bindCrumb(()=>go(n?"chapter":"practice"));
