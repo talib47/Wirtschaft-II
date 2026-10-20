@@ -38,6 +38,9 @@ html{font-size:calc(100% * var(--z,1))}
 .tag.core{color:var(--accent);border:1px solid var(--accent)}
 .tag.bg{color:var(--muted);border:1px dashed var(--line)}
 .cinfo{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:.82rem;line-height:1.45;color:var(--muted)}
+.cinfo .cl{display:block}
+.cinfo .cl+.cl{margin-top:3px}
+.cinfo b{color:var(--ink);font-weight:600}
 .cinfo .ci{flex:none;width:18px;height:18px;border-radius:50%;border:1px solid var(--muted);font:600 .7rem/16px var(--serif);font-style:italic;text-align:center;margin-top:1px}
 .wlink{color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem;line-height:1.4}
 .wlink:hover{text-decoration:underline}
@@ -1795,26 +1798,96 @@ function wipoccBox(id){
     <div class="stack">${L.map(([t,u,ex])=>`<a class="wlink" href="${u.startsWith("http")?u:W+u}" target="_blank" rel="noopener">${ex?'<span class="tag core">Expert:innen</span> ':""}${t} ↗</a>`).join("")}</div></div>`;
 }
 
-/* ================= Kleine Erklärhilfen zu Karten (Herkunft von Kürzeln, Begriffen) ================= */
+/* ================= Kleine Erklärhilfen zu Karten =================
+   Jede Zeile ein Begriff. „Begriff: Erklärung“ wird als fetter Begriff dargestellt. */
 const CARD_INFO={
+ /* Kapitel 1 */
+ "c1-02":"Methodologisch: Es geht um die Methode, wie man erklärt, nicht um ein Werturteil.",
+ "c1-03":"Holismus: von griechisch holos, „ganz“.",
+ "c1-05":"Beutelsbach: Ort in Baden-Württemberg, an dem sich 1976 Fachleute der politischen Bildung auf diese Grundsätze einigten.",
+ "c1-06":"Sozioökonomie: Wirtschaft wird zusammen mit der Gesellschaft betrachtet, und zwar mit mehreren Theorien statt nur einer.",
+ "c1-10":"Monetarismus: von lateinisch moneta, „Geld“. Geldmenge und Geldpolitik stehen im Zentrum.\nNeuklassik: moderne Weiterentwicklung der Neoklassik mit rationalen Erwartungen.",
+ "c1-12":"Post: lateinisch für „nach“. Gemeint ist die Weiterentwicklung nach Keynes.",
+ "c1-13":"Fallibilismus: von lateinisch fallere, „täuschen“. Jedes Wissen kann sich als falsch erweisen.",
+ "c1-14":"Homo oeconomicus: lateinisch für „wirtschaftender Mensch“.",
+ "c1-15":"Grenz-: bedeutet in der VWL immer „zusätzlich“, also für eine Einheit mehr.",
+ "c1-18":"Komparativ: vergleichend. Es zählt der Vorteil relativ zu den anderen Gütern, nicht der absolute.",
+ /* Kapitel 2 */
  "c2-01":"Bild dazu: Ein Strom ist das Wasser, das pro Minute aus dem Hahn fließt. Ein Bestand ist der Wasserstand in der Badewanne zu einem bestimmten Zeitpunkt.",
- "c2-02":"Identität von lateinisch idem, „dasselbe“: Beide Seiten der Gleichung sind per Definition dasselbe, nur anders berechnet.",
- "c2-03":"Y ist in der VWL das übliche Symbol für Produktion und Einkommen. Die hochgestellten Buchstaben sind deutsche Abkürzungen: A = Angebot, N = Nachfrage, VT = Verteilung.",
- "c2-04":"Nominal von lateinisch nomen, „Name“: der Wert dem Namen nach, also in Euro. Real: was man dafür wirklich an Gütern bekommt. Inflation (lateinisch inflare, „aufblähen“) ist der allgemeine Anstieg der Preise.",
- "c2-05":"Italienisch: brutto = „roh“, unbereinigt; netto = „rein“, bereinigt. Abschreibungen sind der Wert, den Maschinen und Gebäude durch Verschleiß verlieren.",
- "c2-07":"H steht für hours, also Arbeitsstunden. Y/H heißt dann: Output je Stunde.",
- "c2-08":"Die Kürzel kommen aus dem Englischen: C = consumption (Konsum), I = investment, G = government (Staat), X = exports, M = imports.",
- "c2-09":"W = wages (Löhne). Π ist das griechische P und steht für Profit, also Gewinne.",
- "c2-10":"HH = Haushalte, F = firms (Unternehmen), St = Staat. „Verfügbar“ heißt: was nach Steuern und Transfers tatsächlich zum Ausgeben übrig bleibt.",
- "c2-11":"H = hours, also gearbeitete Stunden.",
- "c2-12":"Saldo (italienisch für „Rest“): Einnahmen minus Ausgaben. Positiv = Überschuss, negativ = Defizit.",
- "c2-13":"S = saving (Ersparnis), I = investment.",
+ "c2-02":"Identität: von lateinisch idem, „dasselbe“. Beide Seiten der Gleichung sind per Definition gleich, nur anders berechnet.",
+ "c2-03":"Y: übliches Symbol für Produktion und Einkommen.\nA: Angebot\nN: Nachfrage\nVT: Verteilung",
+ "c2-04":"Nominal: von lateinisch nomen, „Name“. Der Wert dem Namen nach, also in Euro.\nReal: was man dafür wirklich an Gütern bekommt.\nInflation: von lateinisch inflare, „aufblähen“. Der allgemeine Anstieg der Preise.",
+ "c2-05":"Brutto: italienisch „roh“, also unbereinigt.\nNetto: italienisch „rein“, also bereinigt.\nAbschreibungen: der Wert, den Maschinen und Gebäude durch Verschleiß verlieren.",
+ "c2-07":"H: hours, also Arbeitsstunden. Y/H heißt Output je Stunde.",
+ "c2-08":"C: consumption, Konsum\nI: investment, Investitionen\nG: government, Staat\nX: exports, Exporte\nM: imports, Importe",
+ "c2-09":"W: wages, Löhne\nΠ: das griechische P, steht für Profit, also Gewinne",
+ "c2-10":"HH: Haushalte\nF: firms, Unternehmen\nSt: Staat\nVerfügbar: was nach Steuern und Transfers tatsächlich zum Ausgeben übrig bleibt.",
+ "c2-11":"H: hours, also gearbeitete Stunden.",
+ "c2-12":"Saldo: italienisch für „Rest“. Einnahmen minus Ausgaben, positiv = Überschuss, negativ = Defizit.",
+ "c2-13":"S: saving, Ersparnis\nI: investment, Investitionen",
  "c2-15":"Merkhilfe: Wenn einer mehr einnimmt, als er ausgibt, muss ein anderer mehr ausgeben, als er einnimmt. Es gibt keine schwarzen Löcher.",
- "c2-16":"Die Leistungsbilanz erfasst den Handel mit Waren und Dienstleistungen mit dem Ausland. In der Vorlesung gilt vereinfacht: Leistungsbilanz = X − M.",
- "c2-20":"ILO = International Labour Organization, die Arbeitsorganisation der Vereinten Nationen. BA = Bundesagentur für Arbeit.",
- "c2-22":"Decoupling = „Entkopplung“ von Wachstum und Emissionen. Degrowth = „Wachstumsrücknahme“, bewusst weniger produzieren.",
- "c6-07":"Stagnation = Stillstand, die Wirtschaft wächst kaum, die Arbeitslosigkeit steigt. Inflation = allgemeiner Anstieg der Preise. Stagflation ist ein Kofferwort aus beidem: beides gleichzeitig."
+ "c2-16":"Leistungsbilanz: erfasst den Handel mit Waren und Dienstleistungen mit dem Ausland. In der Vorlesung gilt vereinfacht Leistungsbilanz = X − M.",
+ "c2-20":"ILO: International Labour Organization, die Arbeitsorganisation der Vereinten Nationen.\nBA: Bundesagentur für Arbeit.",
+ "c2-22":"Decoupling: „Entkopplung“ von Wachstum und Emissionen.\nDegrowth: „Wachstumsrücknahme“, bewusst weniger produzieren.",
+ /* Kapitel 3 */
+ "c3-01":"Externalitäten: Kosten oder Nutzen bei Unbeteiligten, die nicht im Preis stecken, etwa Umweltschäden.",
+ "c3-02":"Imputiert: von lateinisch imputare, „anrechnen“. Ein Wert wird angerechnet, obwohl kein Geld fließt.",
+ "c3-03":"Rente: hier nicht die Altersrente, sondern ein Einkommen ohne Gegenleistung, etwa Pacht oder Zinsen.",
+ "c3-05":"Positionaler Konsum: Güter, deren Wert vor allem im Vergleich mit anderen liegt, etwa Statussymbole.",
+ "c3-06":"Jean-Baptiste Say: französischer Ökonom, Anfang des 19. Jahrhunderts.",
+ "c3-10":"Crowding-out: englisch für „Verdrängung“.",
+ "c3-11":"Crowding-in: englisch für „Hineinziehen“, das Gegenteil von Crowding-out.",
+ "c3-13":"Paradox: von griechisch para doxa, „gegen die Erwartung“. Individuell vernünftig, gesamtwirtschaftlich das Gegenteil.",
+ "c3-15":"Schleier: Geld verhüllt nur die realen Vorgänge, ändert aber nichts an ihnen.",
+ "c3-18":"Arbeitswertlehre: Der Wert einer Ware bemisst sich an der Arbeitszeit, die für ihre Herstellung nötig ist.",
+ "c3-19":"Mehrwert: der Wert, den Arbeiter:innen über ihren eigenen Lohn hinaus schaffen.",
+ "c3-20":"Fetisch: ein Gegenstand, dem man eine Macht über sich zuschreibt.",
+ /* Kapitel 4 */
+ "c4-01":"c: consumption, Konsum\nAutonom: griechisch für „selbstbestimmt“, hier unabhängig vom Einkommen.\nMarginal: zusätzlich, also für einen Euro mehr Einkommen.",
+ "c4-02":"Bounded rationality: „begrenzte Rationalität“ (Herbert Simon). Menschen entscheiden vernünftig, aber mit begrenztem Wissen.",
+ "c4-03":"Exogen: griechisch für „von außen entstanden“.\nEndogen: im Modell selbst bestimmt.\nAnimal spirits: Keynes' Ausdruck für Stimmung und Instinkt der Unternehmer:innen.",
+ "c4-06":"Kreuz: weil sich Nachfragegerade und 45°-Linie im Diagramm kreuzen.",
+ "c4-07":"Akzelerator: von lateinisch accelerare, „beschleunigen“. Die Nachfrage beschleunigt die Investitionen.\na: wie stark die Investitionen auf die Nachfrage reagieren.",
+ "c4-09":"Output: englisch für Produktion.\nPotenzial: was bei Vollbeschäftigung produziert werden könnte.",
+ /* Kapitel 5 */
+ "c5-03":"Antizyklisch: gegen den Konjunkturzyklus.\nProzyklisch: mit ihm, verstärkt also Auf- und Abschwung.",
+ "c5-04":"BS: Budgetsaldo\nT: taxes, Steuern und Abgaben\nG: government, staatliche Nachfrage",
+ "c5-06":"Bürgergeld: Grundsicherung für Arbeitsuchende, früher Hartz IV.",
+ "c5-07":"Diskretionär: von lateinisch discretio, „Ermessen“. Im Einzelfall nach Ermessen beschlossen.",
+ "c5-09":"Multiplikator: vervielfacht den ursprünglichen Impuls.",
+ "c5-14":"d: deficit, Defizitquote\ng: growth, nominales Wachstum\nD: debt, Schuldenstandquote",
+ "c5-16":"Achtung: d und n der Investitionsfunktion haben nichts mit der Defizitquote d zu tun, es sind nur die gleichen Buchstaben.\ni: interest, Zins",
+ "c5-18":"Nominalzins: der vereinbarte Zins in Prozent.\nRealzins: Nominalzins minus Inflation, also was das Geld real bringt.",
+ "c5-22":"David Ricardo: britischer Ökonom, 1772–1823.\nÄquivalenz: Gleichwertigkeit. Ein Kredit heute ist gleichwertig mit Steuern morgen.",
+ "c5-23":"Strukturell: dauerhaft, unabhängig von der Konjunktur.\nKonjunkturell: durch das Auf und Ab der Wirtschaft bedingt.",
+ "c5-24":"Hysterese: von griechisch hysteros, „später“. Die Wirkung bleibt, wenn die Ursache vorbei ist.",
+ /* Kapitel 6 */
+ "c6-03":"Phillips: Alban William Phillips, neuseeländischer Ökonom. Er fand den Zusammenhang 1958 in britischen Daten.",
+ "c6-05":"NAIRU: non-accelerating inflation rate of unemployment, die Arbeitslosenquote, bei der sich die Inflation nicht beschleunigt.",
+ "c6-07":"Stagnation: Stillstand. Die Wirtschaft wächst kaum, die Arbeitslosigkeit steigt.\nInflation: allgemeiner Anstieg der Preise.\nStagflation: Kofferwort aus beidem, also beides gleichzeitig.",
+ "c6-08":"Diskretionär: nach Ermessen im Einzelfall.\nRegelgebunden: nach festen Regeln, etwa einem Inflationsziel.",
+ "c6-11":"Inflation Targeting: englisch für „Steuerung über ein Inflationsziel“.",
+ "c6-13":"π: griechisches p, hier die Inflationsrate\nπ^T: target, das Inflationsziel\nk: wie stark die Zentralbank reagiert",
+ "c6-16":"Flächentarif: Tarifvertrag für eine ganze Branche und Region, nicht nur einen Betrieb.\nAllgemeinverbindlich: gilt auch für Betriebe ohne Tarifbindung.",
+ /* Kapitel 7 */
+ "c7-02":"Bastard-Keynesianismus: abwertender Begriff von Joan Robinson für einen verfälschten Keynes.",
+ "c7-03":"Functional Finance: Konzept von Abba Lerner. Der Staatshaushalt soll eine Funktion erfüllen, nämlich Vollbeschäftigung, statt ausgeglichen zu sein.",
+ "c7-07":"Randwert: der Wert am aktuellen Rand, also ganz am Ende der Datenreihe.",
+ "c7-11":"a: autonomer Konsum\nb: Konsumneigung\nIndex W: aus Löhnen\nIndex Π: aus Gewinnen",
+ /* Kapitel 8 */
+ "c8-01":"CME: coordinated market economy\nKorporatismus: Staat, Gewerkschaften und Arbeitgeber stimmen sich ab.",
+ "c8-02":"LME: liberal market economy\nShareholder Value: Ausrichtung auf den Wert für die Aktionär:innen.",
+ "c8-05":"Fordismus: nach Henry Ford, der Massenproduktion mit Löhnen verband, von denen sich die Arbeiter:innen die Autos leisten konnten.",
+ "c8-06":"Wage-led: lohngetrieben\nProfit-led: gewinngetrieben",
+ "c8-07":"Debt-led: schuldengetrieben",
+ "c8-08":"Export-led: exportgetrieben",
+ "c8-09":"C_Π: Konsum aus Gewinnen\nS_W: Ersparnis aus Löhnen\nNetto: nach Steuern"
 };
+function cardInfoHTML(id){
+  const t=CARD_INFO[id]; if(!t) return "";
+  const lines=t.split("\n").map(l=>{ const m=l.match(/^([^:]{1,32}): (.*)$/); return m?`<span class="cl"><b>${m[1]}</b> ${m[2]}</span>`:`<span class="cl">${l}</span>`; }).join("");
+  return `<div class="cinfo"><span class="ci">i</span><div>${lines}</div></div>`;
+}
 
 /* ================= Grafiken (SVG, Raster 400 × 300) ================= */
 const tri=(x,y,dir,cls)=>{ const s=7, p={up:[[x,y],[x-s/1.6,y+s],[x+s/1.6,y+s]],right:[[x,y],[x-s,y-s/1.6],[x-s,y+s/1.6]],down:[[x,y],[x-s/1.6,y-s],[x+s/1.6,y-s]]}[dir]; return `<polygon class="${cls}" points="${p.map(q=>q.join(",")).join(" ")}"/>`; };
@@ -2040,7 +2113,7 @@ function renderCards(){
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${cur.flip?`<div class="back">${c.b}</div>${CARD_INFO[c.id]?`<p class="cinfo"><span class="ci">i</span>${CARD_INFO[c.id]}</p>`:""}`:""}</div>
+    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${cur.flip?`<div class="back">${c.b}</div>${cardInfoHTML(c.id)}`:""}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
   bindCrumb(()=>go(n?"chapter":"practice"));
