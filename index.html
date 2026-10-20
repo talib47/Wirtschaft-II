@@ -1861,7 +1861,7 @@ function nextStep(){
   for(const ch of CHAPTERS){ const n=ch.n; if(!LESSONS[n]) continue;
     const L=LESSONS[n], li=L.findIndex(x=>!lessonState(x.id));
     if(li>=0) return {label:`Kapitel ${n} · Theorie`, title:L[li].t, go:()=>openLesson(n,li)};
-    if((CARDS[n]||[]).some(x=>cardBox(x.id)<3)) return {label:`Kapitel ${n} · Karten`, title:"Begriffe und Kurzfragen festigen", go:()=>openCards(n)};
+    if((CARDS[n]||[]).some(x=>!isSeen(x.id))) return {label:`Kapitel ${n} · Karten`, title:"Begriffe und Kurzfragen festigen", go:()=>openCards(n)};
     const ct=(CALC[n]||[]).find(t=>lvlOf(t)<3);
     if(ct) return {label:`Kapitel ${n} · Rechnen`, title:TYPES[ct].name, go:()=>startTask(ct,false)};
     const g=(GRAPHS[n]||[]).findIndex(x=>!(state.graphs||{})[x.id]);
@@ -1892,6 +1892,7 @@ function renderHome(){
     <p class="eyebrow">Wirtschaft II · Makroökonomik</p>
     <h1>Lernpfad</h1>
     <p class="muted">Alles für die Klausur in einer App: Theorie lesen, Kurzfragen abfragen, rechnen, Grafiken zeichnen, Essays schreiben.</p>
+    ${dueCards(0).length?`<div class="block row between"><span><b>Heute fällig: ${dueCards(0).length} Karten</b><br><span class="small muted">Zuerst wiederholen, dann Neues lernen.</span></span><button class="btn" id="goDue">Wiederholen</button></div>`:""}
     <div class="block today">
       <p class="eyebrow">Als Nächstes · ${nx.label}</p>
       <h2>${nx.title}</h2>
@@ -1912,6 +1913,7 @@ function renderHome(){
       </div>
     </div>`;
   $("#goNext").onclick=nx.go;
+  if($("#goDue")) $("#goDue").onclick=()=>openCards(0);
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
 }
 
@@ -1926,7 +1928,7 @@ function renderChapter(){
     <h1>${ch.title}</h1>
     <div class="block"><div class="modes">
       <button class="mode" id="mL"><span class="t">Theorie</span><span class="n">${nl}/${L.length}</span><span class="d">${L.length} kurze Lektionen mit Verständnisfragen. Hier fängst du an.</span></button>
-      ${K.length?`<button class="mode" id="mK"><span class="t">Karten</span><span class="n">${nk}/${K.length} sicher</span><span class="d">Kurzfragen für Teil I, mit Wiederholung nach dem Karteikasten-Prinzip.</span></button>`:""}
+      ${K.length?`<button class="mode" id="mK"><span class="t">Karten</span><span class="n">${dueCards(n).length} fällig · ${K.filter(x=>!isSeen(x.id)).length} neu</span><span class="d">Kurzfragen für Teil I. Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder.</span></button>`:""}
       ${C.length?`<button class="mode" id="mC"><span class="t">Rechnen</span><span class="n">${nc}/${C.length} frei</span><span class="d">Teil II mit immer neuen Zahlen: erst vorgerechnet, dann geführt, dann frei.</span></button>`:""}
       ${G.length?`<button class="mode" id="mG"><span class="t">Grafiken</span><span class="n">${ng}/${G.length}</span><span class="d">Mit dem Stift zeichnen, dann die Musterlösung darüberlegen.</span></button>`:""}
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
@@ -1981,7 +1983,17 @@ function logDay(){ const k=today(); state.days[k]=(state.days[k]||0)+1; }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
-function openCards(n){ cur.cardCh=n; cur.deck=buildDeck(n); cur.ci=0; cur.flip=false; cur.right=0; go("cards"); }
+/* Wiederholung mit Fälligkeitsdatum (wie Anki): sicherer gewusst = längerer Abstand */
+const INTERVAL=[0,0,1,3,7,16];   // Tage bis zur nächsten Abfrage je Fach; Fach 5 erneut gewusst: 35 Tage
+const dayStart=(t=Date.now())=>{ const d=new Date(t); d.setHours(0,0,0,0); return d.getTime(); };
+const isSeen=id=>!!(state.box||{})[id];
+const isDue=id=>isSeen(id) && ((state.due||{})[id]||0)<=Date.now();
+function dueCards(n){ return allCards(n).filter(x=>isDue(x.id)).sort((a,b)=>((state.due||{})[a.id]||0)-((state.due||{})[b.id]||0)); }
+function openCards(n,free){ cur.cardCh=n; cur.free=!!free; cur.deck=free?buildDeck(n):buildDueDeck(n); cur.ci=0; cur.flip=false; cur.right=0; cur.requeued={}; go("cards"); }
+function buildDueDeck(n){
+  const due=dueCards(n), fresh=n? allCards(n).filter(x=>!isSeen(x.id)) : [];
+  return due.concat(fresh).slice(0,Math.max(10,Math.min(due.length,30)));
+}
 function buildDeck(n){
   const pool=allCards(n).slice(), deck=[];
   while(deck.length<Math.min(10,pool.length)){
@@ -1993,20 +2005,28 @@ function buildDeck(n){
 function renderCards(){
   const D=cur.deck, n=cur.cardCh;
   if(cur.ci>=D.length){
-    $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}<h1>Runde geschafft</h1>
-      <div class="block"><p>${cur.right} von ${D.length} gewusst.</p><p class="small muted">Karten, die du nicht wusstest, kommen in der nächsten Runde häufiger dran. Sicher ist eine Karte, wenn du sie dreimal hintereinander gewusst hast.</p>
-      <div class="row"><button class="btn" id="again">Nächste Runde</button><button class="btn ghost" id="out">Fertig</button></div></div>`;
-    bindCrumb(()=>go(n?"chapter":"practice")); $("#again").onclick=()=>openCards(n); $("#out").onclick=()=>go(n?"chapter":"practice"); return;
+    const left=dueCards(n).length+(n?allCards(n).filter(x=>!isSeen(x.id)).length:0);
+    const nextDue=allCards(n).filter(x=>isSeen(x.id)&&!isDue(x.id)).map(x=>(state.due||{})[x.id]).sort((a,b)=>a-b)[0];
+    const when=nextDue? Math.round((dayStart(nextDue)-dayStart())/864e5) : null;
+    $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
+      <div class="block">${D.length?`<p>${cur.right} von ${D.length} Antworten gewusst.</p>`:""}
+      <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, nicht gewusste sofort noch einmal.</p>
+      <div class="row">${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button></div></div>`;
+    bindCrumb(()=>go(n?"chapter":"practice")); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>go(n?"chapter":"practice"); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
-    <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
+    <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
     <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${cur.flip?`<div class="back">${c.b}</div>`:""}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
   bindCrumb(()=>go(n?"chapter":"practice"));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
-  const grade=ok=>{ state.box=state.box||{}; const b0=cardBox(c.id); state.box[c.id]=ok?Math.min(5,Math.max(b0,1)+1):1; if(ok) cur.right++; logDay(); save(); cur.ci++; cur.flip=false; renderCards(); };
+  const grade=ok=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), b1=ok?Math.min(5,Math.max(b0,1)+1):1;
+    state.box[c.id]=b1;
+    if(!cur.free||!ok||b1<b0){ const days=ok?(b0===5?35:INTERVAL[b1]):0; state.due[c.id]= ok? dayStart()+days*864e5 : Date.now(); }
+    if(ok) cur.right++; else if((cur.requeued[c.id]||0)<2){ cur.requeued[c.id]=(cur.requeued[c.id]||0)+1; D.push(c); }
+    logDay(); save(); cur.ci++; cur.flip=false; renderCards(); };
   if($("#yes")) $("#yes").onclick=()=>grade(true);
   if($("#no")) $("#no").onclick=()=>grade(false);
 }
@@ -2086,7 +2106,7 @@ function renderPractice(){
   $("#app").innerHTML=`<p class="eyebrow">Wiederholen</p><h1>Üben</h1>
     <p class="muted">Gemischt aus allen fertigen Kapiteln (${ready.join(", ")}). Gemischtes Üben ist anstrengender als blockweises, bleibt aber deutlich besser hängen.</p>
     <div class="block"><div class="modes">
-      <button class="mode" id="pK"><span class="t">Karten gemischt</span><span class="n">${allCards(0).filter(x=>cardBox(x.id)>=3).length}/${allCards(0).length} sicher</span><span class="d">Zehn Karten pro Runde, schwache kommen öfter.</span></button>
+      <button class="mode" id="pK"><span class="t">Fällige Karten</span><span class="n">${dueCards(0).length} fällig</span><span class="d">Alle Karten aus allen Kapiteln, die heute dran sind. Neue Karten lernst du im jeweiligen Kapitel.</span></button>
       <button class="mode" id="pC"><span class="t">Rechnen gemischt</span><span class="d">Wechselnde Aufgabentypen, bevorzugt was dir schwerfällt.</span></button>
       <button class="mode" id="pL"><span class="t">Alle Rechenaufgaben</span><span class="d">Einzelne Typen gezielt üben.</span></button>
       <button class="mode" id="pKz"><span class="t">Kurzfragen schreiben</span><span class="n">${Object.keys(state.kurz||{}).length}/${KURZ.length}</span><span class="d">Teil I wie in der Klausur: kurze Antwort schreiben, mit dem Erwartungshorizont vergleichen.</span></button>
