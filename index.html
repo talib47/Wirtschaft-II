@@ -37,6 +37,8 @@ html{font-size:calc(100% * var(--z,1))}
 .tag{display:inline-block;font-family:var(--sans);font-size:.68rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:999px;vertical-align:middle;white-space:nowrap}
 .tag.core{color:var(--accent);border:1px solid var(--accent)}
 .tag.bg{color:var(--muted);border:1px dashed var(--line)}
+.wlink{color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem;line-height:1.4}
+.wlink:hover{text-decoration:underline}
 .mc .idk{border-style:dashed;color:var(--muted);text-align:center}
 body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 main{max-width:42rem;margin:0 auto;padding-block:20px 120px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
@@ -1425,6 +1427,29 @@ CALC[2]=["vgr","salden","real","schuld"];
 CALC[3]=["marx"];
 CALC[4]=["herl","ohne","akz","voll"];
 
+/* Mikro-Grundlagen für Makro */
+LESSONS[1].push({id:"1-6", t:"Was du aus der Mikroökonomik brauchst", html:`
+<p>Die Makro-Vorlesung setzt an einigen Stellen Begriffe aus „Einführung in die Mikroökonomik“ voraus. Mehr als diese sechs brauchst du nicht:</p>
+<table class="kv">
+<tr><td>Homo oeconomicus</td><td>Das Menschenbild der Neoklassik: Individuen handeln rational und eigennützig, sie wägen Nutzen und Kosten ab und maximieren ihren Nutzen. Aus seinen Entscheidungen werden gesamtwirtschaftliche Ergebnisse abgeleitet (methodologischer Individualismus).</td></tr>
+<tr><td>Grenzproduktivität</td><td>Der zusätzliche Output einer zusätzlichen Arbeitsstunde. Sie sinkt, je mehr Arbeit eingesetzt wird. Ein Unternehmen stellt nur ein, solange der Reallohn w/p nicht über der Grenzproduktivität liegt. Daraus folgt die fallende Arbeitsnachfrage im neoklassischen Arbeitsmarkt: Ein höherer Lohn bedeutet weniger Beschäftigung (Kapitel 3).</td></tr>
+<tr><td>Einkommens- und Substitutionseffekt</td><td>Steigt der Stundenlohn, wird Freizeit teurer, man arbeitet mehr (Substitutionseffekt). Gleichzeitig ist man reicher und kann sich mehr Freizeit leisten, man arbeitet weniger (Einkommenseffekt). Keynes erwartete langfristig, dass der Einkommenseffekt dominiert und die Arbeitszeit sinkt (Kapitel 3, „Enkelkinder“).</td></tr>
+<tr><td>Lebenszyklushypothese</td><td>Neoklassisch planen Haushalte ihren Konsum über das ganze Leben und glätten ihn: Sie konsumieren nach dem erwarteten Lebenseinkommen, nicht nach dem laufenden. Das ist die Gegenposition zur keynesianischen Konsumfunktion C = c₀ + c₁Y (Kapitel 4).</td></tr>
+<tr><td>Komparative Kostenvorteile</td><td>Nach Ricardo lohnt sich Handel auch dann, wenn ein Land alles billiger herstellen kann: Jedes Land spezialisiert sich auf das, was es relativ am günstigsten produziert. Darauf stützt sich die neoklassische Aussage „Freihandel steigert die Wohlfahrt“ (Kapitel 3).</td></tr>
+<tr><td>Externalitäten</td><td>Kosten oder Nutzen, die bei Dritten anfallen und nicht im Preis stecken, etwa Umweltschäden. Grundlage der neoklassischen BIP-Kritik und der Umweltökonomik (Kapitel 3).</td></tr></table>
+<div class="merk"><b>Tipp</b>Wenn auf einer Folie „vgl. Einführung in die Mikroökonomik“ steht, ist fast immer einer dieser Begriffe gemeint.</div>`,
+check:[
+ {q:"Warum fällt im neoklassischen Modell die Arbeitsnachfrage mit steigendem Reallohn?", o:["Weil die Preise steigen","Weil die Grenzproduktivität der Arbeit mit mehr Beschäftigung sinkt","Weil Gewerkschaften streiken","Weil die Nachfrage sinkt"], a:1, ex:"Unternehmen stellen nur ein, solange w/p ≤ Grenzproduktivität. Bei höherem Lohn lohnen sich weniger Arbeitsstunden."},
+ {q:"Der Stundenlohn steigt, und jemand arbeitet weniger. Welcher Effekt dominiert?", o:["Substitutionseffekt","Einkommenseffekt","Multiplikatoreffekt","Crowding-out"], a:1, ex:"Er kann sich mit weniger Arbeit denselben Lebensstandard leisten und nimmt mehr Freizeit."}
+]});
+CARDS[1].push(
+ {id:"c1-14", f:"Homo oeconomicus", b:"Rational und eigennützig handelndes Individuum, das seinen Nutzen maximiert. Menschenbild der Neoklassik."},
+ {id:"c1-15", f:"Grenzproduktivität der Arbeit und Arbeitsnachfrage", b:"Zusätzlicher Output je zusätzlicher Arbeitsstunde, sinkend. Unternehmen stellen ein, solange w/p ≤ Grenzproduktivität. Daher fällt die Arbeitsnachfrage mit dem Reallohn."},
+ {id:"c1-16", f:"Einkommens- vs. Substitutionseffekt beim Arbeitsangebot", b:"Höherer Lohn: Freizeit wird teurer, man arbeitet mehr (Substitution). Man ist reicher, man arbeitet weniger (Einkommen)."},
+ {id:"c1-17", f:"Lebenszyklushypothese", b:"Konsum richtet sich nach dem erwarteten Lebenseinkommen, nicht nach dem laufenden. Neoklassische Gegenposition zur keynesianischen Konsumfunktion."},
+ {id:"c1-18", f:"Komparative Kostenvorteile", b:"Jedes Land spezialisiert sich auf das, was es relativ am günstigsten produziert. Basis der neoklassischen Freihandelsposition (Ricardo)."}
+);
+
 /* ================= Kapitel 6–8 ================= */
 Object.assign(CHAPTERS.find(c=>c.n===6),{title:"Neoklassische Gegenrevolution und Neue Neoklassische Synthese", teaser:"Phillips-Kurve, Monetarismus, NAIRU, Inflation Targeting und Angebotspolitik."});
 Object.assign(CHAPTERS.find(c=>c.n===7),{teaser:"Hysterese, Grenzen der Geldpolitik, Einkommenspolitik und das Kostenparadox."});
@@ -1723,6 +1748,51 @@ CALC[6]=["lps","zins"];
 CALC[7]=["kalecki"];
 CALC[8]=["gewinn"];
 
+/* ================= Vertiefung auf wipocc.de (Online-Lehrbuch des Instituts) ================= */
+const W="https://wipocc.de/";
+const WIPOCC={
+ "1-1":[["Warum gibt es unterschiedliche Meinungen?","warum-gibt-es-unterschiedliche-meinungen/"]],
+ "1-2":[["„In the long run …“: Revolutionen in der Wirtschaftsforschung","in-the-long-run-revolutionen-in-der-wirtschaftsforschung/"]],
+ "1-3":[["„In the long run …“: Wirtschaftspolitische Ziele im Spiegel ihrer Zeit","in-the-long-run-wirtschaftspolitische-ziele-im-spiegel-ihrer-zeit/"]],
+ "1-5":[["Wie wertfrei ist die Volkswirtschaftslehre?","oekonomie-fuer-expertinnen-wie-wertfrei-ist-die-volkswirtschaftslehre-ein-bisschen-wissenschaftsphilosophie/",1]],
+ "1-6":[["„Exploring Economics“: Die Neoklassik","exploring-economics-die-neoklassik/"]],
+ "2-1":[["Ströme und Bestände, oder: Über Wasserhähne und Badewannen","stroeme-und-bestaende-oder-ueber-wasserhaehne-und-badewannen/"]],
+ "2-2":[["Was wächst eigentlich, wenn „die Wirtschaft“ wächst?","was-waechst-eigentlich-wenn-die-wirtschaft-waechst/"],["Die Logik des kumulativen Wachstums","oekonomie-fuer-expertinnen-die-logik-des-kumulativen-wachstums/",1],["Das BIP-Wachstum – ein Zerrbild?","das-bip-wachstum-ein-zerrbild/",1]],
+ "2-3":[["Die Produktionsseite","wie-der-kuchen-entsteht-die-produktionsseite/"],["Die Nachfrageseite","wozu-der-kuchen-verwendet-wird-die-nachfrageseite/"],["Die Verteilungsseite","wie-der-kuchen-verteilt-wird-die-verteilungsseite/"],["Crashkurs VGR: Alles klar? (Übung)","chrashkurs-vgr-alles-klar/"]],
+ "2-5":[["Der Außenhandel im gesamtwirtschaftlichen Kreislauf","der-aussenhandel-im-gesamtwirtschaftlichen-kreislauf/"]],
+ "2-7":[["Überschüsse und Defizite in den letzten Jahrzehnten","in-the-long-run-ueberschuesse-und-defizite-in-den-letzten-jahrzehnten/"],["Eine Geldpolitik für alle: zu wenig für eine Währungsunion?","eine-geldpolitik-fuer-alle-zu-wenig-fuer-eine-erfolgreiche-waehrungsunion/"]],
+ "2-8":[["Crashkurs Arbeitsmarktstatistik","crashkurs-arbeitsmarkstatistik-arbeitslosigkeit-richtig-messen/"]],
+ "2-9":[["Grundbegriffe der Einkommensverteilung","grundbegriffe-der-einkommensverteilung/"],["Der Gini-Koeffizient","oekonomie-fuer-expertinnen-der-gini-koeffizient/",1]],
+ "3-1":[["Das BIP: Eine Zahl mit blinden Flecken?","das-bip-eine-zahl-mit-blinden-flecken/"],["„Exploring Economics“: Die feministische Ökonomik","exploring-economics-die-feministische-oekonomik/"]],
+ "3-2":[["Gesamtwirtschaftliche Zusammenhänge aus Sicht der Neoklassik","gesamtwirtschaftliche-zusammenhaenge-aus-der-sicht-der-neoklassik/"],["Arbeitslosigkeit im einfachen neoklassischen Modell (interaktiv)","oekonomie-fuer-expertinnen-arbeitslosigkeit-im-einfachen-neoklassischen-modell/",1]],
+ "3-3":[["Wie lässt sich mehr Beschäftigung schaffen? Vier Positionen","wie-laesst-sich-mehr-beschaeftigung-in-europa-schaffen-vier-positionen/"]],
+ "3-4":[["Gesamtwirtschaftliche Zusammenhänge aus Sicht des Keynesianismus","gesamtwirtschaftlichen-zusammenhaenge-aus-der-sicht-des-keynesianismus/"]],
+ "3-6":[["„Exploring Economics“: Die Marxistische Politische Ökonomie","exploring-economics-die-marxistische-politische-oekonomie/"]],
+ "3-7":[["Wer hat recht? Drei Streitpunkte zwischen Angebots- und Nachfrageorientierung","wer-hat-recht-drei-streitpunkte-zwischen-angebots-und-nachfrageorientierung/"],["Angebot oder Nachfrage: Alles klar? (Übung)","angebot-oder-nachfrage-alles-klar/"]],
+ "4-2":[["Arbeitslosigkeit im einfachen keynesianischen Modell (interaktiv)","oekonomie-fuer-expertinnen-arbeitslosigkeit-im-einfachen-keynesianischen-modell/",1]],
+ "4-6":[["Arbeitslosigkeit im einfachen keynesianischen Modell (interaktiv)","oekonomie-fuer-expertinnen-arbeitslosigkeit-im-einfachen-keynesianischen-modell/",1]],
+ "5-1":[["Schließe die Outputlücke!","schliesse-die-outputluecke/"]],
+ "5-6":[["Wirkung und Grenzen der Geldpolitik im keynesianischen Grundmodell","oekonomie-fuer-expertinnen-wirkung-und-grenzen-der-geldpolitik-im-keynesianischen-grundmodell/",1]],
+ "5-7":[["Wirkung und Grenzen der Geldpolitik im keynesianischen Grundmodell","oekonomie-fuer-expertinnen-wirkung-und-grenzen-der-geldpolitik-im-keynesianischen-grundmodell/",1]],
+ "5-8":[["Zwei Länder = zwei Outputlücken","oekonomie-fuer-expertinnen-zwei-laender-zwei-outputluecken/",1]],
+ "5-9":[["Die Rückkehr des Streits zwischen den Denkschulen","oekonomie-fuer-expertinnen-die-rueckkehr-des-streits-zwischen-den-denkschulen/",1]],
+ "6-1":[["Was sind Folgen von Inflation und Deflation?","was-sind-folgen-von-inflation-und-deflation/"]],
+ "6-2":[["Nachfrage, Angebot oder beides? Neoklassik, Keynesianismus und ihre Synthese","nachfrage-angebot-oder-beides-neoklassik-keynesianismus-und-ihre-synthese/"]],
+ "6-6":[["Die Inflationssteuerung durch die Geldpolitik","die-inflationssteuerung-durch-die-geldpolitik/"],["Keynesianische Nachfragepolitik in der kurzen Frist (GeoGebra aus der Vorlesung)","https://www.geogebra.org/m/d2ac5jj7"],["Länderspezifische Nachfragesteuerung (GeoGebra aus der Vorlesung)","https://www.geogebra.org/m/fzmhbayk"]],
+ "6-7":[["Der Streit um die Wirkungen der „Agenda 2010“","oekonomie-fuer-expertinnen-der-streit-um-die-wirkungen-der-agenda-2010/",1]],
+ "7-1":[["„Exploring Economics“: Der Postkeynesianismus","exploring-economics-der-postkeynesianismus/"]],
+ "7-3":[["Die Rückkehr des Streits zwischen den Denkschulen (Hysterese, interaktiv)","oekonomie-fuer-expertinnen-die-rueckkehr-des-streits-zwischen-den-denkschulen/",1]],
+ "7-4":[["Die Rückkehr des Streits zwischen den Denkschulen (Struktur oder Konjunktur?)","oekonomie-fuer-expertinnen-die-rueckkehr-des-streits-zwischen-den-denkschulen/",1]],
+ "7-6":[["Verursacht Ungleichheit Wirtschaftskrisen?","oekonomie-fuer-expertinnen-verursacht-ungleichheit-wirtschaftskrisen/",1]],
+ "8-2":[["Ungleichheit, Ungleichgewichte, Instabilität: keynesianisch geprägte Ursachenanalysen","ungleichheit-ungleichgewichte-instabilitaet-keynesianisch-gepraegte-ursachenanalysen/"]],
+ "8-4":[["Verursacht Ungleichheit Wirtschaftskrisen?","oekonomie-fuer-expertinnen-verursacht-ungleichheit-wirtschaftskrisen/",1]]
+};
+function wipoccBox(id){
+  const L=WIPOCC[id]; if(!L) return "";
+  return `<div class="block"><h3>Vertiefen</h3><p class="small muted" style="margin:0 0 6px">Optional, wenn etwas nicht klickt: wipocc.de ist das Online-Lehrbuch des Instituts mit interaktiven Grafiken.</p>
+    <div class="stack">${L.map(([t,u,ex])=>`<a class="wlink" href="${u.startsWith("http")?u:W+u}" target="_blank" rel="noopener">${ex?'<span class="tag core">Expert:innen</span> ':""}${t} ↗</a>`).join("")}</div></div>`;
+}
+
 /* ================= Grafiken (SVG, Raster 400 × 300) ================= */
 const tri=(x,y,dir,cls)=>{ const s=7, p={up:[[x,y],[x-s/1.6,y+s],[x+s/1.6,y+s]],right:[[x,y],[x-s,y-s/1.6],[x-s,y+s/1.6]],down:[[x,y],[x-s/1.6,y-s],[x+s/1.6,y-s]]}[dir]; return `<polygon class="${cls}" points="${p.map(q=>q.join(",")).join(" ")}"/>`; };
 const ln=(x1,y1,x2,y2,cls)=>`<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
@@ -1881,6 +1951,7 @@ function renderLesson(){
   $("#app").innerHTML=`${backTo("Kapitel "+n)}
     <p class="eyebrow">Kapitel ${n} · Lektion ${cur.li+1} von ${L.length} ${tagOf(x.id)}</p>
     <article class="block lesson"><h1>${x.t}</h1>${html}</article>
+    ${wipoccBox(x.id)}
     <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>{ const a=cur.ans[j];
       return `<div style="margin-top:${j?16:4}px"><p style="margin:0"><b>${c.q}</b></p><div class="mc">${c.o.map((o,k)=>{
         const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
