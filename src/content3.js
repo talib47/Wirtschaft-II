@@ -1,0 +1,297 @@
+/* ================= Kapitel 6–8 ================= */
+Object.assign(CHAPTERS.find(c=>c.n===6),{title:"Neoklassische Gegenrevolution und Neue Neoklassische Synthese", teaser:"Phillips-Kurve, Monetarismus, NAIRU, Inflation Targeting und Angebotspolitik."});
+Object.assign(CHAPTERS.find(c=>c.n===7),{teaser:"Hysterese, Grenzen der Geldpolitik, Einkommenspolitik und das Kostenparadox."});
+Object.assign(CHAPTERS.find(c=>c.n===8),{title:"Spielarten des Kapitalismus und Wachstumsmodelle", teaser:"Koordinierte und liberale Marktwirtschaften, lohn-, schulden- und exportgetriebenes Wachstum."});
+
+LESSONS[6]=[
+{id:"6-1", t:"Der Dauerstreit: Inflation und Arbeitslosigkeit", html:`
+<p>Übersteigt die Nachfrage den Vollbeschäftigungsoutput länger, setzen Arbeitnehmer:innen höhere Löhne und Unternehmen höhere Preise durch. Im Extremfall entstehen <b>Lohn-Preis-Spiralen</b>, die schwer zu stoppen sind. Umgekehrt führt dauerhafter Nachfragemangel zu <b>Deflation</b>, die noch schwerer zu bekämpfen ist.</p>
+<table class="kv">
+<tr><td>Inflation</td><td>Angebotskrise nach dem Ersten Weltkrieg und Ruhrbesetzung (bis 1923), Stagflation nach den Ölpreisschocks der 1970er, Corona- und Energiekrise der frühen 2020er</td></tr>
+<tr><td>Deflation</td><td>Weltwirtschaftskrise Anfang der 1930er, Japan nach 1991, Eurokrise Anfang der 2010er</td></tr></table>
+<p>Keynes war wenig um Inflation besorgt; in den 1930ern herrschte Deflation. Die Gegenrevolution nach ihm entzündete sich genau an der Frage, wie Arbeitslosigkeit und Inflation zusammenhängen.</p>`,
+check:[{q:"Welches Ereignis ist ein Beispiel für Stagflation?", o:["Weltwirtschaftskrise 1929","Ölpreisschocks der 1970er Jahre","Japan nach 1991","Eurokrise 2010"], a:1, ex:"Stagnation und Inflation gleichzeitig. Die anderen Beispiele waren deflationär."}]},
+{id:"6-2", t:"Neoklassische Synthese und Phillips-Kurve", html:`
+<p>Nach dem Zweiten Weltkrieg bis Anfang der 1970er war die <b>Neoklassische Synthese</b> der Mainstream (Paul Samuelson, John Hicks; Nixon 1972: „We are all Keynesians now“). Ihre Grundlage: Langfristig, bei flexiblen Löhnen, Preisen und Zinsen, gelten neoklassische Prinzipien (S bestimmt I). Kurzfristig gilt die keynesianische Theorie.</p>
+<p>Kernstück ist die <b>Phillips-Kurve</b>: Je geringer die Arbeitslosigkeit, desto schneller steigen die Nominallöhne (ursprüngliche Phillips-Kurve) und desto schneller steigen die Preise (modifizierte Phillips-Kurve, π = f(U)).</p>
+<div class="merk"><b>„5 % Inflation sind mir lieber als 5 % Arbeitslosigkeit“</b>Helmut Schmidt. Die Idee: Die Politik kann zwischen Arbeitslosigkeit und Inflation wählen, je nach Präferenzen. Wer Arbeitslosigkeit für schädlicher hält, nimmt mehr Inflation in Kauf. Genau diesen dauerhaften Zielkonflikt bestritten später Monetarismus und Neuklassik.</div>`,
+check:[{q:"Was besagt die modifizierte Phillips-Kurve?", o:["Je höher die Arbeitslosigkeit, desto höher die Inflation","Je geringer die Arbeitslosigkeit, desto höher die Inflation","Inflation und Arbeitslosigkeit sind unabhängig","Die Löhne sinken bei Vollbeschäftigung"], a:1, ex:"Sie stellt einen Zielkonflikt zwischen Arbeitslosigkeit und Inflation dar."}]},
+{id:"6-3", t:"Monetarismus und Neuklassik: natürliche Arbeitslosigkeit", html:`
+<p>Seit den 1960ern einflussreich in den USA, Großbritannien, Chile und Deutschland: Milton Friedman, Robert Lucas, die „Chicago Boys“ in Chile, die monetaristische Tradition der Bundesbank. Sie liefern eine Theorie der <b>Stagflation</b>.</p>
+<ul><li>Der Phillips-Kurven-Zusammenhang gilt nur kurzfristig.</li>
+<li>Langfristig ist die Phillips-Kurve <b>vertikal</b>: Es gibt eine „natürliche Arbeitslosigkeit“, bedingt durch zu hohe Löhne oder Arbeitsmarktrigiditäten. Später heißt sie <b>NAIRU</b> (non-accelerating inflation rate of unemployment).</li></ul>
+<p>Der Mechanismus nach Friedman: Arbeitnehmer:innen arbeiten mehr, weil sie glauben, die Reallöhne stiegen. Die Unternehmen erhöhen aber die Preise, die Reallöhne bleiben konstant. Steigt die Inflation, wird sie für die Zukunft erwartet. Die Arbeitnehmer:innen fordern höhere Nominallöhne, die kurzfristige Phillips-Kurve verschiebt sich nach oben. Um sie erneut zu „täuschen“, müsste die Inflation noch höher sein.</p>
+<div class="merk"><b>Folgerung</b>Langfristig bringt Nachfragesteuerung über Geld- und Fiskalpolitik nichts außer Inflation. Stattdessen soll die Inflation stabilisiert und der Arbeitsmarkt flexibilisiert werden, damit sich das Arbeitsangebot nach rechts verschiebt.</div>`,
+check:[{q:"Wie verläuft die langfristige Phillips-Kurve laut Monetarismus?", o:["Fallend","Steigend","Vertikal bei der natürlichen Arbeitslosigkeit","Waagerecht"], a:2, ex:"Langfristig gibt es keinen Zielkonflikt, nur höhere Inflation."}]},
+{id:"6-4", t:"Lohnsetzung, Preissetzung und Lohn-Preis-Spirale", html:`
+<p>Das Arbeitsmarktmodell der Vorlesung hat den Reallohn w/p auf der y-Achse und das Arbeitsvolumen E auf der x-Achse:</p>
+<ul><li><b>Lohnsetzung</b> (steigend): Je höher die Beschäftigung, desto höhere Reallöhne fordern die Arbeitnehmer:innen, weil sie weniger Angst vor Arbeitslosigkeit haben.</li>
+<li><b>Preissetzung</b> (waagerecht): der Reallohn, den die Unternehmen über ihre Preissetzung zu zahlen bereit sind.</li></ul>
+<p>Im Schnittpunkt liegt das Gleichgewicht, die NAIRU. Ist die Beschäftigung höher, klafft eine <b>Lücke</b>: Die Arbeitnehmer:innen wollen einen höheren Reallohn, als die Unternehmen zahlen wollen. Sie fordern die erwartete Inflation plus die Lücke, die Unternehmen erhöhen die Preise entsprechend:</p>
+<div class="tablewrap"><table class="data"><tr><th>Periode</th><th>Erwartete Inflation</th><th>Lücke</th><th>Lohninflation</th><th>Preisinflation</th></tr>
+<tr><td>0</td><td>4</td><td>0</td><td>4</td><td>4</td></tr><tr><td>1</td><td>4</td><td>2</td><td>6</td><td>6</td></tr><tr><td>2</td><td>6</td><td>2</td><td>8</td><td>8</td></tr><tr><td>3</td><td>8</td><td>2</td><td>10</td><td>10</td></tr></table></div>
+<p>Die Inflation beschleunigt sich, die Reallöhne bleiben gleich. Liegt die Beschäftigung unter dem Gleichgewicht (Lücke −2 %), sinkt die Inflation von Periode zu Periode bis in die Deflation.</p>
+{{fig:g6a}}
+<div class="merk"><b>Klausur 2024, 7 Punkte</b>Führt ein Konjunkturprogramm zu Y* > Y<sub>POT</sub>, liegt die Beschäftigung rechts vom Gleichgewicht. Auf dem Arbeitsmarkt klafft die Lücke zwischen Lohn- und Preissetzung, in der Phillips-Kurven-Grafik verschiebt sich die kurzfristige Kurve Periode für Periode nach oben: steigende Inflation.</div>`,
+check:[
+ {q:"Inflation 2 %, ab t1 Lücke von 2 %. Wie stark steigen die Preise in t2?", o:["2 %","4 %","6 %","8 %"], a:2, ex:"t1: 2 + 2 = 4 %. t2: 4 + 2 = 6 %."},
+ {q:"Was passiert in der Lohn-Preis-Spirale mit den Reallöhnen?", o:["Sie steigen um die Lücke","Sie bleiben konstant","Sie sinken","Sie steigen mit der Inflation"], a:1, ex:"Die Unternehmen geben jede Lohnsteigerung an die Preise weiter."}
+]},
+{id:"6-5", t:"„Irrelevanz der Wirtschaftspolitik“", html:`
+<p>Monetarismus und Neuklassik folgern:</p>
+<ul><li>Keine diskretionäre Konjunkturpolitik, stattdessen <b>regelgebundene</b> Wirtschaftspolitik.</li>
+<li><b>Ricardianische Äquivalenz</b>: Erhöht der Staat sein Defizit, sparen die Privaten im gleichen Umfang mehr, weil sie künftige Steuererhöhungen erwarten. Kein Nachfrageeffekt, der Multiplikator ist null oder sehr klein.</li>
+<li>Geld- und Fiskalpolitik sollen auch kurzfristig nicht aktiv stabilisieren.</li>
+<li>Arbeits-, Güter- und Finanzmärkte sollen flexibilisiert werden.</li></ul>
+<p>Die Neuklassik arbeitet mit <b>rationalen Erwartungen</b> und allgemeiner Gleichgewichtstheorie. Das Lehrbuch-Bild der Vorlesung: Wirtschaftspolitik kann die Menschen nicht systematisch täuschen.</p>`,
+check:[{q:"Warum ist der Multiplikator nach der Ricardianischen Äquivalenz nahe null?", o:["Weil die Zinsen sinken","Weil Haushalte für erwartete Steuererhöhungen mehr sparen","Weil Importe steigen","Weil der Staat spart"], a:1, ex:"Der höhere Staatskonsum wird durch geringeren privaten Konsum ausgeglichen."}]},
+{id:"6-6", t:"Neuer Konsens und Inflation Targeting", html:`
+<p>Seit den 1980ern ist die <b>Neue Neoklassische Synthese</b> (Neukeynesianismus, Neuer Konsens) internationaler Mainstream: Gregory Mankiw, anfangs Joseph Stiglitz und Paul Krugman, Ben Bernanke. Sie übernimmt die Methode der Neuklassik (rationale Erwartungen), kommt aber zu ähnlichen Schlüssen wie die alte Synthese:</p>
+<ul><li>Langfristig: neoklassisch, Beschäftigung und Produktion werden am Arbeitsmarkt bestimmt.</li>
+<li>Kurzfristig: keynesianisch, aktive Konjunkturpolitik ist nötig, vor allem über die Geldpolitik.</li></ul>
+<div class="eq">Y* = 1/(1 − c₁) · (c₀ − c₁T + d − n·i + G)   (kurzfristig)</div>
+<div class="eq">Y* = Y<sub>POT</sub>   (langfristig)</div>
+<p>Im langfristigen Gleichgewicht muss das BIP dem Potenzial entsprechen, sonst droht eine Inflations- oder Deflationsspirale. Die Zentralbank soll den Zins so wählen, dass Y* = Y<sub>POT</sub>. Ihre Zinsregel:</p>
+<div class="eq">i<sub>t</sub> = i<sub>t−1</sub> + k · (π<sub>t−1</sub> − π<sup>T</sup>),   k > 0</div>
+<p>War die Inflation über dem Ziel, steigt der Zins, sonst sinkt er, bis das Ziel erreicht und die Output-Lücke geschlossen ist.</p>
+<div class="merk"><b>Wirtschaftspolitik vor der Finanzkrise</b>Angebotsorientierung (Flexibilisierung von Güter-, Arbeits-, Finanzmärkten), passive Fiskalpolitik (Stabilitätspakt, Schuldenbremse), aktive Konjunktursteuerung über <b>Inflation Targeting</b>: Die EZB zielt auf eine Inflation unter, aber nahe 2 %. In einer Währungsunion ist länderspezifische Nachfragesteuerung über die Geldpolitik nicht möglich, diese Rolle müsste die Fiskalpolitik übernehmen.</div>`,
+check:[
+ {q:"i(t−1) = 2 %, k = 1, Inflation 4 %, Ziel 2 %. Welchen Zins setzt die Zentralbank?", o:["2 %","3 %","4 %","6 %"], a:2, ex:"2 + 1 · (4 − 2) = 4 %."},
+ {q:"Welche Rolle hat die Fiskalpolitik im Neuen Konsens?", o:["Aktive Konjunktursteuerung","Eher passiv, regelgebunden","Sie setzt das Inflationsziel","Sie bestimmt das Potenzial"], a:1, ex:"Konjunktursteuerung übernimmt die Geldpolitik."}
+]},
+{id:"6-7", t:"Angebotspolitik", html:`
+<p>Im Neuen Konsens ist mehr Beschäftigung ohne Inflation nur möglich, wenn sich das Arbeitsmarktgleichgewicht verschiebt. Zwei Wege:</p>
+<p><b>1. Bei der Lohnsetzung ansetzen</b>: Deregulierung des Arbeitsmarkts, also geringere Arbeitslosenunterstützung, weniger allgemeinverbindliche Flächentarifverträge. Die Lohnsetzungsmacht der Gewerkschaften wird geschwächt, die Lohnsetzungskurve verschiebt sich nach rechts, ebenso die langfristige Phillips-Kurve. Höhere Nachfrage ist nun ohne Inflation möglich (Y<sub>POT</sub> steigt).</p>
+{{fig:g6b}}
+<p><b>2. Bei der Preissetzung ansetzen</b>: Die Preissetzungskurve verschiebt sich nach oben, etwa durch bessere Ausbildung und höhere Produktivität (Arbeitgeber:innen zahlen höhere Reallöhne) oder mehr Wettbewerb auf dem Gütermarkt (niedrigere Preise).</p>
+<div class="merk"><b>Unterscheide</b>Neoklassische Arbeitslosigkeit muss auf dem Arbeitsmarkt bekämpft werden. Keynesianische Arbeitslosigkeit entsteht durch zu geringe Güternachfrage im Vergleich zum Vollbeschäftigungsoutput und wird über die Nachfrage bekämpft.</div>`,
+check:[{q:"Wie wirkt eine Deregulierung des Arbeitsmarkts im Neuen Konsens?", o:["Lohnsetzung verschiebt sich nach rechts, Potenzial steigt","Preissetzung sinkt","Die Inflation steigt dauerhaft","Die kurzfristige Phillips-Kurve wird vertikal"], a:0, ex:"Die NAIRU sinkt, also ist mehr Beschäftigung ohne steigende Inflation möglich."}]}
+];
+
+LESSONS[7]=[
+{id:"7-1", t:"Postkeynesianismus im Überblick", html:`
+<p>Begründet von Keynes' Kolleg:innen und Nachfolger:innen in Cambridge (Joan Robinson, Nicholas Kaldor) in den 1950er und 1960er Jahren, aufbauend auf Keynes und Michał Kalecki.</p>
+<ul><li>Kritik am „Bastard-Keynesianismus“ der Neoklassischen Synthese und des Neuen Konsenses</li>
+<li>Nachfrage ist kurz- <b>und</b> langfristig relevant (Hysterese)</li>
+<li>Zweifel an der Wirksamkeit der Geldpolitik</li>
+<li><b>Functional Finance</b>: zentrale Rolle der Fiskalpolitik gegen Arbeitslosigkeit, Staatsverschuldung ist kein Hindernis für Vollbeschäftigungspolitik</li>
+<li>Expliziter Zusammenhang von Verteilung zwischen Klassen (Arbeiter:innen, Kapitalist:innen) und Nachfrage bzw. Wachstum</li>
+<li>„Soziologischer“ Blick: Konventionen, fundamentale Unsicherheit, Erwartungen, Machtverhältnisse, Institutionen</li></ul>
+<p>Auch neukeynesianische Ökonom:innen entdecken diese Konzepte zunehmend wieder.</p>`,
+check:[{q:"In welchen Zeithorizonten ist die Nachfrage aus postkeynesianischer Sicht relevant?", o:["Nur kurzfristig","Nur langfristig","Kurz- und langfristig","Gar nicht"], a:2, ex:"Über Hysterese prägt die Nachfrage auch das Potenzial."}]},
+{id:"7-2", t:"Zweifel an der Geldpolitik", html:`
+<p>Investitions- und Konsumentscheidungen hängen weniger vom Zentralbankzins ab als von</p>
+<ul><li>den animal spirits der Unternehmen,</li><li>sozialen Normen,</li><li>Institutionen,</li><li>der Einkommensverteilung.</li></ul>
+<p>Dazu kommen die Grenzen aus Kapitel 5: In der <b>Nominalzinsfalle</b> ist der Realzins trotz Nullzins zu hoch, in der <b>Investitionsfalle</b> reagieren die Investitionen nicht auf den Zins. Dann hilft nur Fiskalpolitik.</p>
+<div class="merk"><b>Kein sicherer Kompass</b>Eine seriöse Messung der Output-Lücke als Orientierung für die Geldpolitik ist unmöglich, weil das Potenzial selbst von der Nachfrage abhängt (Hysterese).</div>`,
+check:[{q:"Warum ist die Output-Lücke aus postkeynesianischer Sicht kein sicherer Kompass?", o:["Weil das BIP nicht gemessen wird","Weil das Potenzial wegen Hysterese selbst von der Nachfrage abhängt","Weil die Zentralbank sie geheim hält","Weil sie immer null ist"], a:1, ex:"Schätzungen des Potenzials folgen dem tatsächlichen BIP."}]},
+{id:"7-3", t:"Hysterese am Arbeitsmarkt", html:`
+<p><b>Hysterese</b> (griechisch hysteros, später): Der Zustand eines Systems hängt nicht nur von der aktuellen Eingangsgröße ab, sondern auch von seinem früheren Zustand. Einfach gesagt: Ein Zustand dauert fort, auch wenn die Anregung weggefallen ist.</p>
+<p>Am Arbeitsmarkt: Zunächst liegt keynesianische Arbeitslosigkeit vor, die Güternachfrage ist zu gering (Y* < Y<sub>POT</sub>). Hält das länger an,</p>
+<ul><li>verschiebt sich die <b>Lohnsetzung nach oben</b>, weil Langzeitarbeitslose den Bezug zur Arbeitswelt verlieren und keinen Lohndruck mehr auf Beschäftigte ausüben,</li>
+<li>verschiebt sich die <b>Preissetzung nach unten</b>, weil die Arbeitsproduktivität wegen unterlassener Investitionen in den Kapitalstock fällt.</li></ul>
+{{fig:g7a}}
+<p>Im Ergebnis sinkt die gleichgewichtige Beschäftigung, das Produktionspotenzial fällt, der Deflationsdruck nimmt ab. Kurzfristiger Nachfragemangel führt zu langfristigen Produktionseinbußen. Langfristig wird jedes Arbeitsmarktgleichgewicht möglich. Das gilt analog für „zu hohe“ Nachfrage: Ein Boom kann das Potenzial erhöhen.</p>
+<div class="merk"><b>Klausur 2024 (Zweittermin), 7 Punkte</b>„Zeigen Sie grafisch, wie laut Postkeynesianismus Hysterese am Arbeitsmarkt entstehen kann, wenn die Güternachfrage zu lange unter dem ursprünglichen Potenzialoutput liegt.“ Genau diese Grafik.</div>`,
+check:[
+ {q:"Warum verschiebt sich bei Hysterese die Preissetzungskurve nach unten?", o:["Weil die Gewerkschaften stärker werden","Weil die Produktivität wegen unterlassener Investitionen fällt","Weil die Zinsen steigen","Weil die Preise sinken"], a:1, ex:"Unternehmen können dann nur noch niedrigere Reallöhne zahlen."},
+ {q:"Warum verschiebt sich die Lohnsetzungskurve nach oben?", o:["Langzeitarbeitslose üben keinen Lohndruck mehr aus","Mindestlöhne steigen","Die Inflation steigt","Mehr Menschen suchen Arbeit"], a:0, ex:"Sie verlieren den Bezug zur Arbeitswelt und konkurrieren nicht mehr um Stellen."}
+]},
+{id:"7-4", t:"Hysterese durch falsche Diagnose", html:`
+<p>Im Abschwung fällt das Wachstum, Defizit und Arbeitslosigkeit steigen. Ist das ein <b>strukturelles</b> oder ein <b>konjunkturelles</b> Problem? Hält die Politik ein konjunkturelles Problem fälschlich für strukturell und reagiert mit Deregulierung und <b>Austeritätspolitik</b>, kann Hysterese entstehen: Das ursprünglich konjunkturelle Problem wird durch die falsche Politik zu einem strukturellen.</p>
+<p>Dazu kommt das <b>Randwertproblem</b>: Potenzial und NAIRU werden aus dem beobachteten BIP und der beobachteten Arbeitslosigkeit geschätzt. Am aktuellen Rand ist unklar, ob man den alten Trend fortschreibt oder ihn an die neuen Daten anpasst. Passt man an, erscheint ein Abschwung strukturell: Das geschätzte Potenzial sinkt mit, die Output-Lücke schrumpft, das strukturelle Defizit wächst.</p>
+<div class="merk"><b>Beispiel Spanien</b>Die EU-Kommission schätzte, dass die strukturelle Arbeitslosigkeit (NAWRU) von unter 10 % (2007) auf über 25 % (2013) stieg. Fast die ganze Arbeitslosigkeit galt damit als strukturell, Arbeitsmarktreformen und Sparprogramme wurden gefordert. Schreibt man die NAWRU dagegen fort, wäre der Anstieg konjunkturell gewesen und hätte Konjunkturprogramme gerechtfertigt.</div>`,
+check:[{q:"Was ist das Randwertproblem?", o:["Die Zentralbank kann den Zins nicht unter null senken","Potenzial und NAIRU am aktuellen Rand hängen davon ab, ob man den Trend fortschreibt oder anpasst","Die Leistungsbilanz der Welt ist null","Das BIP misst keine Sorgearbeit"], a:1, ex:"Je nach Methode erscheint derselbe Abschwung konjunkturell oder strukturell."}]},
+{id:"7-5", t:"Eine postkeynesianische Phillips-Kurve", html:`
+<p>Postkeynesianisch hat die Lohnsetzungskurve einen <b>horizontalen Abschnitt</b>: In einem breiten Bereich führt mehr Beschäftigung nicht zu höheren Lohnforderungen. Entsprechend hat auch die kurzfristige Phillips-Kurve einen horizontalen Abschnitt. Mehr Beschäftigung ist dort ohne steigende Inflation möglich, es gibt keine eindeutige NAIRU.</p>
+<p><b>Einkommenspolitik</b>: Arbeitgeber:innen und Arbeitnehmer:innen verzichten, unter Druck oder Vermittlung der Regierung, auf Lohn-Preis-Spiralen und machen so den Weg frei für mehr Beschäftigung ohne Inflation.</p>
+<div class="merk"><b>Vergleich mit dem Neukeynesianismus</b>Neukeynesianisch gibt es eine eindeutige NAIRU, mehr Beschäftigung ohne Inflation erfordert Angebotsreformen (Deregulierung). Postkeynesianisch kann die Nachfragepolitik die Beschäftigung dauerhaft erhöhen, gestützt durch Einkommenspolitik statt Deregulierung.</div>`,
+check:[{q:"Welche Politik empfiehlt der Postkeynesianismus, um mehr Beschäftigung ohne Inflation zu erreichen?", o:["Deregulierung des Arbeitsmarkts","Einkommenspolitik und Nachfragepolitik","Höhere Zinsen","Ausgeglichene Haushalte"], a:1, ex:"Sozialpartner verzichten unter Vermittlung der Regierung auf Lohn-Preis-Spiralen."}]},
+{id:"7-6", t:"Das Kostenparadox mit Kalecki", html:`
+<p>Postkeynesianisch hängt die Nachfrage von der Verteilung ab. Kaleckianische Konsumfunktion mit unterschiedlichen Konsumneigungen aus Löhnen und Gewinnen:</p>
+<div class="eq">C = a<sub>W</sub> + a<sub>Π</sub> + b<sub>W</sub>W + b<sub>Π</sub>Π,   W = w·Y,   Π = (1 − w)·Y</div>
+<p>Beispiel der Vorlesung: a<sub>W</sub> = 60, a<sub>Π</sub> = 40, b<sub>W</sub> = 0,9, b<sub>Π</sub> = 0,5, I = 100, Lohnanteil 0,6:</p>
+<div class="eq">Y* = 200 / (1 − 0,9·0,6 − 0,5·0,4) = 200 / 0,26 ≈ 769,23</div>
+<p>Steigt der Lohnanteil auf 0,7: Y* = 200 / (1 − 0,63 − 0,15) = 200 / 0,22 ≈ 909,09.</p>
+<p>Mit nachfrageabhängigen Investitionen I = 100 + 0,12Y (Aufgabenblatt 7): Y* = 200/0,14 ≈ 1428,57 und nach der Umverteilung 200/0,10 = 2000. Die Gewinne steigen von 0,4 · 1428,57 ≈ 571,43 auf 0,3 · 2000 = 600.</p>
+<div class="merk"><b>Kostenparadox</b>Alle Unternehmen zahlen höhere Löhne, und trotzdem steigen die gesamtwirtschaftlichen Gewinne, weil die Nachfrage stärker wächst. Basis ist die höhere Konsumneigung aus Löhnen.</div>`,
+check:[{q:"Worauf beruht das Kostenparadox?", o:["Auf sinkenden Zinsen","Auf der höheren Konsumneigung aus Löhnen als aus Gewinnen","Auf steigenden Exporten","Auf höherer Produktivität"], a:1, ex:"Umverteilung zu den Löhnen erhöht die durchschnittliche Konsumneigung und damit die Nachfrage."}]}
+];
+
+LESSONS[8]=[
+{id:"8-1", t:"Spielarten des Kapitalismus", html:`
+<p>Warum sind Arbeits- und Finanzmärkte in manchen Ländern stärker reguliert? Warum ist die Geld- und Fiskalpolitik in manchen Ländern keynesianischer als in anderen? Die Vergleichende Politische Ökonomie unterscheidet:</p>
+<div class="tablewrap"><table class="data" style="text-align:left">
+<tr><th></th><th>Koordinierte Marktwirtschaft (CME)</th><th>Liberale Marktwirtschaft (LME)</th></tr>
+<tr><th>Beispiele</th><td>Deutschland, Niederlande, Skandinavien, Japan</td><td>USA, Vereinigtes Königreich</td></tr>
+<tr><th>Produktion</th><td>inkrementelle Innovation, spezifische Qualifikationen, Kündigungsschutz, bankbasierte geduldige Finanzierung, Mitbestimmung, Exportorientierung</td><td>radikale Innovation, allgemeine Qualifikationen, hire and fire, marktbasierte Finanzierung, Shareholder Value</td></tr>
+<tr><th>Wohlfahrtsstaat</th><td>sozialdemokratisch/kontinental, duale Ausbildung</td><td>liberal, minimal, College</td></tr>
+<tr><th>Politisches System</th><td>Konsens, Verhältniswahlrecht, Koalitionen</td><td>Mehrheitswahlrecht, Ein-Parteien-Regierungen</td></tr>
+<tr><th>Nachfragesteuerung</th><td>regelbasiert, neoklassisch, konservativ</td><td>diskretionär, keynesianisch, offensiv</td></tr></table></div>
+<p><b>Warum?</b> In CMEs ist die exportorientierte Industrie auf preisliche Wettbewerbsfähigkeit angewiesen; die Geld- und Fiskalpolitik soll Inflation vermeiden. Ein starker Sozialstaat sichert ab. In LMEs ist die soziale Sicherung schwach, deshalb ist expansive Politik nötig, um längere Arbeitslosigkeit zu vermeiden; externe Wettbewerbsfähigkeit ist weniger wichtig.</p>
+<p>Empirisch schwanken in den USA Arbeitslosenquote, staatlicher Finanzierungssaldo und Leitzinsen stärker als in Deutschland.</p>`,
+check:[{q:"Welche makroökonomische Politik ist in einer CME zu erwarten?", o:["Diskretionär und keynesianisch","Regelbasiert und konservativ","Keine Geldpolitik","Dauerhafte Defizite"], a:1, ex:"Exportorientierung macht Preisstabilität und Wettbewerbsfähigkeit wichtig."}]},
+{id:"8-2", t:"Wachstumsmodelle: vom Fordismus zur Finanzialisierung", html:`
+<p><b>Fordismus (1945–1970er)</b>: lohngetriebenes Wachstum. Steigende Löhne tragen den Massenkonsum, Investitionen und Gewinne wachsen im Gleichschritt. Regulierte Finanzmärkte, wenig Spielraum für private oder Auslandsverschuldung, keynesianische Fiskalpolitik.</p>
+<p><b>Krise (1970er)</b>: „zu hohe Löhne“, zwei Deutungen. Erstens ein Regimewechsel von lohngetriebenem (wage-led) zu gewinngetriebenem (profit-led) Wachstum, weil hohe Lohnkosten die Investitionen belasten. Zweitens politischer Widerstand der Kapitalseite gegen an Vollbeschäftigung gewöhnte Gewerkschaften. Mitterrand wollte 1981–83 einen Übergang zum Sozialismus, Thatcher und Reagan wollten die Macht der Gewerkschaften brechen. Es folgte der Neoliberalismus.</p>
+<p><b>Neoliberalismus und Finanzialisierung (1980–2008)</b>: Die Löhne der Mittelschicht fallen als Basis der Konsumnachfrage aus, Investitionen leiden unter der Shareholder-Value-Orientierung. Zwei „Lösungen“:</p>
+<ul><li><b>Schuldengetriebenes Wachstum</b> (debt-led), USA, Vereinigtes Königreich: Untere Einkommensgruppen verschulden sich für Konsum, dazu Staats- und Leistungsbilanzdefizite.</li>
+<li><b>Exportorientiertes Wachstum</b> (export-led), Deutschland, Japan, China: Lohnzurückhaltung, Unternehmensersparnis und Staatsüberschüsse schwächen die Binnennachfrage, Leistungsbilanzüberschüsse.</li></ul>
+<p><b>Krise seit 2008</b>: Schuldenkrise der privaten Haushalte (USA, UK) und Schuldenkrise bei den Handelspartnern der Exportländer.</p>`,
+check:[
+ {q:"Was kennzeichnet ein schuldengetriebenes Wachstumsmodell?", o:["Lohnzurückhaltung und Exportüberschüsse","Konsum unterer Einkommensgruppen auf Kredit","Staatliche Überschüsse","Steigende Lohnquote"], a:1, ex:"Typisch für die USA vor 2008."},
+ {q:"Was kennzeichnet ein exportgetriebenes Wachstumsmodell?", o:["Leistungsbilanzdefizite","Lohnzurückhaltung, schwache Binnennachfrage, Leistungsbilanzüberschüsse","Hohe Haushaltsverschuldung","Expansive Fiskalpolitik"], a:1, ex:"Typisch für Deutschland."}
+]},
+{id:"8-3", t:"Kaleckis Gewinngleichung", html:`
+<p>Aus Y = C<sub>W</sub> + C<sub>Π</sub> + I + G + X − M und Y = W<sub>netto</sub> + Π<sub>netto</sub> + T folgt:</p>
+<div class="eq">Π<sub>netto</sub> = C<sub>Π</sub> + I − S<sub>W</sub> + (G − T) + (X − M)</div>
+<p>mit S<sub>W</sub> = W<sub>netto</sub> − C<sub>W</sub>, der Ersparnis aus Löhnen. Teilt man durch den Kapitalstock K, erhält man die Profitrate r = Π/K und die Akkumulationsrate g = I/K.</p>
+<p>Ausgangspunkt postkeynesianischer Wachstums- und Verteilungsmodelle sind die <b>„Gewinne ohne Investitionen“</b> im neoliberalen Zeitalter. Die Lücke r − g kann steigen, wenn</p>
+<ul><li>mehr Gewinne ausgeschüttet und daraus konsumiert wird (USA),</li>
+<li>die Ersparnis aus Löhnen sinkt oder negativ wird (debt-led, USA),</li>
+<li>die Nettoexporte steigen (export-led, Deutschland).</li></ul>`,
+check:[{q:"Nach Kaleckis Gewinngleichung: Was erhöht die Gewinne, ohne dass investiert wird?", o:["Höhere Ersparnis aus Löhnen","Höhere Nettoexporte","Höhere Steuern","Sinkende Staatsausgaben"], a:1, ex:"Steigende X − M erhöhen Π direkt. Höhere Ersparnis aus Löhnen senkt sie."}]},
+{id:"8-4", t:"Ungleichheit und Krise", html:`
+<p>In den USA stieg der Anteil der oberen 10 %, 1 % und 0,1 % an den Haushaltseinkommen seit den 1980ern stark. Gleichzeitig fiel die Sparquote der Haushalte, und ihre Verschuldung stieg auf weit über 100 % des verfügbaren Einkommens. Die Nachfrage der Mittelschicht hielt sich über Kredit, bis die Schuldenkrise 2007 ausbrach.</p>
+<p>In Deutschland sank der Anteil der verfügbaren Haushaltseinkommen am Gesamteinkommen, Unternehmen und Staat steigerten ihre Anteile. Seit etwa 2000 haben Haushalte und Unternehmen, seit etwa 2010 auch der Staat positive Finanzierungssalden. Nach der Salden-Identität muss sich dann das Ausland verschulden: Die schwache Binnennachfrage zeigt sich in Exportüberschüssen.</p>
+<div class="merk"><b>Für den Essay</b>Die Verbindung von Verteilung (funktional, sektoral, personell) und Wachstumsmodell erklärt, warum hohe Ungleichheit postkeynesianisch als Krisenursache gilt: Entweder fehlt Nachfrage, oder sie entsteht über Verschuldung im Inland oder im Ausland.</div>`,
+check:[{q:"Wie hängen in den USA Ungleichheit und Krise 2007 zusammen?", o:["Gar nicht","Die Mittelschicht hielt ihren Konsum über Verschuldung, bis die Schuldenkrise kam","Steigende Löhne lösten die Krise aus","Exportüberschüsse führten zur Krise"], a:1, ex:"Debt-led growth: Sinkende Sparquote, steigende Verschuldung."}]}
+];
+
+CARDS[6]=[
+ {id:"c6-01", f:"Wie entstehen Lohn-Preis-Spiralen?", b:"Liegt die Beschäftigung über dem Gleichgewicht, fordern Arbeitnehmer:innen erwartete Inflation plus Reallohnlücke (Differenz zwischen gefordertem und gezahltem Reallohn), die Unternehmen erhöhen die Preise entsprechend. Die Inflation beschleunigt sich, Reallöhne bleiben konstant."},
+ {id:"c6-02", f:"Neoklassische Synthese: Grundidee", b:"Langfristig neoklassisch (flexible Preise, S bestimmt I), kurzfristig keynesianisch. Samuelson, Hicks. Mainstream 1945 bis Anfang der 1970er."},
+ {id:"c6-03", f:"Ursprüngliche und modifizierte Phillips-Kurve", b:"Ursprünglich: je geringer die Arbeitslosigkeit, desto schneller steigen die Nominallöhne.\nModifiziert: … desto höher die Preisinflation, π = f(U)."},
+ {id:"c6-04", f:"„5 % Inflation sind mir lieber als 5 % Arbeitslosigkeit“", b:"Helmut Schmidt. Idee eines dauerhaften Zielkonflikts entlang der Phillips-Kurve: Die Politik kann mehr Inflation für weniger Arbeitslosigkeit wählen."},
+ {id:"c6-05", f:"Natürliche Arbeitslosigkeit / NAIRU", b:"Arbeitslosenquote, bei der die Inflation nicht beschleunigt. Langfristige Phillips-Kurve ist dort vertikal. Ursache: zu hohe Löhne, Rigiditäten (z. B. Kündigungsschutz, Tarifbindung, hohe Arbeitslosenunterstützung)."},
+ {id:"c6-06", f:"Friedmans Erklärung der vertikalen Phillips-Kurve", b:"Kurzfristig werden Arbeitnehmer:innen über die Inflation getäuscht. Steigende Inflationserwartungen verschieben die kurzfristige Kurve nach oben. Langfristig müssen die Erwartungen erfüllt sein."},
+ {id:"c6-07", f:"Stagflation", b:"Stagnation bei gleichzeitiger Inflation, 1970er nach den Ölpreisschocks. Monetarismus erklärt sie als Folge von Nachfragepolitik über die natürliche Arbeitslosigkeit hinaus."},
+ {id:"c6-08", f:"„Irrelevanz der Wirtschaftspolitik“", b:"Monetarismus/Neuklassik: keine diskretionäre Konjunkturpolitik, regelgebunden (z. B. festes Inflationsziel), Ricardianische Äquivalenz, Flexibilisierung der Märkte."},
+ {id:"c6-09", f:"Lohnsetzung und Preissetzung", b:"Lohnsetzung (steigend): Reallohn, den Arbeitnehmer:innen je Beschäftigung fordern.\nPreissetzung (waagerecht): Reallohn, den Unternehmen zu zahlen bereit sind. Schnittpunkt = NAIRU."},
+ {id:"c6-10", f:"Neuer Konsens: lang- und kurzfristig", b:"Langfristig: Beschäftigung und Produktion am Arbeitsmarkt bestimmt (neoklassisch).\nKurzfristig: Nachfrage zählt, aktive Konjunkturpolitik vor allem über die Geldpolitik."},
+ {id:"c6-11", f:"Wirtschaftspolitischer Mainstream vor der Krise", b:"Angebotsorientierung (Politik setzt bei Produktion und Arbeitsmarkt an, z. B. durch Flexibilisierung), passive Fiskalpolitik (Stabilitäts- und Wachstumspakt der EU, Schuldenbremse), aktive Geldpolitik durch Inflation Targeting (EZB: unter, aber nahe 2 %)."},
+ {id:"c6-12", f:"Langfristige Gleichgewichtsbedingung im Neuen Konsens", b:"Y* = Y_POT. Sonst Inflations- oder Deflationsspirale (sich selbst verstärkender Anstieg oder Verfall der Preise). Die Zentralbank wählt den Zins so, dass das erreicht wird."},
+ {id:"c6-13", f:"Zinsregel beim Inflation Targeting", b:"i_t = i_{t−1} + k · (π_{t−1} − π^T), k > 0. Zins rauf, wenn die Inflation über dem Ziel war, runter, wenn darunter."},
+ {id:"c6-14", f:"Inflation Targeting: welche Ideologie, welche Rolle der Fiskalpolitik?", b:"Neuer Konsens / Neue Neoklassische Synthese. Fiskalpolitik passiv; die Geldpolitik stabilisiert die Inflation und schließt damit die Output-Lücke."},
+ {id:"c6-15", f:"Konjunkturprogramm mit Y* > Y_POT im Neuen Konsens", b:"Beschäftigung über dem Gleichgewicht (NAIRU), Lücke zwischen Lohn- und Preissetzung, kurzfristige Phillips-Kurve verschiebt sich nach oben: steigende Inflation. Zentralbank muss den Zins erhöhen."},
+ {id:"c6-16", f:"Angebotspolitik über die Lohnsetzung", b:"Deregulierung (geringere Arbeitslosenunterstützung, weniger Flächentarif) schwächt Lohnsetzungsmacht, Lohnsetzung und langfristige Phillips-Kurve verschieben sich nach rechts, Y_POT steigt."},
+ {id:"c6-17", f:"Angebotspolitik über die Preissetzung", b:"Preissetzungskurve nach oben durch bessere Ausbildung (höhere Produktivität) oder mehr Wettbewerb auf dem Gütermarkt."},
+ {id:"c6-18", f:"Neoklassische vs. keynesianische Arbeitslosigkeit: wo bekämpfen?", b:"Neoklassische auf dem Arbeitsmarkt. Keynesianische entsteht durch zu geringe Güternachfrage und wird über die Nachfrage bekämpft."},
+ {id:"c6-19", f:"Warum braucht eine Währungsunion Fiskalpolitik?", b:"Die gemeinsame Geldpolitik kann nicht länderspezifisch steuern. Diese Rolle könnte (müsste) die nationale Fiskalpolitik übernehmen."}
+];
+CARDS[7]=[
+ {id:"c7-01", f:"Begründer:innen des Postkeynesianismus", b:"Joan Robinson, Nicholas Kaldor (Cambridge, 1950er/60er), aufbauend auf Keynes und Michał Kalecki."},
+ {id:"c7-02", f:"„Bastard-Keynesianismus“", b:"Postkeynesianische Kritik an Neoklassischer Synthese und Neuem Konsens, die Keynes auf die kurze Frist reduzieren."},
+ {id:"c7-03", f:"Functional Finance", b:"Zentrale Rolle der Fiskalpolitik gegen Arbeitslosigkeit. Staatsverschuldung ist kein Hindernis für Vollbeschäftigungspolitik."},
+ {id:"c7-04", f:"Hysterese: Definition", b:"Ein Zustand dauert fort, auch wenn die Anregung weggefallen ist. Kurzfristiger Nachfragemangel führt zu dauerhaft geringerem Potenzial."},
+ {id:"c7-05", f:"Hysterese im Arbeitsmarktdiagramm", b:"Lohnsetzung nach oben (Langzeitarbeitslose üben keinen Lohndruck aus), Preissetzung nach unten (Produktivität sinkt durch fehlende Investitionen). Gleichgewichtige Beschäftigung und Potenzial sinken."},
+ {id:"c7-06", f:"Hysterese-Gefahr durch Austerität", b:"Wird ein konjunkturelles Problem (vorübergehende Nachfrageschwäche) fälschlich als strukturell (dauerhaftes Angebotsproblem) gedeutet und mit Sparpolitik (Austerität) und Deregulierung beantwortet, wird es zum strukturellen Problem."},
+ {id:"c7-07", f:"Randwertproblem", b:"Schätzungen von Potenzial und NAIRU (struktureller Arbeitslosigkeit) folgen am aktuellen Rand den beobachteten Daten. Ein Abschwung erscheint dann strukturell, die Output-Lücke klein."},
+ {id:"c7-08", f:"Wie verhält sich das BIP bei positiver Output-Lücke zum Potenzial?", b:"Das beobachtete BIP liegt über dem (geschätzten) Produktionspotenzial."},
+ {id:"c7-09", f:"Postkeynesianische Phillips-Kurve", b:"Lohnsetzung und kurzfristige Phillips-Kurve mit horizontalem Abschnitt: mehr Beschäftigung ohne steigende Inflation möglich, keine eindeutige NAIRU."},
+ {id:"c7-10", f:"Einkommenspolitik", b:"Sozialpartner (Gewerkschaften und Arbeitgeberverbände) verzichten unter Druck oder Vermittlung der Regierung auf Lohn-Preis-Spiralen. Mehr Beschäftigung ohne Inflation."},
+ {id:"c7-11", f:"Kaleckianische Konsumfunktion", b:"C = a_W + a_Π + b_W·W + b_Π·Π mit b_W > b_Π. Die Verteilung beeinflusst die Nachfrage."},
+ {id:"c7-12", f:"Basis des Kostenparadoxes", b:"Höhere Konsumneigung aus Löhnen. Ein höherer Lohnanteil erhöht Nachfrage und Einkommen und kann sogar die Gewinne erhöhen."},
+ {id:"c7-13", f:"Gründe für Zweifel an der Geldpolitik (postkeynesianisch)", b:"Investitionen und Konsum hängen mehr von animal spirits, sozialen Normen (z. B. was als angemessener Lebensstandard gilt), Institutionen (z. B. Tarifsystem, Bankenregulierung) und Verteilung ab als vom Zins. Nominalzins- und Investitionsfalle. Output-Lücke nicht seriös messbar."}
+];
+CARDS[8]=[
+ {id:"c8-01", f:"Koordinierte Marktwirtschaft (CME): Merkmale", b:"Regulierte Arbeitsbeziehungen und Corporate Governance (Regeln der Unternehmensführung, z. B. Mitbestimmung im Aufsichtsrat), Korporatismus, ausgebauter Sozialstaat, geringe Ungleichheit, konservative Geld- und Fiskalpolitik. Deutschland, Skandinavien, Japan."},
+ {id:"c8-02", f:"Liberale Marktwirtschaft (LME): Merkmale", b:"Wenig regulierte Arbeits- und Finanzmärkte, Shareholder Value, kleiner Sozialstaat, hohe Ungleichheit, offensivere Geld- und Fiskalpolitik. USA, Vereinigtes Königreich."},
+ {id:"c8-03", f:"Warum betreiben CMEs konservative Makropolitik?", b:"Exportorientierte Industrie braucht preisliche Wettbewerbsfähigkeit, also Inflationsvermeidung. Starker Sozialstaat federt Arbeitslosigkeit ab."},
+ {id:"c8-04", f:"Warum betreiben LMEs expansive Makropolitik?", b:"Schwache soziale Sicherung: Längere Arbeitslosigkeit muss durch Nachfragepolitik vermieden werden. Externe Wettbewerbsfähigkeit ist weniger wichtig."},
+ {id:"c8-05", f:"Fordismus", b:"1945–1970er: lohngetriebenes Wachstum (steigende Löhne tragen die Nachfrage), Massenkonsum, regulierte Finanzmärkte, keynesianische Fiskalpolitik."},
+ {id:"c8-06", f:"Zwei Deutungen der Krise der 1970er", b:"Regimewechsel von wage-led zu profit-led (Lohnkosten belasten Investitionen) oder politischer Widerstand der Kapitalseite gegen starke Gewerkschaften (Thatcher, Reagan)."},
+ {id:"c8-07", f:"Schuldengetriebenes Wachstum (debt-led)", b:"USA, UK: Untere Einkommensgruppen konsumieren auf Kredit, Staats- und Leistungsbilanzdefizite."},
+ {id:"c8-08", f:"Exportgetriebenes Wachstum (export-led)", b:"Deutschland, Japan, China: Lohnzurückhaltung (bewusst geringe Lohnsteigerungen), Unternehmensersparnis, Staatsüberschüsse, schwache Binnennachfrage, Leistungsbilanzüberschüsse."},
+ {id:"c8-09", f:"Kaleckis Gewinngleichung", b:"Π_netto = C_Π + I − S_W + (G − T) + (X − M)."},
+ {id:"c8-10", f:"„Gewinne ohne Investitionen“: drei Kanäle", b:"Mehr Konsum aus Gewinnen (Gewinne werden an Eigentümer:innen ausgeschüttet), sinkende Ersparnis aus Löhnen (Verschuldung), steigende Nettoexporte."},
+ {id:"c8-11", f:"Ungleichheit und Krise 2007 in den USA", b:"Steigende Top-Einkommensanteile (Anteil der Reichsten am Gesamteinkommen), sinkende Sparquote und steigende Verschuldung der Haushalte hielten die Nachfrage, bis die private Schuldenkrise ausbrach."},
+ {id:"c8-12", f:"Verteilung und deutsche Exportüberschüsse", b:"Sinkender Anteil der Haushaltseinkommen, Überschüsse von Haushalten, Unternehmen und Staat. Nach der Salden-Identität muss sich das Ausland verschulden."}
+];
+
+GRAPHS[6]=[
+ {id:"g6a", t:"Positive Output-Lücke im Neuen Konsens", klausur:"Ersttermin 2024, Aufgabe 6e (7 Punkte)",
+  task:"Ein Konjunkturprogramm führt zu Y* > Y<sub>POT</sub>. Zeigen Sie die Auswirkungen auf den Arbeitsmarkt (links) und die Inflation (rechts) im Sinne des Neuen Konsenses.",
+  check:["Arbeitsmarkt beschriftet: w/p, Arbeitsvolumen, Lohnsetzung steigend, Preissetzung waagerecht","Gleichgewicht E* (NAIRU) im Schnittpunkt","Neue Beschäftigung E₁ rechts von E*","Lücke zwischen Lohnsetzung und Preissetzung bei E₁ markiert","Phillips-Kurven: langfristige vertikal bei E*, kurzfristige steigend","Kurzfristige Phillips-Kurve verschiebt sich nach oben (steigende Inflation)","Satz: Lohn-Preis-Spirale, Zentralbank müsste den Zins erhöhen"]},
+ {id:"g6b", t:"Angebotspolitik: Arbeitsmarktreform",
+  task:"Durch eine Deregulierung des Arbeitsmarkts sinkt die Lohnsetzungsmacht der Gewerkschaften. Zeigen Sie die Wirkung auf dem Arbeitsmarkt und bei den Phillips-Kurven.",
+  check:["Lohnsetzungskurve verschiebt sich nach rechts (unten)","Neues Gleichgewicht E₂ rechts vom alten","Langfristige Phillips-Kurve verschiebt sich nach rechts","Folge: höheres Potenzial, mehr Beschäftigung ohne steigende Inflation"]}
+];
+GRAPHS[7]=[
+ {id:"g7a", t:"Hysterese am Arbeitsmarkt", klausur:"Zweittermin 2024, Aufgabe 6e (7 Punkte)",
+  task:"Die Güternachfrage liegt zu lange unter dem ursprünglichen Potenzialoutput. Zeigen Sie, wie laut Postkeynesianismus Hysterese am Arbeitsmarkt entsteht.",
+  check:["Achsen: Reallohn w/p, Arbeitsvolumen E; Lohnsetzung und Preissetzung","Ursprüngliches Gleichgewicht E_pot und tatsächliche Beschäftigung E₁ < E_pot","Lohnsetzung verschiebt sich nach oben (Langzeitarbeitslose ohne Lohndruck)","Preissetzung verschiebt sich nach unten (Produktivität sinkt mangels Investitionen)","Neues Gleichgewicht bei geringerer Beschäftigung, Potenzial sinkt","Satz: Kurzfristiger Nachfragemangel senkt das Potenzial dauerhaft"]}
+];
+
+ESSAYS[6]=[
+ {id:"e6-1", pts:24, klausur:"Zweittermin 2024, Teil III",
+  q:"„Gegen Arbeitslosigkeit hilft einzig die Flexibilisierung des Arbeits- und Gütermarkts sowie Investitionen in die Bildung.“ Diskutieren Sie diese Aussage vor dem Hintergrund der Vorlesungsinhalte. Berücksichtigen Sie unterschiedliche theoretische Perspektiven.",
+  k:["Einordnung: Aussage ist angebotsorientiert (Neoklassik / Neuer Konsens)","Neoklassik: Arbeitslosigkeit durch zu hohe Löhne und Regulierung, Mindestlohn-Logik","Monetarismus: natürliche Arbeitslosigkeit / NAIRU, vertikale langfristige Phillips-Kurve","Neuer Konsens: Deregulierung verschiebt Lohnsetzung, Bildung und Wettbewerb verschieben Preissetzung, Y_POT steigt","Keynesianisch: Arbeitslosigkeit durch zu geringe Güternachfrage, Ursache auf dem Gütermarkt","Instrumente: Fiskalpolitik (Multiplikator), Geldpolitik, Grenzen (Nominalzins-, Investitionsfalle)","Kostenparadox: Lohnsenkungen können Nachfrage und Beschäftigung senken","Postkeynesianisch: Hysterese, falsche Diagnose verfestigt Arbeitslosigkeit","Einkommenspolitik als Alternative zur Deregulierung","Bildung: auch keynesianisch sinnvoll (staatliche Investitionen, Nachfrage), aber nicht „einzig“","Problem der Unterscheidung strukturell vs. konjunkturell (Randwertproblem)","Begründetes Fazit"],
+  m:`Die Aussage vertritt eine angebotsorientierte Sicht: Arbeitslosigkeit gilt als strukturelles Problem des Arbeits- und Gütermarkts.
+
+Aus neoklassischer Sicht ist das schlüssig. Der Arbeitsmarkt bestimmt Beschäftigung und Produktion, Arbeitslosigkeit entsteht durch zu hohe Löhne, etwa durch Mindestlöhne, Gewerkschaftsmacht oder großzügige Sozialleistungen. Monetarismus und Neuklassik ergänzen: Nachfragepolitik über die natürliche Arbeitslosigkeit hinaus erzeugt nur Inflation, die langfristige Phillips-Kurve ist vertikal. Im Neuen Konsens verschiebt eine Deregulierung die Lohnsetzungskurve nach rechts; Bildung und mehr Wettbewerb heben die Preissetzungskurve. Beides senkt die NAIRU und erhöht das Potenzial.
+
+Aus keynesianischer Sicht greift das zu kurz. Keynesianische Arbeitslosigkeit hat ihre Ursache auf dem Gütermarkt: Die Nachfrage reicht nicht für Vollbeschäftigung. Dann helfen Fiskalpolitik über den Multiplikator und Geldpolitik, in der Nominalzins- oder Investitionsfalle nur noch Fiskalpolitik. Flexibilisierung, die Löhne senkt, kann nach dem Kostenparadox sogar schaden: Sinkt der Lohnanteil, sinkt die Konsumnachfrage, weil Lohnbezieher:innen mehr konsumieren.
+
+Der Postkeynesianismus betont Hysterese: Wird ein konjunkturelles Problem fälschlich als strukturell gedeutet und mit Deregulierung und Austerität beantwortet, verfestigt sich die Arbeitslosigkeit, das Potenzial sinkt. Weil Potenzial und NAIRU am aktuellen Rand nur geschätzt werden (Randwertproblem), ist die Diagnose selbst umstritten. Mehr Beschäftigung ohne Inflation ist postkeynesianisch auch durch Einkommenspolitik möglich.
+
+Investitionen in Bildung sind dagegen aus mehreren Perspektiven sinnvoll: angebotsseitig über die Produktivität, nachfrageseitig als staatliche Ausgaben.
+
+Fazit: Bei struktureller Arbeitslosigkeit können Reformen und Bildung helfen. Das Wort „einzig“ blendet aber die nachfrageseitige Ursache aus, die bei konjunktureller Arbeitslosigkeit im Vordergrund steht.`},
+ {id:"e6-2", pts:12, klausur:"Aufgabenblatt 6, Aufgabe 1",
+  q:"Erläutern Sie den wirtschaftspolitischen Standpunkt „5 % Inflation sind besser als 5 % Arbeitslosigkeit“.",
+  k:["Zuordnung: Helmut Schmidt, Neoklassische Synthese","Phillips-Kurve: Zielkonflikt zwischen Inflation und Arbeitslosigkeit","Politik kann einen Punkt auf der Kurve wählen, Präferenz für Beschäftigung","Kritik von Monetarismus/Neuklassik: nur kurzfristig, langfristig vertikal","Folge laut Kritik: Stagflation, sich beschleunigende Inflation","Postkeynesianische Sicht: horizontaler Abschnitt, Einkommenspolitik"],
+  m:`Der Satz stammt von Helmut Schmidt und spiegelt die Neoklassische Synthese. Grundlage ist die Phillips-Kurve: Je geringer die Arbeitslosigkeit, desto höher die Inflation. Die Politik kann demnach zwischen beiden wählen, und wer Arbeitslosigkeit für schädlicher hält, nimmt mehr Inflation in Kauf.
+
+Monetarismus und Neuklassik bestreiten den dauerhaften Zielkonflikt. Nach Friedman gilt die Phillips-Kurve nur kurzfristig: Steigende Inflation wird erwartet, Arbeitnehmer:innen fordern höhere Nominallöhne, die kurzfristige Kurve verschiebt sich nach oben. Langfristig ist die Phillips-Kurve vertikal bei der natürlichen Arbeitslosigkeit. Wer dauerhaft weniger Arbeitslosigkeit erzwingen will, bekommt eine sich beschleunigende Inflation, und am Ende womöglich beides: Stagflation wie in den 1970ern.
+
+Postkeynesianisch hat die Phillips-Kurve dagegen einen horizontalen Abschnitt. Mehr Beschäftigung ist dort ohne steigende Inflation möglich, gestützt durch Einkommenspolitik.`}
+];
+ESSAYS[7]=[
+ {id:"e7-1", pts:24,
+  q:"„Lohnsteigerungen gefährden Arbeitsplätze. Lohnzurückhaltung ist daher die beste Beschäftigungspolitik.“ Diskutieren Sie diese Aussage vor dem Hintergrund der Vorlesungsinhalte. Berücksichtigen Sie unterschiedliche theoretische Perspektiven.",
+  k:["Neoklassik: Lohn als Preis am Arbeitsmarkt, zu hohe Löhne verursachen Arbeitslosigkeit","Reallohn ≤ Grenzproduktivität, Mindestlohn-Logik","Neuer Konsens: Lohnsetzungsmacht bestimmt die NAIRU, Lohn-Preis-Spiralen","Keynesianisch: Löhne sind auch Kaufkraft, Arbeitslosigkeit durch zu geringe Nachfrage","Kostenparadox / Kaufkrafttheorie: höhere Konsumneigung aus Löhnen","Kaleckianisches Zahlenbeispiel oder Mechanismus: Gewinne können steigen","Mikro-Makro-Unterscheidung: einzelnes Unternehmen vs. Gesamtwirtschaft (externe Effekte)","Wachstumsmodelle: Lohnzurückhaltung in Deutschland → export-led, Leistungsbilanzüberschüsse","Grenzen: Nicht alle Länder können Exportüberschüsse erzielen","Postkeynesianisch: Einkommenspolitik statt Lohnsenkung, Verteilung als Krisenfaktor","Begründetes Fazit"],
+  m:`Die Aussage folgt einer neoklassischen Logik. Der Reallohn ist der Preis, der Arbeitsangebot und -nachfrage ausgleicht. Ein Unternehmen beschäftigt nur, solange der Reallohn die Produktivität nicht übersteigt. Zu hohe Löhne verursachen Arbeitslosigkeit, Lohnzurückhaltung senkt sie. Im Neuen Konsens bestimmt die Lohnsetzungsmacht die NAIRU: Schwächere Lohnforderungen erlauben mehr Beschäftigung ohne Lohn-Preis-Spirale.
+
+Keynesianisch sind Löhne aber nicht nur Kosten, sondern auch Kaufkraft. Arbeitslosigkeit entsteht durch zu geringe Güternachfrage. Haben Lohnbezieher:innen eine höhere Konsumneigung als Gewinnbezieher:innen, senkt Lohnzurückhaltung die Nachfrage. Nach dem Kostenparadox kann umgekehrt eine Lohnerhöhung Nachfrage, Beschäftigung und sogar die gesamtwirtschaftlichen Gewinne erhöhen: Im Beispiel von Aufgabenblatt 7 steigt Y* von 1428,57 auf 2000, die Gewinne von 571,43 auf 600. Was für ein einzelnes Unternehmen rational ist, gilt gesamtwirtschaftlich nicht.
+
+Lohnzurückhaltung kann über die Exporte trotzdem Beschäftigung schaffen, wie das exportgetriebene Wachstumsmodell Deutschlands zeigt. Das verlagert die Nachfrageschwäche aber ins Ausland, das sich verschulden muss. Nicht alle Länder können gleichzeitig so verfahren.
+
+Der Postkeynesianismus sieht hohe Ungleichheit als Krisenursache und setzt auf Einkommenspolitik: Die Sozialpartner vermeiden Lohn-Preis-Spiralen, ohne die Lohnquote zu drücken.
+
+Fazit: Ob Lohnzurückhaltung Beschäftigung schafft, hängt davon ab, ob Arbeitslosigkeit angebots- oder nachfragebedingt ist und ob das Land auf Exporte ausweichen kann. „Die beste Beschäftigungspolitik“ ist sie aus Sicht der Vorlesung nicht allgemein.`},
+ {id:"e7-2", pts:12, klausur:"Aufgabenblatt 7, Aufgabe 2b",
+  q:"Vergleichen Sie die Phillips-Kurve aus postkeynesianischer Perspektive mit dem neukeynesianischen Modell. Welche Unterschiede gibt es, und welche Folgen haben sie für die wirtschaftspolitischen Empfehlungen?",
+  k:["Neukeynesianisch: steigende kurzfristige, vertikale langfristige Phillips-Kurve, eindeutige NAIRU","Neukeynesianische Empfehlung: Inflation Targeting, Angebotsreformen für mehr Beschäftigung","Postkeynesianisch: Lohnsetzung und Phillips-Kurve mit horizontalem Abschnitt","Keine eindeutige NAIRU, Hysterese verschiebt das Gleichgewicht","Postkeynesianische Empfehlung: Nachfragepolitik, Einkommenspolitik","Konsequenz: mehr Beschäftigung ohne Inflation ohne Deregulierung möglich"],
+  m:`Im neukeynesianischen Modell steigt die kurzfristige Phillips-Kurve, die langfristige ist vertikal bei der NAIRU. Höhere Beschäftigung als die NAIRU führt zu Lohn-Preis-Spiralen. Die Zentralbank steuert die Nachfrage über Inflation Targeting zum Potenzial. Dauerhaft mehr Beschäftigung ist nur durch Angebotsreformen möglich, die die Lohnsetzungskurve nach rechts verschieben.
+
+Postkeynesianisch hat die Lohnsetzungskurve einen horizontalen Abschnitt, entsprechend auch die kurzfristige Phillips-Kurve. In diesem Bereich steigt die Beschäftigung ohne steigende Inflation, eine eindeutige NAIRU gibt es nicht. Wegen Hysterese hängt das Gleichgewicht zudem von der Nachfrage der Vergangenheit ab.
+
+Daraus folgen andere Empfehlungen: Nachfragepolitik kann dauerhaft Beschäftigung schaffen. Lohn-Preis-Spiralen werden durch Einkommenspolitik vermieden, bei der die Sozialpartner unter Vermittlung der Regierung auf überzogene Lohn- und Preissteigerungen verzichten, statt durch Deregulierung.`}
+];
+ESSAYS[8]=[
+ {id:"e8-1", pts:24,
+  q:"„Deutschlands Exportüberschüsse sind Ausdruck seiner Wettbewerbsfähigkeit und daher kein Problem.“ Diskutieren Sie diese Aussage vor dem Hintergrund der Vorlesungsinhalte. Berücksichtigen Sie unterschiedliche theoretische Perspektiven.",
+  k:["VGR: Leistungsbilanzüberschuss = private Überschüsse + Staatssaldo; Ausland verschuldet sich","Leistungsbilanz der Welt ist null, nicht alle können Überschüsse haben","Neoklassisch: Überschüsse als Gleichgewicht der Präferenzen (Demografie, rentablere Anlagen im Ausland, Hüther)","Wettbewerbsfähigkeit, Freihandel und komparative Vorteile","Keynesianisch: Überschüsse als Zeichen schwacher Binnennachfrage","Risiken: Überschuldung und Krise der Handelspartner, Verlust von Auslandsvermögen (Eurokrise)","Keynes' Sozialphilosophie: Sanktionierung von Exportüberschüssen","Wachstumsmodell export-led: Lohnzurückhaltung, Unternehmens- und Staatsersparnis","Spielarten des Kapitalismus: CME, Exportorientierung, konservative Makropolitik","Verteilung: sinkender Anteil der Haushaltseinkommen","Kaleckis Gewinngleichung: Gewinne über Nettoexporte statt Investitionen","Begründetes Fazit"],
+  m:`Nach der VGR entspricht ein Leistungsbilanzüberschuss der Summe aus privatem und staatlichem Finanzierungssaldo. In Deutschland haben Haushalte, Unternehmen und seit etwa 2010 auch der Staat Überschüsse, also muss sich das Ausland verschulden. Weil die Leistungsbilanz der Welt null ist, können nicht alle Länder Überschüsse haben.
+
+Aus neoklassischer Sicht sind Überschüsse ein mögliches Gleichgewicht. Sie spiegeln Präferenzen: Eine alternde Gesellschaft baut Auslandsvermögen für später auf, Kapital fließt dorthin, wo die Renditen höher sind. So argumentiert Michael Hüther, Deutschland schaffe mit seiner Ersparnis Investitionsmöglichkeiten im Ausland. Freihandel und Wettbewerbsfähigkeit steigern die Wohlfahrt.
+
+Keynesianisch sind hohe Überschüsse dagegen ein Zeichen schwacher Binnennachfrage. Das Land hält seine Arbeitslosigkeit niedrig, weil andere seine Waren kreditfinanziert kaufen. Das ist riskant: Geraten die Schuldner in die Krise, brechen Exporte ein und Auslandsvermögen wird entwertet, wie die Eurokrise zeigt. Keynes wollte Exportüberschüsse international sanktionieren.
+
+Der Vergleichenden Politischen Ökonomie zufolge passt der Überschuss zum deutschen Modell einer koordinierten Marktwirtschaft mit exportorientierter Industrie und konservativer Makropolitik. Postkeynesianisch ist er Teil eines exportgetriebenen Wachstumsmodells: Lohnzurückhaltung, sinkender Anteil der Haushaltseinkommen, Unternehmens- und Staatsersparnis. Nach Kaleckis Gewinngleichung entstehen Gewinne dann über Nettoexporte statt über Investitionen.
+
+Fazit: Wettbewerbsfähigkeit ist ein Teil der Erklärung. Dass die Überschüsse kein Problem seien, lässt sich aus Kreislaufsicht aber nicht halten, denn sie setzen die Verschuldung anderer voraus und beruhen auch auf schwacher Binnennachfrage.`},
+ {id:"e8-2", pts:12,
+  q:"Welche makroökonomische Politik ist in einer koordinierten, welche in einer liberalen Marktwirtschaft zu erwarten? Begründen Sie.",
+  k:["CME: regelbasierte, konservative Geld- und Fiskalpolitik","Begründung CME: Exportorientierung, preisliche Wettbewerbsfähigkeit, Inflationsvermeidung","Starker Sozialstaat sichert spezifische Qualifikationen ab","LME: diskretionäre, keynesianische, offensive Politik","Begründung LME: schwache soziale Sicherung, Arbeitslosigkeit muss vermieden werden","Empirie: stärkere Schwankungen von Arbeitslosigkeit, Defizit und Zinsen in den USA"],
+  m:`In koordinierten Marktwirtschaften wie Deutschland ist eine regelbasierte, eher neoklassisch geprägte Geld- und Fiskalpolitik zu erwarten. Die Industrie ist auf inkrementelle Innovation und Export spezialisiert; preisliche Wettbewerbsfähigkeit ist wichtig, deshalb sollen Inflation und Kostensteigerungen vermieden werden. Ein starker Sozialstaat sichert Beschäftigte mit betriebsspezifischen Qualifikationen ab und federt Abschwünge ab.
+
+In liberalen Marktwirtschaften wie den USA ist die Politik diskretionär und offensiver keynesianisch. Weil die soziale Sicherung schwach ist, muss längere Arbeitslosigkeit über expansive Geld- und Fiskalpolitik vermieden werden. Externe Wettbewerbsfähigkeit ist wegen des hohen Anteils nicht handelbarer Dienstleistungen weniger wichtig.
+
+Empirisch schwanken in den USA Arbeitslosenquote, staatlicher Finanzierungssaldo und Leitzinsen deutlich stärker als in Deutschland.`}
+];
+
+CALC[6]=["lps","zins"];
+CALC[7]=["kalecki"];
+CALC[8]=["gewinn"];
