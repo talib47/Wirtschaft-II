@@ -6,7 +6,7 @@
    - "| Kopf | A | B" (mehrere Zeilen) wird Gegenüberstellung, auf dem Handy gestapelt
    - **fett**, Y^N hochgestellt, Y_POT tiefgestellt; Klammern mit Wörtern werden leiser gesetzt */
 const nb=s=>String(s).replace(/(\d) (%|€|Prozentpunkte|Punkte|P\.|Tage|Minuten)/g,"$1&nbsp;$2");
-const subsup=s=>s.replace(/([A-Za-zΠ*])\^([A-Za-z]+)/g,"$1<sup>$2</sup>").replace(/([A-Za-zΠ])_([A-Za-z]{1,8})/g,"$1<sub>$2</sub>");
+const subsup=s=>s.replace(/([A-Za-zΠ*])\^([A-Za-z]+)/g,"$1<sup>$2</sup>").replace(/([A-Za-zΠ])_([A-Za-zΠ]{1,8})/g,"$1<sub>$2</sub>");
 const quietParens=s=>s.replace(/\(([^()]{2,})\)/g,(m,x)=>/^[A-Za-zÄÖÜäöüß„]/.test(x)&&/[A-Za-zÄÖÜäöüß]{3,}/.test(x)&&!/[=+−·<>\/]/.test(x)?`<span class="pz">(${x})</span>`:m);
 const inl=s=>quietParens(subsup(nb(String(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"))));
 const fx=s=>subsup(nb(s));

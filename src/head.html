@@ -49,7 +49,8 @@ html{font-size:calc(100% * var(--z,1))}
 body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 main{max-width:42rem;margin:0 auto;padding-block:20px 120px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0 0 .4em;text-wrap:balance}
-h1{font-size:1.75rem} h2{font-size:1.3rem} h3{font-size:1.05rem}
+h1{font-size:1.75rem}
+h1,h2,h3,.card .front{overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto} h2{font-size:1.3rem} h3{font-size:1.05rem}
 p{margin:0 0 .8em}
 .muted{color:var(--muted)} .small{font-size:.875rem}
 .eyebrow{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 .3em}
@@ -93,6 +94,10 @@ button{cursor:pointer}
 .data th{font-weight:600;color:var(--muted);font-size:.8rem}
 .data td{font-family:var(--mono)}
 .tablewrap{overflow-x:auto;margin:8px 0 2px}
+.vals{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr));gap:6px;margin:10px 0 2px}
+.vals div{border:1px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--bg);display:flex;flex-direction:column;gap:1px;min-width:0}
+.vals span{font-size:.76rem;color:var(--muted);line-height:1.3}
+.vals b{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
 .eq{font-family:var(--mono);font-size:.92rem;background:var(--bg);border-radius:8px;padding:8px 10px;overflow-x:auto;white-space:nowrap}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg button{background:none;border:0;padding:7px 12px;font-size:.85rem;color:var(--muted)}
@@ -160,7 +165,8 @@ nav button[aria-current="page"]{background:var(--accent-soft);color:var(--ink)}
 .merk b:first-child{display:block;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
 .kv{width:100%;border-collapse:collapse;font-size:.9rem;margin:6px 0 10px}
 .kv td{border-top:1px solid var(--line);padding:6px 4px;vertical-align:top}
-.kv td:first-child{font-weight:600;white-space:nowrap;padding-right:10px}
+.kv td:first-child{font-weight:600;padding-right:14px;width:34%;hyphens:auto;-webkit-hyphens:auto}
+@media (max-width:560px){ .kv,.kv tbody,.kv tr,.kv td{display:block;width:100%} .kv tr{border-top:1px solid var(--line);padding:6px 0} .kv tr:first-child{border-top:0} .kv td{border:0;padding:1px 0} .kv td:first-child{width:auto} }
 .mc{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .mc button{text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .mc button.r{border-color:var(--good);background:var(--good-soft)}
@@ -230,6 +236,7 @@ svg .sarrow{fill:var(--accent)}
 .card .back ul,.card .back ol{margin:0 0 .5em;padding-left:1.25em}
 .card .back li{margin:.2em 0}
 .card .back>:last-child{margin-bottom:0}
+.ml ol,.ml ul{padding-left:1.25em;margin:0 0 .5em} .ml li{margin:.25em 0} .ml p{margin:0 0 .5em}
 .card .tap{font-size:.78rem;color:var(--muted);margin:0}
 .fb{margin-top:10px;border-left:3px solid var(--line);padding:2px 0 2px 12px;font-size:.92rem}
 .fb.good{border-color:var(--good)} .fb.bad{border-color:var(--bad)} .fb.idk{border-color:var(--gold)}

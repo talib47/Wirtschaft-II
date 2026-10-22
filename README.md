@@ -14,6 +14,7 @@ python3 build.py      # erzeugt index.html neu
 |---|---|
 | `head.html` | Kopf, Icons, Manifest, komplettes CSS (Farben als Tokens, Dunkelmodus), Zoom |
 | `core.js` | Speicher (`localStorage`), Geräte-Abgleich über GitHub, Hilfsfunktionen, `judge()` |
+| `format.js` | Textformat: Karten-Rückseiten (Listen, Begriff: Erklärung, Formelbox, Vergleichstabelle), Beispielboxen, Kopierhilfe |
 | `model.js`, `model2.js` | Rechenaufgaben-Generatoren (Schritte mit Erklärung, 3 Stufen) |
 | `content*.js` | Kapitel, Lektionen, Karten, Grafiken, Essays, Rechentypen je Kapitel |
 | `cardinfo.js` | Kontextzeile (Vorderseite) und dezente i-Infos (Rückseite) je Karte |

@@ -42,7 +42,7 @@ function renderTask(){
 const eqLine=s=>`<div class="eq">${esc(s.calc)}</div>`;
 /* Lösungsschritt: Formel, Einsetzen, Begründung; am Ende Ergebnis und Deutung */
 const stepRows=s=>`<div class="dlist">${s.f?`<b>Formel</b><span><span class="eq" style="display:block">${esc(s.f)}</span></span>`:""}<b>Einsetzen</b><span><span class="eq" style="display:block">${esc(s.calc)}</span></span>${s.why?`<b>Warum</b><span>${s.why}</span>`:""}</div>`;
-const deutBox=d=>d.deut?`<div class="bsp"><p class="bh">Deutung</p><p style="margin:0 0 8px">${d.deut}</p></div>`:"";
+const deutBox=d=>{ const t=d.deut||(TYPES[task.t]||{}).deut; return t?`<div class="bsp"><p class="bh">Deutung</p><p style="margin:0 0 8px">${t}</p></div>`:""; };
 
 /* Stufe 1: vorgerechnet, Schritt für Schritt aufdecken */
 function renderWorked(){

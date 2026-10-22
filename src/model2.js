@@ -1,6 +1,7 @@
 /* ================= Rechenaufgaben Kapitel 2, 3, 4, 6, 7, 8 ================= */
 const d2=x=>Math.round(x*100)/100;
-function tbl(h,v){ return `<div class="tablewrap"><table class="data"><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr><tr>${v.map(x=>`<td>${typeof x==="number"?fmt(x):x}</td>`).join("")}</tr></table></div>`; }
+/* Gegebene Werte als Kacheln: brechen auf dem Handy um, statt quer aus dem Bild zu laufen */
+function tbl(h,v){ return `<div class="vals">${h.map((x,i)=>`<div><span>${x}</span><b>${typeof v[i]==="number"?fmt(v[i]):v[i]}</b></div>`).join("")}</div>`; }
 const VGR_TXT="Offene Volkswirtschaft. Internationale Einkommensströme werden vernachlässigt, sodass Nettoexporte = Leistungsbilanz = − Finanzierungssaldo des Auslands.";
 /* Eine in sich stimmige Volkswirtschaft: alle Identitäten der VGR gelten */
 function economy(){
@@ -201,3 +202,23 @@ Object.assign(TYPES,{
       steps:[{lab:"Nettogewinne Π<sub>netto</sub>", why:"„Gewinne ohne Investitionen“: Π kann auch steigen, wenn mehr aus Gewinnen konsumiert wird, die Lohnbezieher:innen entsparen (debt-led) oder die Nettoexporte steigen (export-led).", f:"Π = C_Π + I − S_W + (G − T) + (X − M)", calc:`Π = ${CP} + ${I} − ${par(SW)} + ${par(GT)} + ${par(NX)} = ${P}`, ans:P, final:true}]};
   }}
 });
+
+/* Deutung am Ende des Lösungswegs: ein Satz, was das Ergebnis bedeutet (falls die Aufgabe keine eigene hat) */
+Object.entries({
+  gg:"Negative Lücke: Die Wirtschaft produziert unter ihrem Potenzial, es herrscht Unterbeschäftigung. Positive Lücke: Überauslastung, früher oder später Inflation.",
+  dG:"Wegen des Multiplikators muss der Staat seine Ausgaben nur um einen Bruchteil der Lücke erhöhen: ΔG = Lücke / Multiplikator.",
+  dT:"Steuern wirken schwächer als Staatsausgaben, weil von einer Entlastung ein Teil gespart wird. Um dieselbe Lücke zu schließen, muss die Steueränderung deshalb größer sein als eine Ausgabenänderung.",
+  di:"Bei negativer Lücke senkt die Zentralbank den Zins, damit mehr investiert wird, bei positiver erhöht sie ihn. Je stärker die Investitionen auf den Zins reagieren (n), desto kleiner der nötige Zinsschritt.",
+  mult:"Staatsausgaben wirken stärker als eine gleich große Steuersenkung, weil von der Entlastung ein Teil gespart wird. Die Differenz der Multiplikatoren beträgt genau 1.",
+  bs:"Beide Maßnahmen verschlechtern den Budgetsaldo um genau 1, weil die Steuern hier ein fester Betrag sind. Die Mehrausgabe bringt aber mehr Einkommen: Für dasselbe Defizit wirkt G stärker.",
+  klausur:"Wegen des Multiplikators reicht ein Impuls, der kleiner ist als die Lücke. Bei Steuern muss er größer sein als bei Staatsausgaben, weil von einer Steuerentlastung ein Teil gespart wird.",
+  schuld:"Die Schuldenstandquote läuft langfristig auf d/g zu. Ein dauerhaftes Defizit ist also mit einer stabilen Quote vereinbar, solange die Wirtschaft nominal wächst.",
+  vgr:"Entstehung, Verwendung und Verteilung ergeben dasselbe Y, und die Finanzierungssalden summieren sich zu null. Deshalb lässt sich jede fehlende Größe aus den anderen berechnen.",
+  salden:"Privatsektor, Staat und Ausland haben zusammen immer den Saldo null: Der Überschuss des einen ist das Defizit eines anderen.",
+  real:"Das reale Wachstum zeigt, ob wirklich mehr produziert wird. Der Rest des nominalen Wachstums ist nur Preissteigerung.",
+  marx:"Im Klassenmodell sind die Investitionen genau der Teil der Produktion, den die Arbeiter:innen nicht als Lohn erhalten. Steigt die Rente der Grundbesitzer, bleibt bei gegebener Produktion weniger für Investitionen.",
+  lps:"Solange die Lücke zwischen Lohn- und Preissetzung besteht, ändert sich die Inflation jede Periode um die Lücke. Die Reallöhne bleiben trotzdem konstant, weil die Unternehmen jede Lohnänderung an die Preise weitergeben.",
+  zins:"Liegt die Inflation über dem Ziel, erhöht die Zentralbank den Zins, liegt sie darunter, senkt sie ihn. Der Faktor k bestimmt, wie stark sie reagiert.",
+  kalecki:"Ein höherer Lohnanteil erhöht die Nachfrage, weil aus Löhnen mehr konsumiert wird als aus Gewinnen. Hängen die Investitionen von der Nachfrage ab, können sogar die Gewinne steigen: das Kostenparadox.",
+  gewinn:"Gesamtwirtschaftlich entstehen Gewinne aus Investitionen, Konsum aus Gewinnen, Staatsdefizit und Nettoexporten. Ersparnis aus Löhnen senkt sie."
+}).forEach(([k,v])=>{ if(TYPES[k]) TYPES[k].deut=v; });
