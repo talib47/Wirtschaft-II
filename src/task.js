@@ -40,13 +40,17 @@ function renderTask(){
   return renderFree();
 }
 const eqLine=s=>`<div class="eq">${esc(s.calc)}</div>`;
+/* Lösungsschritt: Formel, Einsetzen, Begründung; am Ende Ergebnis und Deutung */
+const stepRows=s=>`<div class="dlist">${s.f?`<b>Formel</b><span><span class="eq" style="display:block">${esc(s.f)}</span></span>`:""}<b>Einsetzen</b><span><span class="eq" style="display:block">${esc(s.calc)}</span></span>${s.why?`<b>Warum</b><span>${s.why}</span>`:""}</div>`;
+const deutBox=d=>d.deut?`<div class="bsp"><p class="bh">Deutung</p><p style="margin:0 0 8px">${d.deut}</p></div>`:"";
 
 /* Stufe 1: vorgerechnet, Schritt für Schritt aufdecken */
 function renderWorked(){
   const S=task.data.steps, n=task.shown;
   $("#app").innerHTML=head()+`
     <div class="stack">${S.slice(0,n+1).map((s,i)=>`<div class="step">
-      <div class="lab">${i+1}. ${s.lab}</div><div class="why">${s.why}</div>${eqLine(s)}</div>`).join("")}</div>
+      <div class="lab">${i+1}. ${s.lab}</div>${stepRows(s)}</div>`).join("")}</div>
+    ${n>=S.length-1?deutBox(task.data):""}
     <div class="row" style="margin-top:14px">${n<S.length-1?`<button class="btn" id="more">Nächster Schritt</button>`:`<button class="btn" id="self">Jetzt selbst rechnen</button>`}</div>`;
   bindHead();
   if($("#more")) $("#more").onclick=()=>{ task.shown++; renderWorked(); };
@@ -64,7 +68,7 @@ function renderGuided(){
       <div id="out"></div></div>`;
   }).join("");
   $("#app").innerHTML=head()+`<div class="stack">${html}</div>
-    ${task.done?finishBox():padHTML()}`;
+    ${task.done?deutBox(task.data)+finishBox():padHTML()}`;
   bindHead(); bindPad();
   if(task.done){ bindFinish(); return; }
   const inp=$("#in"); inp.focus({preventScroll:true});
@@ -102,7 +106,7 @@ function renderFree(){
     F.forEach(([s,i])=>{ const el=$("#f"+i), res=judge(s,el.value); if(!res) all=false;
       el.disabled=true; $("#o"+i).innerHTML=`<p class="res ${res?"good":"bad"}">${res?"Richtig":"Richtig wäre "+fmt(s.ans)+(s.rate?" (= "+fmt(s.ans*100)+" Prozentpunkte)":"")+(s.pct?" %":"")}</p>`; });
     task.done=true; record(all); $("#chkAll").remove();
-    $("#sol").innerHTML=`<div class="block"><h3>Lösungsweg</h3><div class="stack">${S.map((s,i)=>`<div><div class="small" style="font-weight:600">${i+1}. ${s.lab}</div>${eqLine(s)}</div>`).join("")}</div></div>`+finishBox(all);
+    $("#sol").innerHTML=`<div class="block"><h3>Lösungsweg</h3><div class="stack">${S.map((s,i)=>`<div><div class="small" style="font-weight:600">${i+1}. ${s.lab}</div>${stepRows(s)}</div>`).join("")}</div>${deutBox(task.data)}</div>`+finishBox(all);
     bindFinish();
   };
 }

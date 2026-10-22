@@ -112,17 +112,17 @@ Object.assign(TYPES,{
         {lab:"Gleichgewichtiges BIP Y*", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = 1/(1 − c₁) · (c₀ + I)", calc:`Y* = 1/(1 − ${fmt(c1)}) · (${c0} + ${I}) = ${fmt(k)} · ${c0+I} = ${fmt(Y)}`, ans:Y, final:true},
         {lab:"Ersparnis S", why:"S = Y − C mit C = c₀ + c₁Y. Ergebnis: S = I.", f:"S = Y − (c₀ + c₁Y)", calc:`S = ${fmt(Y)} − (${c0} + ${fmt(c1)}·${fmt(Y)}) = ${fmt(r(Y-C))}`, ans:r(Y-C), final:true}];
       if(v==="I"){ const dI=pick([5,10,20]), Y2=r(k*(c0+I+dI));
-        return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
+        return {deut:`Mehr Investitionen erhöhen Y* um das ${fmt(k)}-Fache: um ${fmt(r(Y2-Y))} statt nur um ${dI}. Die Ersparnis steigt genau um ${dI}: Weil mehr investiert wird, wird mehr gespart (I → S).`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
           q:`Berechnen Sie Y* und die Ersparnis S. Danach steigen die Investitionen um ${dI}: Wie hoch sind jetzt Y* und S?`,
           steps:[...head,
             {lab:"Neues Y*", why:"Höhere Investitionen wirken mit dem Multiplikator.", f:"Y*neu = 1/(1 − c₁) · (c₀ + I + ΔI)", calc:`Y*neu = ${fmt(k)} · ${c0+I+dI} = ${fmt(Y2)}`, ans:Y2, final:true},
             {lab:"Neue Ersparnis S", why:"Keynesianisch: Die Investitionen bestimmen die Ersparnis (I → S).", f:"S = I", calc:`S = ${I+dI}`, ans:I+dI, final:true}]}; }
       if(v==="c0"){ const dc=pick([5,10,-5,-10]); if(c0+dc<=0) continue; const Y2=r(k*(c0+dc+I));
-        return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
+        return {deut:`Der autonome Konsum ${dc>0?"steigt":"sinkt"} um ${Math.abs(dc)}, Y* ${dc>0?"steigt":"sinkt"} um das ${fmt(k)}-Fache, also um ${fmt(Math.abs(r(Y2-Y)))}.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
           q:`Berechnen Sie Y* und die Ersparnis S. Danach ${dc>0?"steigt":"sinkt"} der autonome Konsum auf ${c0+dc}: Wie hoch ist jetzt Y*?`,
           steps:[...head,{lab:"Neues Y*", why:"Auch der autonome Konsum wirkt mit dem vollen Multiplikator.", f:"Y*neu = 1/(1 − c₁) · (c₀neu + I)", calc:`Y*neu = ${fmt(k)} · ${c0+dc+I} = ${fmt(Y2)}`, ans:Y2, final:true}]}; }
       const c1n=pick([.5,.6,.75].filter(x=>x<c1)); if(c1n===undefined) continue; const k2=1/(1-c1n), Y2=r(k2*(c0+I)); if(!nice(Y2,2)) continue;
-      return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
+      return {deut:`Sparparadox: Die Haushalte wollen mehr sparen, doch Y* fällt von ${fmt(Y)} auf ${fmt(Y2)}. Gespart wird am Ende genauso viel wie vorher: S = I = ${I}.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
         q:`Berechnen Sie Y* und S. Danach wollen die Haushalte mehr sparen: c<sub>1</sub> fällt auf ${fmt(c1n)}. Wie hoch sind jetzt Y* und S? (Sparparadox)`,
         steps:[...head,
           {lab:"Neues Y*", why:"Der Multiplikator sinkt mit der Konsumneigung.", f:"Y*neu = 1/(1 − c₁neu) · (c₀ + I)", calc:`Y*neu = 1/(1 − ${fmt(c1n)}) · ${c0+I} = ${fmt(Y2)}`, ans:Y2, final:true},
@@ -138,11 +138,11 @@ Object.assign(TYPES,{
         {lab:"Multiplikator 1/(1 − c₁ − a)", why:"Nachfragebedingte Investitionen verstärken die Kettenreaktion.", f:"1 / (1 − c₁ − a)", calc:`1 / (1 − ${fmt(c1)} − ${fmt(a)}) = ${fmt(d2(k))}`, ans:d2(k)},
         {lab:"Gleichgewichtiges BIP Y*", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = (c₀ + I_aut) / (1 − c₁ − a)", calc:`Y* = (${c0} + ${Ia}) / ${fmt(r(1-c1-a))} = ${fmt(d2(Y))}`, ans:d2(Y), final:true}];
       if(v){ const Ia2=Ia+1, Y2=r((c0+Ia2)*k);
-        return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
+        return {deut:`Steigen die autonomen Investitionen um 1, steigt Y* um den Multiplikator ${fmt(d2(k))}. Er ist größer als ohne Akzelerator, weil auch die Investitionen auf die Nachfrage reagieren.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
           q:`Ermitteln Sie Y*. Wie hoch ist Y*, wenn die autonomen Investitionen auf ${Ia2} steigen?`,
           steps:[...head,{lab:"Neues Y*", why:"ΔY = Multiplikator · ΔI_aut.", f:"Y*neu = (c₀ + I_aut,neu) / (1 − c₁ − a)", calc:`Y*neu = ${c0+Ia2} / ${fmt(r(1-c1-a))} = ${fmt(d2(Y2))}`, ans:d2(Y2), final:true}]}; }
       const a2=r(a+.1); if(c1+a2>=.95) continue; const Y2=r((c0+Ia)/(1-c1-a2));
-      return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
+      return {deut:`Ein größerer Akzelerator macht den Nenner kleiner und den Multiplikator größer: Y* steigt von ${fmt(d2(Y))} auf ${fmt(d2(Y2))}, obwohl sich die autonomen Ausgaben nicht ändern.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
         q:`Ermitteln Sie Y*. Wie verändert sich Y*, wenn der Akzelerator a auf ${fmt(a2)} steigt?`,
         steps:[...head,{lab:"Neues Y*", why:"Der Nenner wird kleiner, der Multiplikator größer.", f:"Y*neu = (c₀ + I_aut) / (1 − c₁ − a_neu)", calc:`Y*neu = ${c0+Ia} / ${fmt(r(1-c1-a2))} = ${fmt(d2(Y2))}`, ans:d2(Y2), final:true}]};
     }
@@ -151,7 +151,7 @@ Object.assign(TYPES,{
     for(;;){
       const c1=pick([.5,.6,.75,.8]), k=1/(1-c1), c0=rint(1,6), I=rint(2,8), Y=r(k*(c0+I)); if(!nice(Y,1)) continue;
       const YV=Math.ceil(Y)+rint(1,6), dI=1, c0n=r(YV*(1-c1)-(I-dI)); if(!nice(c0n,2)||c0n<=0) continue;
-      return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I","Y<sub>V</sub>"],[c0,c1,I,YV]),
+      return {deut:`Y* liegt um ${fmt(r(YV-Y))} unter Y<sub>V</sub>: Gleichgewicht bei Unterbeschäftigung. Damit nach dem Rückgang der Investitionen Vollbeschäftigung herrscht, müsste der autonome Konsum auf ${fmt(c0n)} steigen.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I","Y<sub>V</sub>"],[c0,c1,I,YV]),
         q:`a) Wie hoch ist Y*? Herrscht Vollbeschäftigung? b) Die Investitionen fallen um ${dI} auf ${I-dI}. Wie hoch müsste der autonome Konsum sein, damit Vollbeschäftigung erreicht wird?`,
         steps:[
           {lab:"a) Gleichgewichtiges BIP Y*", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = 1/(1 − c₁) · (c₀ + I)", calc:`Y* = ${fmt(k)} · ${c0+I} = ${fmt(Y)}`, ans:Y, final:true},

@@ -276,71 +276,121 @@ check:[
 
 LESSONS[4]=[
 {id:"4-1", t:"Das einfache keynesianische Modell", html:`
-<p>Geschlossene Volkswirtschaft ohne Staat: Y<sup>N</sup> = C + I.</p>
-<ul><li><b>Konsumfunktion</b> C = c₀ + c₁Y<sup>VT</sup>: c₀ ist der autonome Konsum, unabhängig vom Einkommen. c₁ ist die marginale Konsumneigung: Steigt das Einkommen um eine Einheit, steigt der Konsum um c₁ Einheiten (0 < c₁ < 1).</li>
-<li><b>Investitionen</b> I sind exogen, also außerhalb des Modells bestimmt: durch die animal spirits der Unternehmer:innen.</li>
-<li>Das Angebot passt sich der Nachfrage an: Y<sup>N</sup> → Y<sup>A</sup>, und Y<sup>A</sup> = Y<sup>N</sup> = Y<sup>VT</sup>.</li></ul>
-<p><b>Unterstellt die Konsumfunktion irrationale Haushalte?</b> Aus neoklassischer Sicht ja: Haushalte sollten nach dem erwarteten Lebenseinkommen entscheiden, nicht nach dem laufenden. Keynes betont aber, dass hyperrationale Entscheidungen über die Zeit unmöglich sind („In the long run, we are all dead“). Im Sinne der <b>bounded rationality</b> sind Gegenwart und jüngste Vergangenheit eine vernünftige Orientierung, wenn man wenig über die Zukunft weiß.</p>`,
+<p>Das Modell beschreibt eine geschlossene Volkswirtschaft (ohne Ausland) ohne Staat. Die Nachfrage besteht nur aus Konsum und Investitionen:</p>
+<div class="eq">Y<sup>N</sup> = C + I</div>
+<h3>Die drei Annahmen</h3>
+<div class="dlist">
+<b>Konsum</b><span><span class="eq" style="display:block">C = c₀ + c₁Y<sup>VT</sup></span><b>c₀</b>: autonomer Konsum <span class="pz">(unabhängig vom Einkommen, z. B. Miete und Lebensmittel)</span><br><b>c₁</b>: marginale Konsumneigung <span class="pz">(Anteil jedes zusätzlichen Euros, der ausgegeben wird, 0 &lt; c₁ &lt; 1)</span></span>
+<b>Investitionen</b><span>exogen <span class="pz">(außerhalb des Modells festgelegt)</span>: Sie hängen von der Stimmung der Unternehmer:innen ab <span class="pz">(animal spirits)</span>.</span>
+<b>Angebot</b><span>passt sich der Nachfrage an: Y<sup>A</sup> = Y<sup>N</sup> = Y<sup>VT</sup></span>
+</div>
+<h3>Sind die Haushalte irrational?</h3>
+<p>Die Konsumfunktion sagt: Haushalte richten ihren Konsum nach dem laufenden Einkommen. Ob das vernünftig ist, sehen die Schulen verschieden:</p>
+${cmp([["","Neoklassik","Keynes"],["Antwort","Ja, irrational","Nein, vernünftig"],["Begründung","Haushalte sollten nach dem erwarteten Lebenseinkommen planen.","Über die ferne Zukunft weiß man wenig („In the long run, we are all dead“). Gegenwart und jüngste Vergangenheit sind eine vernünftige Orientierung."],["Fachbegriff","Hyperrationalität (perfekte Planung über das ganze Leben)","begrenzte Rationalität (bounded rationality)"]])}`,
 check:[
- {q:"Was bedeutet c₁ = 0,8?", o:["80 % des Einkommens werden gespart","Von jedem zusätzlichen Euro Einkommen werden 80 Cent konsumiert","Der autonome Konsum beträgt 0,8","Die Investitionen steigen um 0,8"], a:1, ex:"c₁ ist die marginale Konsumneigung."},
- {q:"Was heißt „Investitionen sind exogen“?", o:["Sie hängen vom Zins ab","Sie werden außerhalb des Modells bestimmt","Sie sind null","Sie kommen aus dem Ausland"], a:1, ex:"Im einfachen Modell bestimmen die animal spirits I, nicht Variablen des Modells."}
+ {q:"Was bedeutet c₁ = 0,8?", o:["80 % des Einkommens werden gespart","Von jedem zusätzlichen Euro Einkommen werden 80 Cent konsumiert","Der autonome Konsum beträgt 0,8","Die Investitionen steigen um 0,8"], a:1,
+  ex:"c₁ ist die marginale Konsumneigung: der Anteil eines zusätzlichen Euros, der in den Konsum geht.",
+  w:["Genau umgekehrt: 0,8 wird ausgegeben. Gespart werden nur 20 Cent je zusätzlichem Euro (1 − c₁ = 0,2).",null,"Hier ist c₁ mit c₀ verwechselt. c₀ ist ein fester Betrag (autonomer Konsum), c₁ ein Anteil zwischen 0 und 1.","c₁ gehört zur Konsumfunktion. Die Investitionen sind im Modell fest vorgegeben und hängen nicht von c₁ ab."]},
+ {q:"Was heißt „Investitionen sind exogen“?", o:["Sie hängen vom Zins ab","Sie werden außerhalb des Modells bestimmt","Sie sind null","Sie kommen aus dem Ausland"], a:1,
+  ex:"Exogen heißt „von außen“: Keine Größe im Modell (etwa Y oder c₁) bestimmt I. Den Ausschlag gibt die Stimmung der Unternehmer:innen (animal spirits).",
+  w:["Das ist die neoklassische Sicht: Der Zins steuert die Investitionen. Im einfachen keynesianischen Modell kommt der Zins noch gar nicht vor.",null,"Exogen heißt nicht null, sondern fest vorgegeben, zum Beispiel I = 70.","„Von außen“ meint außerhalb des Modells, nicht aus dem Ausland. Das Modell hat gar kein Ausland."]}
 ]},
 {id:"4-2", t:"Das keynesianische Kreuz", html:`
-<p>Im Diagramm steht die Nachfrage Y<sup>N</sup> = c₀ + c₁Y + I als Gerade mit dem Achsenabschnitt c₀ + I und der Steigung c₁. Das Angebot ist die <b>45°-Linie</b> Y<sup>A</sup> = Y. Im Schnittpunkt liegt das Gleichgewicht Y*.</p>
+<p>Im Diagramm treffen Nachfrage und Angebot aufeinander:</p>
+<div class="dlist">
+<b>Nachfrage</b><span>Gerade Y<sup>N</sup> = c₀ + I + c₁Y mit Achsenabschnitt c₀ + I und Steigung c₁</span>
+<b>Angebot</b><span>45°-Linie Y<sup>A</sup> = Y <span class="pz">(Produktion gleich Nachfrage)</span></span>
+<b>Gleichgewicht</b><span>Schnittpunkt der beiden Linien, darunter auf der x-Achse liegt Y*</span>
+</div>
 {{fig:g4a0}}
-<p>Herleitung, so wie sie in der Klausur verlangt wird (2 Punkte):</p>
-<div class="eq">Y<sup>N</sup> = c₀ + c₁Y + I</div>
-<div class="eq">Y<sup>N</sup> = Y<sup>A</sup> = Y<sup>VT</sup> = Y  ⇒  Y = c₀ + c₁Y + I</div>
-<div class="eq">Y − c₁Y = c₀ + I  ⇒  (1 − c₁) · Y = c₀ + I</div>
-<div class="eq">Y* = 1/(1 − c₁) · (c₀ + I)</div>
-<div class="merk"><b>Merksatz</b>1/(1 − c₁) heißt Multiplikator. Er multipliziert die autonomen Ausgaben c₀ + I zum Gleichgewichtseinkommen.</div>`,
+<h3>Herleitung von Y* (in der Klausur 2 Punkte)</h3>
+<ol class="steps">
+<li>Nachfrage aufschreiben<div class="eq">Y<sup>N</sup> = c₀ + c₁Y + I</div></li>
+<li>Gleichgewicht einsetzen: Y<sup>N</sup> = Y<sup>A</sup> = Y<sup>VT</sup> = Y<div class="eq">Y = c₀ + c₁Y + I</div></li>
+<li>c₁Y nach links bringen und Y ausklammern<div class="eq">(1 − c₁) · Y = c₀ + I</div></li>
+<li>Durch (1 − c₁) teilen<div class="eq">Y* = 1/(1 − c₁) · (c₀ + I)</div></li>
+</ol>
+<div class="merk"><b>Merksatz</b>1/(1 − c₁) heißt Multiplikator. Er vervielfacht die autonomen Ausgaben c₀ + I zum Gleichgewichtseinkommen.</div>
+${bsp("Beispiel aus der Vorlesung",[["Gegeben","c₀ = 5, I = 15, c₁ = 0,8"],["Gesucht","Y*"],["Rechnung","$ Y* = 1/(1 − 0,8) · (5 + 15) = 5 · 20"],["Ergebnis","Y* = 100"],["Deutung","Autonome Ausgaben von 20 erzeugen ein Einkommen von 100, also das Fünffache."]])}`,
 check:[
- {q:"c₀ = 80, c₁ = 0,8, I = 70. Wie hoch ist Y*?", o:["150","600","750","187,5"], a:2, ex:"Y* = 1/0,2 · 150 = 5 · 150 = 750 (Aufgabenblatt 4, Aufgabe 2)."}
+ {q:"c₀ = 80, c₁ = 0,8, I = 70. Wie hoch ist Y*?", o:["150","600","750","187,5"], a:2,
+  ex:"Y* = 1/(1 − 0,8) · (80 + 70) = 5 · 150 = 750 (Aufgabenblatt 4, Aufgabe 2).",
+  w:["150 sind nur die autonomen Ausgaben c₀ + I. Der Multiplikator 1/(1 − c₁) fehlt.","600 = 0,8 · 750 ist der einkommensabhängige Konsum c₁Y, nicht das Einkommen selbst.",null,"187,5 = 150 / 0,8: Hier wurde durch c₁ geteilt. Richtig ist durch 1 − c₁ = 0,2."]}
 ]},
 {id:"4-3", t:"Die Logik des Multiplikators", html:`
-<p>Ein Unternehmen investiert 100 € mehr. Das sind 100 € Einnahmen für jemand anderen. Bei c₁ = 0,8 gibt diese Person 80 € aus. Die sind wieder Einkommen für eine dritte Person, die davon 64 € ausgibt, und so weiter:</p>
-<div class="eq">100 + 0,8·100 + 0,8²·100 + … = 1/(1 − 0,8) · 100 = 500</div>
-<p>Der Multiplikator ist 5. Im Diagramm verschiebt sich die Nachfragegerade um ΔI nach oben, und Y* steigt um ein Vielfaches davon.</p>
-<p>Was passiert mit der Ersparnis? Ohne Staat gilt S = Y − C. Steigen die Investitionen um 1 bei c₁ = 0,5, steigt Y um 2, der Konsum um 1, also die Ersparnis um 1. Es wird also nicht mehr investiert, weil mehr gespart wird, sondern <b>weil mehr investiert wird, wird mehr gespart</b> (I → S).</p>`,
+<p>Warum wird aus 100 € Investition mehr als 100 € Einkommen? Weil jede Ausgabe Einkommen für jemand anderen ist:</p>
+<ol class="steps">
+<li>Ein Unternehmen investiert 100 € mehr. Das sind 100 € Einkommen für den Maschinenbauer.</li>
+<li>Bei c₁ = 0,8 gibt er davon 80 € aus.</li>
+<li>Die 80 € sind Einkommen für die nächste Person. Sie gibt 64 € aus.</li>
+<li>Und so weiter: Jede Runde ist um 20 % kleiner als die vorige.</li>
+</ol>
+<div class="eq">100 + 80 + 64 + … = 1/(1 − 0,8) · 100 = 500</div>
+<div class="merk"><b>Merksatz</b>Der Multiplikator ist hier 5. Im Diagramm verschiebt sich die Nachfragegerade um ΔI nach oben, und Y* steigt um das Fünffache.</div>
+<h3>Und die Ersparnis?</h3>
+${bsp("Beispiel aus dem Skript",[["Gegeben","c₁ = 0,5, die Investitionen steigen um 1"],["Rechnung","$ ΔY = 1/(1 − 0,5) · 1 = 2\n$ ΔC = 0,5 · 2 = 1\n$ ΔS = ΔY − ΔC = 2 − 1 = 1"],["Ergebnis","Die Ersparnis steigt um 1, genau so viel wie die Investitionen."],["Deutung","Es wird nicht mehr investiert, weil mehr gespart wird. Sondern weil mehr investiert wird, wird mehr gespart (I → S)."]])}`,
 check:[
- {q:"c₁ = 0,75, die Investitionen steigen um 10. Um wie viel steigt Y*?", o:["7,5","10","30","40"], a:3, ex:"Multiplikator 1/0,25 = 4, also ΔY = 40."}
+ {q:"c₁ = 0,75, die Investitionen steigen um 10. Um wie viel steigt Y*?", o:["7,5","10","30","40"], a:3,
+  ex:"Multiplikator 1/(1 − 0,75) = 1/0,25 = 4, also ΔY = 4 · 10 = 40.",
+  w:["7,5 = 0,75 · 10 ist nur die zweite Ausgabenrunde, nicht die Summe aller Runden.","10 wäre das Ergebnis ohne Multiplikator. Die Kettenreaktion aus Ausgaben und Einkommen fehlt.","30 = 0,75/0,25 · 10 ist der Steuermultiplikator c₁/(1 − c₁) aus dem Modell mit Staat. Investitionen gehen voll in die Nachfrage ein und wirken mit 1/(1 − c₁).",null]}
 ]},
 {id:"4-4", t:"Das Sparparadox in Zahlen", html:`
-<p>Zahlenbeispiel der Vorlesung: c₀ = 5, I = 15, c₁ = 0,8. Dann ist Y* = (5 + 15)/(1 − 0,8) = 100.</p>
-<p>Nun wollen die Haushalte mehr sparen, c₁ fällt auf 0,5. Das neue Gleichgewicht:</p>
-<div class="eq">Y* = 1/(1 − 0,5) · (5 + 15) = 40</div>
-<p>Die Ersparnis bleibt bei S = I = 15: S = Y − C = 40 − (5 + 0,5 · 40) = 15. Die Haushalte wollten mehr sparen, erreicht haben sie nur ein viel niedrigeres Einkommen.</p>
+<p>Was passiert, wenn alle Haushalte gleichzeitig mehr sparen wollen? Zahlenbeispiel der Vorlesung mit c₀ = 5 und I = 15:</p>
+${cmp([["","Vorher","Alle sparen mehr"],["c₁","0,8","0,5"],["Y*","(5 + 15) / 0,2 = 100","(5 + 15) / 0,5 = 40"],["Konsum C","5 + 0,8 · 100 = 85","5 + 0,5 · 40 = 25"],["Ersparnis S = Y − C","15","15"]])}
+<div class="merk"><b>Sparparadox</b>Die Haushalte wollten mehr sparen. Erreicht haben sie nur ein viel niedrigeres Einkommen. Die Ersparnis bleibt bei S = I = 15.</div>
 <div class="merk"><b>Noch krasser mit Akzelerator</b>Hängen auch die Investitionen von der Nachfrage ab, sinken sie im Abschwung mit. Dann fällt die gesamtwirtschaftliche Ersparnis sogar, gerade weil alle mehr sparen wollen.</div>`,
 check:[
- {q:"Was passiert im keynesianischen Modell, wenn c₁ sinkt und I konstant bleibt?", o:["Y* steigt, S steigt","Y* sinkt, S bleibt gleich","Y* bleibt gleich, S steigt","Y* sinkt, S steigt"], a:1, ex:"S = I bleibt unverändert, nur das Einkommen sinkt."}
+ {q:"Was passiert im keynesianischen Modell, wenn c₁ sinkt und I konstant bleibt?", o:["Y* steigt, S steigt","Y* sinkt, S bleibt gleich","Y* bleibt gleich, S steigt","Y* sinkt, S steigt"], a:1,
+  ex:"Gesamtwirtschaftlich gilt S = I. Bleibt I gleich, bleibt auch S gleich. Es sinkt nur das Einkommen.",
+  w:["Das wäre die Sicht eines einzelnen Haushalts. Gesamtwirtschaftlich fehlt Konsumnachfrage, deshalb sinkt Y*.",null,"Y* hängt über den Multiplikator 1/(1 − c₁) von c₁ ab. Sinkt c₁, wird der Multiplikator kleiner und Y* sinkt.","Dass Y* sinkt, stimmt. S kann aber nicht steigen, denn S = I, und I bleibt gleich."]}
 ]},
 {id:"4-5", t:"Der Akzelerator", html:`
-<p>Ein etwas weniger einfaches Modell: Die Investitionen bestehen aus autonomen Investitionen und einem nachfragebedingten Teil.</p>
+<p>Bisher waren die Investitionen fest vorgegeben. Jetzt hängt ein Teil von ihnen von der Nachfrage ab:</p>
 <div class="eq">I = I<sub>aut</sub> + aY</div>
-<p>Unternehmen weiten ihre Kapazitäten aus, wenn die Nachfrage steigt (Keynes' Restaurant schafft mehr Tische an, wenn alle belegt sind). Damit wird</p>
+<div class="dlist">
+<b>I<sub>aut</sub></b><span>autonome Investitionen <span class="pz">(unabhängig von der Nachfrage)</span></span>
+<b>a</b><span>Akzelerator: wie stark die Investitionen auf die Nachfrage reagieren</span>
+</div>
+<p>Die Idee: Unternehmen bauen ihre Kapazitäten aus, wenn die Nachfrage dauerhaft steigt. In Keynes' Beispiel schafft ein Restaurant mehr Tische an, wenn ständig alle belegt sind. Für das Gleichgewicht gilt dann:</p>
 <div class="eq">Y* = 1/(1 − c₁ − a) · (c₀ + I<sub>aut</sub>)</div>
-<p>Der Multiplikator wird größer. Beispiel aus dem Skript: c₁ = 0,5, a = 0,1, Multiplikator 1/0,4 = 2,5. Steigen die Staatsausgaben um 1, steigen Y um 2,5, der Konsum um 1,25 und die Investitionen um 1,25: kein Crowding-out, sondern Crowding-in.</p>`,
+<p>Der Nenner wird kleiner, der Multiplikator also größer.</p>
+${bsp("Beispiel aus dem Skript",[["Gegeben","c₁ = 0,5, a = 0,1, die Staatsausgaben steigen um 1"],["Rechnung","$ Multiplikator = 1/(1 − 0,5 − 0,1) = 1/0,4 = 2,5\n$ ΔC = 0,5 · 2,5 = 1,25\n$ ΔI = 0,1 · 2,5 = 0,25"],["Ergebnis","Y steigt um 2,5, der Konsum um 1,25 und die Investitionen um 0,25."],["Deutung","Die privaten Investitionen werden nicht verdrängt, sondern mitgezogen: kein Crowding-out, sondern Crowding-in."],["Hinweis","Im Skript steht an dieser Stelle, auch die Investitionen stiegen um 1,25. Richtig ist 0,1 · 2,5 = 0,25, sonst ginge die Rechnung 2,5 = 1,25 + 0,25 + 1 nicht auf. Im Gegenbeispiel direkt danach rechnet das Skript selbst mit 0,25."]])}`,
 check:[
- {q:"c₁ = 0,5 und a = 0,2. Wie groß ist der Multiplikator?", o:["2","2,5","3,33","5"], a:2, ex:"1/(1 − 0,5 − 0,2) = 1/0,3 ≈ 3,33."}
+ {q:"c₁ = 0,5 und a = 0,2. Wie groß ist der Multiplikator?", o:["2","2,5","3,33","5"], a:2,
+  ex:"1/(1 − 0,5 − 0,2) = 1/0,3 ≈ 3,33.",
+  w:["2 = 1/(1 − 0,5) ist der Multiplikator ohne Akzelerator. Das a fehlt im Nenner.","2,5 = 1/0,4 wäre richtig für a = 0,1, hier ist a aber 0,2.",null,"5 = 1/0,2: Hier wurde nur a abgezogen und c₁ vergessen. Im Nenner stehen beide: 1 − c₁ − a."]}
 ]},
 {id:"4-6", t:"Output-Lücke und keynesianische Arbeitslosigkeit", html:`
-<p>Bis zum <b>Potenzialoutput</b> Y<sub>V</sub> (Vollbeschäftigung) folgt die Produktion der Nachfrage entlang der 45°-Linie. Wegen des Multiplikators führt schon ein kleiner Anstieg der autonomen Nachfrage zu einem großen Anstieg des BIP.</p>
-<table class="kv">
-<tr><td>A</td><td>Gleichgewicht bei Unterbeschäftigung: Schnittpunkt links von Y<sub>V</sub>, negative Output-Lücke</td></tr>
-<tr><td>B</td><td>Gleichgewicht bei Vollbeschäftigung: Lücke geschlossen</td></tr>
-<tr><td>C</td><td>Gleichgewicht bei Inflation: Schnittpunkt rechts von Y<sub>V</sub>, positive Output-Lücke, früher oder später Inflation</td></tr></table>
+<p>Bis zum <b>Produktionspotenzial</b> Y<sub>V</sub> <span class="pz">(Produktion bei Vollbeschäftigung)</span> folgt die Produktion der Nachfrage entlang der 45°-Linie. Wegen des Multiplikators führt schon ein kleiner Anstieg der autonomen Nachfrage zu einem großen Anstieg des BIP.</p>
+<p>Je nachdem, wo die Nachfragegerade die 45°-Linie schneidet, gibt es drei Fälle:</p>
+<div class="dlist">
+<b>A · Unterbeschäftigung</b><span>Schnittpunkt links von Y<sub>V</sub>, negative Output-Lücke</span>
+<b>B · Vollbeschäftigung</b><span>Schnittpunkt genau bei Y<sub>V</sub>, keine Lücke</span>
+<b>C · Inflation</b><span>Schnittpunkt rechts von Y<sub>V</sub>, positive Output-Lücke, früher oder später steigen die Preise</span>
+</div>
 {{fig:g4a}}
 <div class="merk"><b>Ursache auf dem Gütermarkt</b>Anders als im neoklassischen Modell wird keine fallende Grenzproduktivität der Arbeit angenommen. Höhere Güternachfrage führt zu mehr Beschäftigung, aber nicht unbedingt zu geringeren Reallöhnen.</div>`,
 check:[
- {q:"Der Schnittpunkt von Nachfrage und 45°-Linie liegt rechts von Y_V. Was droht?", o:["Deflation","Inflation","Arbeitslosigkeit","Nichts"], a:1, ex:"Positive Output-Lücke: Die Nachfrage übersteigt das Potenzial."}
+ {q:"Der Schnittpunkt von Nachfrage und 45°-Linie liegt rechts von Y_V. Was droht?", o:["Deflation","Inflation","Arbeitslosigkeit","Nichts"], a:1,
+  ex:"Rechts von Y_V ist die Nachfrage größer als das, was bei Vollbeschäftigung produziert werden kann (positive Output-Lücke). Früher oder später steigen die Preise.",
+  w:["Sinkende Preise (Deflation) wären eher bei zu wenig Nachfrage zu erwarten, also links von Y_V.",null,"Arbeitslosigkeit herrscht links von Y_V (negative Output-Lücke). Rechts davon ist die Nachfrage zu hoch, nicht zu niedrig.","Rechts von Y_V kann die Wirtschaft die Nachfrage auf Dauer nicht bedienen. Das bleibt nicht folgenlos."]}
 ]},
 {id:"4-7", t:"Das Kostenparadox", html:`
-<p>Haben Lohnbezieher:innen eine höhere Konsumneigung als Gewinnbezieher:innen, führt ein Anstieg der Reallöhne zu höherer Güternachfrage: Die Nachfragegerade wird steiler, Y* steigt (<b>Kaufkrafttheorie der Löhne</b>).</p>
+<p><b>Voraussetzung:</b> Lohnbezieher:innen geben einen größeren Teil ihres Einkommens aus als Gewinnbezieher:innen.</p>
+<ol class="steps">
+<li>Die Reallöhne steigen, Einkommen verschiebt sich von Gewinnen zu Löhnen.</li>
+<li>Die durchschnittliche Konsumneigung steigt, die Nachfragegerade wird steiler.</li>
+<li>Y* steigt. Das ist die <b>Kaufkrafttheorie der Löhne</b>.</li>
+</ol>
 {{fig:g4b}}
-<p>Das Paradox: Alle Unternehmen haben höhere Kosten, und trotzdem (gerade deswegen) können die gesamtwirtschaftlichen Gewinne steigen, denn Π = Y<sup>VT</sup> − W. Individuelle Lohnabschlüsse haben also externe Effekte.</p>
-<div class="merk"><b>Mikro-Makro-Paradoxa</b>Sparparadox und Kostenparadox zeigen dasselbe Muster: Was für einen einzelnen Haushalt oder ein einzelnes Unternehmen rational ist, kann gesamtwirtschaftlich das Gegenteil bewirken.</div>`,
+<div class="merk"><b>Das Paradox</b>Jedes Unternehmen hat höhere Kosten. Trotzdem, gerade deswegen, können die Gewinne insgesamt steigen, denn Π = Y<sup>VT</sup> − W. Einzelne Lohnabschlüsse haben also externe Effekte <span class="pz">(Wirkungen auf andere, die im eigenen Kalkül nicht vorkommen)</span>.</div>
+<h3>Mikro-Makro-Paradoxa</h3>
+<p>Spar- und Kostenparadox zeigen dasselbe Muster: Was für einen Einzelnen vernünftig ist, kann gesamtwirtschaftlich das Gegenteil bewirken.</p>
+${cmp([["","Einzeln vernünftig","Wenn es alle tun"],["Sparparadox","Ein Haushalt spart mehr.","Das Einkommen sinkt, die Ersparnis steigt nicht."],["Kostenparadox","Ein Unternehmen hält die Löhne niedrig.","Die Nachfrage sinkt, die Gewinne insgesamt können sinken."]])}`,
 check:[
- {q:"Wann führen höhere Löhne im keynesianischen Modell zu höherer Nachfrage?", o:["Immer","Wenn Lohnbezieher:innen eine höhere Konsumneigung haben als Gewinnbezieher:innen","Wenn die Zinsen steigen","Nie"], a:1, ex:"Dann steigt die durchschnittliche Konsumneigung, wenn der Lohnanteil steigt."}
+ {q:"Wann führen höhere Löhne im keynesianischen Modell zu höherer Nachfrage?", o:["Immer","Wenn Lohnbezieher:innen eine höhere Konsumneigung haben als Gewinnbezieher:innen","Wenn die Zinsen steigen","Nie"], a:1,
+  ex:"Dann fließt mehr Einkommen zu denen, die mehr davon ausgeben. Die durchschnittliche Konsumneigung und damit Y* steigen.",
+  w:["Nicht immer: Geben Lohnbezieher:innen zusätzliches Einkommen nicht stärker aus als Gewinnbezieher:innen, ändert die Umverteilung die Nachfrage nicht.",null,"Zinsen kommen im einfachen Modell ohne Staat nicht vor. Entscheidend ist, wer das Einkommen bekommt.","„Nie“ wäre die Sicht, dass Löhne nur Kosten sind. Im keynesianischen Modell sind Löhne auch Kaufkraft."]}
 ]}
 ];
 
@@ -408,21 +458,21 @@ CARDS[3]=[
  {id:"c3-22", f:"Ricardo: Wirkung steigender Renten", b:"Bei gegebener Produktion und Subsistenzlöhnen (Löhne, die gerade zum Überleben reichen) sinken Gewinne und Investitionen. Folgerung: Politik für Kapitalisten, gegen Grundbesitzer."}
 ];
 CARDS[4]=[
- {id:"c4-01", f:"Konsumfunktion im keynesianischen Modell", b:"C = c₀ + c₁Y. c₀ autonomer Konsum, c₁ marginale Konsumneigung (0 < c₁ < 1)."},
- {id:"c4-02", f:"Ist die keynesianische Konsumfunktion irrational?", b:"Neoklassisch ja (Haushalte sollten nach dem erwarteten Lebenseinkommen konsumieren). Keynes: Hyperrationalität (perfekte Planung über das ganze Leben) ist unmöglich, bei unsicherer Zukunft ist das laufende Einkommen eine vernünftige Orientierung (bounded rationality)."},
- {id:"c4-03", f:"Was heißt „Investitionen sind exogen“?", b:"Sie werden außerhalb des Modells bestimmt, durch die animal spirits (Stimmung und Erwartungen der Unternehmer:innen)."},
- {id:"c4-04", f:"Herleitung von Y* ohne Staat", b:"Y = c₀ + c₁Y + I ⇒ (1 − c₁)Y = c₀ + I ⇒ Y* = 1/(1 − c₁) · (c₀ + I)."},
- {id:"c4-05", f:"Wie entsteht die Multiplikatorwirkung?", b:"Jede Ausgabe ist Einkommen für andere, die davon den Anteil c₁ wieder ausgeben: 100 + 80 + 64 + … = 1/(1 − c₁) · 100."},
- {id:"c4-06", f:"Keynesianisches Kreuz", b:"Nachfragegerade Y^N = c₀ + I + c₁Y schneidet die 45°-Linie Y^A = Y im Gleichgewicht Y*."},
- {id:"c4-07", f:"Multiplikator mit Akzelerator", b:"I = I_aut + aY ⇒ Y* = 1/(1 − c₁ − a) · (c₀ + I_aut). Größer, weil auch die Investitionen auf die Nachfrage reagieren."},
- {id:"c4-08", f:"Warum ist der Multiplikator mit Akzelerator größer?", b:"Steigende Nachfrage löst zusätzlich Investitionen aus, die wieder Einkommen schaffen."},
- {id:"c4-09", f:"Negative und positive Output-Lücke", b:"Negativ: Y* < Y_POT (Produktionspotenzial, also Produktion bei Vollbeschäftigung), Unterbeschäftigung.\nPositiv: Y* > Y_POT, früher oder später Inflation."},
- {id:"c4-10", f:"Drei Konstellationen des Gleichgewichts", b:"Unterbeschäftigung (links vom Vollbeschäftigungsoutput Y_V), Vollbeschäftigung (bei Y_V), Inflation (rechts von Y_V)."},
- {id:"c4-11", f:"Wo liegt die Ursache keynesianischer Arbeitslosigkeit?", b:"Auf dem Gütermarkt: zu geringe Güternachfrage im Vergleich zum Vollbeschäftigungsoutput."},
- {id:"c4-12", f:"Sparparadox im Zahlenbeispiel", b:"c₀ = 5, I = 15: Bei c₁ = 0,8 ist Y = 100. Fällt c₁ auf 0,5, ist Y = 40. S bleibt 15 = I."},
- {id:"c4-13", f:"Kostenparadox (Kaufkrafttheorie der Löhne)", b:"Höhere Löhne erhöhen die Nachfrage, wenn Lohnbezieher:innen mehr konsumieren. Alle Unternehmen haben höhere Kosten, aber die Gewinne Π = Y − W (Einkommen minus Löhne) können steigen."},
- {id:"c4-14", f:"Unterschied Gleichgewichtsoutput vs. Vollbeschäftigungsoutput", b:"Gleichgewichtsoutput: Schnittpunkt von Nachfrage und Angebot (Y*). Vollbeschäftigungsoutput: Produktion bei Vollbeschäftigung (Y_V). Sie müssen nicht übereinstimmen."},
- {id:"c4-15", f:"„Sag mir, was du über die Kausalität von S = I denkst …“", b:"„… und ich sage dir, was für ein Ökonom du bist.“ S → I: neoklassisch. I → S: keynesianisch."}
+ {id:"c4-01", f:"Konsumfunktion im keynesianischen Modell", b:"$ C = c₀ + c₁Y\nc₀: **autonomer Konsum** (unabhängig vom Einkommen)\nc₁: **marginale Konsumneigung**, der Anteil jedes zusätzlichen Euros, der ausgegeben wird (zwischen 0 und 1)"},
+ {id:"c4-02", f:"Ist die keynesianische Konsumfunktion irrational?", b:"| | Neoklassik | Keynes\n| Antwort | Ja | Nein\n| Grund | Haushalte sollten nach dem erwarteten Lebenseinkommen konsumieren. | Perfekte Planung über das ganze Leben ist unmöglich (Hyperrationalität).\n| Folge | – | Bei unsicherer Zukunft ist das laufende Einkommen eine vernünftige Orientierung: **begrenzte Rationalität** (bounded rationality)."},
+ {id:"c4-03", f:"Was heißt „Investitionen sind exogen“?", b:"Sie werden **außerhalb des Modells** bestimmt, also nicht durch Y oder c₁.\nDen Ausschlag gibt die **Stimmung der Unternehmer:innen** (animal spirits)."},
+ {id:"c4-04", f:"Herleitung von Y* ohne Staat", b:"1. Gleichgewicht ansetzen\n$ Y = c₀ + c₁Y + I\n2. c₁Y nach links bringen, Y ausklammern\n$ (1 − c₁) · Y = c₀ + I\n3. Durch (1 − c₁) teilen\n$ Y* = 1/(1 − c₁) · (c₀ + I)"},
+ {id:"c4-05", f:"Wie entsteht die Multiplikatorwirkung?", b:"Jede Ausgabe ist **Einkommen für andere**. Die geben davon wieder den Anteil c₁ aus, und so weiter.\nBei c₁ = 0,8 wird aus 100 € Investition ein Einkommen von 500 €:\n$ 100 + 80 + 64 + … = 1/(1 − 0,8) · 100 = 500"},
+ {id:"c4-06", f:"Was zeigt das keynesianische Kreuz?", b:"Nachfrage: Gerade Y^N = c₀ + I + c₁Y\nAngebot: 45°-Linie Y^A = Y\nGleichgewicht Y*: Schnittpunkt der beiden Linien"},
+ {id:"c4-07", f:"Multiplikator mit Akzelerator", b:"$ I = I_aut + aY\n$ Y* = 1/(1 − c₁ − a) · (c₀ + I_aut)\na: **Akzelerator**, wie stark die Investitionen auf die Nachfrage reagieren\nDer Multiplikator wird **größer**, weil auch die Investitionen auf die Nachfrage reagieren."},
+ {id:"c4-08", f:"Warum ist der Multiplikator mit Akzelerator größer?", b:"Steigende Nachfrage löst **zusätzliche Investitionen** aus (Unternehmen bauen Kapazitäten aus).\nDiese Investitionen sind wieder Einkommen für andere. Die Kettenreaktion wird länger.\n$ 1/(1 − c₁ − a) > 1/(1 − c₁)"},
+ {id:"c4-09", f:"Negative und positive Output-Lücke", b:"| | Negativ | Positiv\n| Lage | Y* < Y_POT | Y* > Y_POT\n| Folge | Unterbeschäftigung (Arbeitslosigkeit) | früher oder später Inflation\nY_POT: **Produktionspotenzial**, die Produktion bei Vollbeschäftigung"},
+ {id:"c4-10", f:"Drei Konstellationen des Gleichgewichts", b:"- Unterbeschäftigung: Y* links vom Vollbeschäftigungsoutput Y_V\n- Vollbeschäftigung: Y* genau bei Y_V\n- Inflation: Y* rechts von Y_V"},
+ {id:"c4-11", f:"Wo liegt die Ursache keynesianischer Arbeitslosigkeit?", b:"Gütermarkt: Die Güternachfrage ist zu gering für Vollbeschäftigung.\nNicht der Arbeitsmarkt (zu hohe Löhne) wie in der Neoklassik."},
+ {id:"c4-12", f:"Sparparadox im Zahlenbeispiel", b:"Gegeben: c₀ = 5, I = 15\n| | Vorher | Alle sparen mehr\n| c₁ | 0,8 | 0,5\n| Y* | 100 | 40\n| S | 15 | 15\nDie Haushalte wollen mehr sparen, erreichen aber nur ein **niedrigeres Einkommen**. S bleibt gleich I."},
+ {id:"c4-13", f:"Kostenparadox (Kaufkrafttheorie der Löhne)", b:"Voraussetzung: Lohnbezieher:innen geben einen größeren Teil ihres Einkommens aus als Gewinnbezieher:innen.\nWirkung: Höhere Löhne erhöhen die Nachfrage und Y*.\nParadox: Alle Unternehmen haben höhere Kosten, trotzdem können die Gewinne insgesamt steigen.\n$ Π = Y − W"},
+ {id:"c4-14", f:"Unterschied Gleichgewichtsoutput vs. Vollbeschäftigungsoutput", b:"| | Gleichgewichtsoutput Y* | Vollbeschäftigungsoutput Y_V\n| Was? | Schnittpunkt von Nachfrage und Angebot | Produktion, wenn alle Arbeitswilligen Arbeit haben\n| Hängt ab von | der Nachfrage (Multiplikator) | Arbeitskräften und Produktivität\nBeide müssen **nicht übereinstimmen**. Die Differenz ist die Output-Lücke."},
+ {id:"c4-15", f:"„Sag mir, was du über die Kausalität von S = I denkst …“", b:"„… und ich sage dir, was für ein Ökonom du bist.“\n| | Neoklassik | Keynesianismus\n| Richtung | S → I | I → S\n| Bedeutung | Die Ersparnis finanziert über den Zins die Investitionen. | Die Investitionen schaffen über das Einkommen die Ersparnis."}
 ];
 
 GRAPHS[3]=[

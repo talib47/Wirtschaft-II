@@ -97,6 +97,7 @@ function renderHome(){
     <p class="eyebrow">Wirtschaft II · Makroökonomik</p>
     <h1>Lernpfad</h1>
     <p class="muted">Alles für die Klausur in einer App: Theorie lesen, Kurzfragen abfragen, rechnen, Grafiken zeichnen, Essays schreiben.</p>
+    ${homeReview()}
     ${dueCards(0).length?`<div class="block row between"><span><b>Heute fällig: ${dueCards(0).length} Karten</b><br><span class="small muted">Zuerst wiederholen, dann Neues lernen.</span></span><button class="btn" id="goDue">Wiederholen</button></div>`:""}
     <div class="block today">
       <p class="eyebrow">Als Nächstes · ${nx.label}</p>
@@ -110,13 +111,19 @@ function renderHome(){
       </button>`;}).join("")}</div></div>
     <div class="block">
       <h2>So ist die Klausur gebaut</h2>
-      <p class="small muted">Beide Altklausuren 2024: 60 Punkte in 60 Minuten, immer derselbe Aufbau. Falls die Klausur bei Bank 90 Minuten dauert, kommt wahrscheinlich Stoff dazu.</p>
+      <div class="klist">
+        <b>Termin</b><span>steht noch nicht fest (kommt über LSF bzw. Moodle)</span>
+        <b>Dauer</b><span>90 Minuten laut Modul. Die Altklausuren 2024 hatten 60 Minuten, also kommt eher mehr Stoff dazu.</span>
+        <b>Hilfsmittel</b><span>Taschenrechner, Geodreieck, Buntstifte</span>
+      </div>
+      <p class="small muted" style="margin:0 0 6px">Aufbau beider Altklausuren 2024, je 60 Punkte:</p>
       <div class="partlist">
-        <span>Teil I</span><span>Kurzfragen: Begriffe, BIP-Kritik, Salden, Schuldenquote</span><b>12 P.</b>
-        <span>Teil II</span><span>Rechnen: VGR-Tabelle, Modell mit Staat, eine Grafik</span><b>24 P.</b>
-        <span>Teil III</span><span>Essay: These aus mehreren Paradigmen diskutieren</span><b>24 P.</b>
+        <span>Teil I</span><span>Kurzfragen: Begriffe, BIP-Kritik, Salden, Schuldenquote</span><b>12&nbsp;P.</b>
+        <span>Teil II</span><span>Rechnen: VGR-Tabelle, Modell mit Staat, eine Grafik</span><b>24&nbsp;P.</b>
+        <span>Teil III</span><span>Essay: These aus mehreren Paradigmen diskutieren</span><b>24&nbsp;P.</b>
       </div>
     </div>`;
+  bindReview();
   $("#goNext").onclick=nx.go;
   if($("#goDue")) $("#goDue").onclick=()=>openCards(0);
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
@@ -139,7 +146,7 @@ function renderChapter(){
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
     </div></div>
     <div class="block"><h3>Lektionen</h3><p class="small muted" style="margin:0 0 6px">${tagOf("")} brauchst du für die Klausur. ${tagOf("1-1")} einmal lesen und abhaken.</p><div class="tlist">${L.map((x,i)=>{ const s=lessonState(x.id);
-      return `<button class="titem" data-i="${i}"><span class="t">${i+1}. ${x.t} ${tagOf(x.id)}</span><span class="chip ${s?(s.ok?"l3":"l2"):""}">${s?(s.ok?"sicher":"gelesen"):"offen"}</span></button>`;}).join("")}</div></div>`;
+      return `<button class="titem" data-i="${i}"><span class="t">${i+1}. ${x.t} ${tagOf(x.id)}</span>${isUnclear(x.id)?`<span class="chip unk">unklar</span>`:`<span class="chip ${s?(s.ok?"l3":"l2"):""}">${s?(s.ok?"sicher":"wiederholen"):"offen"}</span>`}</button>`;}).join("")}</div></div>`;
   bindCrumb(()=>go("home"));
   $("#mL").onclick=()=>openLesson(n,Math.max(0,L.findIndex(x=>!lessonState(x.id))));
   if($("#mK")) $("#mK").onclick=()=>openCards(n);
@@ -153,18 +160,21 @@ function renderChapter(){
 function openLesson(n,i){ cur.ch=n; cur.li=i; cur.ans={}; go("lesson"); }
 function renderLesson(){
   const n=cur.ch, L=LESSONS[n], x=L[cur.li];
-  const html=x.html.replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
+  const html=nb(x.html).replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
   const allAns=x.check.every((_,j)=>cur.ans[j]!==undefined);
   $("#app").innerHTML=`${backTo("Kapitel "+n)}
     <p class="eyebrow">Kapitel ${n} · Lektion ${cur.li+1} von ${L.length} ${tagOf(x.id)}</p>
     <article class="block lesson"><h1>${x.t}</h1>${html}</article>
+    <div class="block unc">${isUnclear(x.id)
+      ?`<span class="small" style="flex:1;min-width:12rem"><b>Als unklar markiert.</b> Den Prompt kannst du in Claude einfügen.</span><button class="btn ghost small" id="uncCopy">Prompt nochmal kopieren</button><button class="btn small" id="uncOk">Jetzt verstanden</button>`
+      :`<span class="small muted" style="flex:1;min-width:12rem">Etwas unklar? Markiert die Lektion und kopiert einen fertigen Prompt für Claude.</span><button class="btn ghost small" id="uncSet">Verstehe ich nicht</button>`}<div id="uncBox" style="width:100%"></div></div>
     ${wipoccBox(x.id)}
     <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>{ const a=cur.ans[j];
       return `<div style="margin-top:${j?16:4}px"><p style="margin:0"><b>${c.q}</b></p><div class="mc">${c.o.map((o,k)=>{
         const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
         return `<button data-j="${j}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${o}</button>`;}).join("")}
         ${a===undefined?`<button data-j="${j}" data-k="-1" class="idk">Weiß ich nicht</button>`:""}</div>
-        ${a!==undefined?`<p class="ex ${a===c.a?"res good":"res bad"}">${a===c.a?"Richtig. ":a===-1?"Gut, dass du ehrlich bist. Die Lektion kommt später wieder. ":"Nicht ganz. "}<span style="color:var(--ink)">${c.ex}</span></p>`:""}</div>`;}).join("")}
+        ${a!==undefined?feedback(c,a):""}</div>`;}).join("")}
     </div>
     <div class="lnav">
       ${cur.li>0?`<button class="btn ghost" id="prev">← Vorherige</button>`:"<span></span>"}
@@ -177,6 +187,10 @@ function renderLesson(){
       state.lessons[x.id]={ok, t:Date.now()}; logDay(); save(); }
     const y=window.scrollY; renderLesson(); window.scrollTo(0,y);
   });
+  const unc=()=>copyText(unclearPrompt(n,x),"#uncBox");
+  if($("#uncSet")) $("#uncSet").onclick=()=>{ state.unclear=state.unclear||{}; state.unclear[x.id]=Date.now(); save(); const y=window.scrollY; renderLesson(); window.scrollTo(0,y); unc(); };
+  if($("#uncCopy")) $("#uncCopy").onclick=unc;
+  if($("#uncOk")) $("#uncOk").onclick=()=>{ delete state.unclear[x.id]; save(); toast("Markierung entfernt"); const y=window.scrollY; renderLesson(); window.scrollTo(0,y); };
   if($("#prev")) $("#prev").onclick=()=>openLesson(n,cur.li-1);
   if($("#next")) $("#next").onclick=()=>openLesson(n,cur.li+1);
   if($("#fin")) $("#fin").onclick=()=>go("chapter");
@@ -185,6 +199,46 @@ function renderLesson(){
 const HINTERGRUND=new Set(["1-1","1-3","1-4","1-5","2-7","2-8","2-9","2-10","3-6","6-1","7-1","8-1","8-2","8-3","8-4"]);
 const tagOf=id=>HINTERGRUND.has(id)?'<span class="tag bg">Hintergrund</span>':'<span class="tag core">Klausurkern</span>';
 function logDay(){ const k=today(); state.days[k]=(state.days[k]||0)+1; }
+
+/* Rückmeldung zu Verständnisfragen: warum falsch, was richtig ist */
+function feedback(c,a){
+  const right=`<b>Richtig</b><span>${inl(c.o[c.a])}</span>`;
+  if(a===c.a) return `<div class="fb good"><p class="fh">Richtig.</p><p style="margin:0">${inl(c.ex)}</p></div>`;
+  if(a===-1) return `<div class="fb idk"><p class="fh">Kein Problem, die Frage kommt später noch einmal.</p><div class="dlist">${right}<b>Warum</b><span>${inl(c.ex)}</span></div></div>`;
+  const why=c.w&&c.w[a];
+  return `<div class="fb bad"><p class="fh">Nicht ganz.</p><div class="dlist">${why?`<b>Deine Wahl</b><span>${inl(why)}</span>`:""}${right}<b>${why?"Der Unterschied":"Warum"}</b><span>${inl(c.ex)}</span></div></div>`;
+}
+
+/* „Verstehe ich nicht“: Markierung und fertiger Prompt für Claude */
+const isUnclear=id=>!!(state.unclear||{})[id];
+function unclearPrompt(n,x){
+  const d=document.createElement("div"); d.innerHTML=x.html.replace(/\{\{fig:\w+\}\}/g,"[Grafik]");
+  d.querySelectorAll("li").forEach(li=>li.prepend("- ")); d.querySelectorAll("p,div,li,tr,h3").forEach(el=>el.append("\n"));
+  d.querySelectorAll("td,th").forEach(el=>el.append(" | "));
+  const txt=d.textContent.replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
+  const ch=CHAPTERS.find(c=>c.n===n);
+  return `Ich lerne für die Klausur „Einführung in die Makroökonomik“ (Wirtschaft II, UDE, Lehramt GyGe, Folien von Till van Treeck). Diese Lektion verstehe ich noch nicht.
+
+Thema: ${ch.title}
+Lektion: ${x.t}
+
+Lektionstext:
+${txt}
+
+Bitte erkläre mir das einfacher: kurze Sätze, Fachbegriffe kurz erklärt, mit einem Beispiel aus dem Alltag oder aus der Schule. Bleib bei den Begriffen und Formeln der Vorlesung. Stell mir danach zwei Kontrollfragen, damit ich prüfen kann, ob ich es verstanden habe. Die Lösungen bitte erst, wenn ich geantwortet habe.`;
+}
+function chapterOfCard(id){ const n=+String(id).replace(/^c(\d+)-.*/,"$1"), ch=CHAPTERS.find(c=>c.n===n); return ch?ch.title:""; }
+
+/* Startseite: unklare Lektionen und Fragen, die später wiederkommen */
+function lessonRef(id){ for(const ch of CHAPTERS){ const i=(LESSONS[ch.n]||[]).findIndex(x=>x.id===id); if(i>=0) return {n:ch.n,i,t:LESSONS[ch.n][i].t,ch:ch.title}; } return null; }
+function homeReview(){
+  const unc=Object.keys(state.unclear||{}).map(lessonRef).filter(Boolean);
+  const again=Object.entries(state.lessons||{}).filter(([id,v])=>v&&!v.ok&&v.t<dayStart()&&!isUnclear(id)).map(([id])=>lessonRef(id)).filter(Boolean);
+  if(!unc.length&&!again.length) return "";
+  const row=(r,lab)=>`<button class="titem rv" data-n="${r.n}" data-i="${r.i}"><span class="t">${r.t}</span><span class="chip ${lab==="unklar"?"unk":"l2"}">${lab}</span><span class="d">${r.ch}</span></button>`;
+  return `<div class="block"><h3>Nochmal anschauen</h3><p class="small muted" style="margin:0 0 4px">${unc.length?"Als unklar markiert oder ":""}mit Fragen, die du nicht gewusst hast.</p><div class="tlist">${unc.map(r=>row(r,"unklar")).join("")}${again.slice(0,5).map(r=>row(r,"Fragen")).join("")}</div></div>`;
+}
+function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
@@ -222,11 +276,13 @@ function renderCards(){
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${CARD_CTX[c.id]?`<p class="cctx">${CARD_CTX[c.id]}</p>`:""}${cur.flip?`<div class="back">${c.b}</div>${cardInfoHTML(c.id)}`:""}</div>
+    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
   bindCrumb(()=>go(n?"chapter":"practice"));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
+  const cd=$("#card"); cd.onclick=e=>{ if(e.target.closest("a")) return; cur.flip=!cur.flip; renderCards(); };
+  cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } };
   const grade=ok=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), b1=ok?Math.min(5,Math.max(b0,1)+1):1;
     state.box[c.id]=b1;
     if(!cur.free||!ok||b1<b0){ const days=ok?(b0===5?35:INTERVAL[b1]):0; state.due[c.id]= ok? dayStart()+days*864e5 : Date.now(); }
@@ -238,9 +294,9 @@ function renderCards(){
 
 /* ================= Grafiken ================= */
 let gStrokes={};
-function openGraph(n,i){ cur.ch=n; cur.gi=i; cur.gshow=false; cur.gchecks={}; go("graph"); }
+function openGraph(n,i){ cur.ch=n; cur.gi=i; cur.gshow=false; cur.gchecks={}; cur.gprev=(state.graphs||{})[GRAPHS[n][i].id]; go("graph"); }
 function renderGraph(){
-  const n=cur.ch, G=GRAPHS[n], g=G[cur.gi], st=(state.graphs||{})[g.id];
+  const n=cur.ch, G=GRAPHS[n], g=G[cur.gi], st=cur.gprev;
   gStrokes[g.id]=gStrokes[g.id]||[];
   $("#app").innerHTML=`${backTo("Kapitel "+n)}
     <p class="eyebrow">Kapitel ${n} · Grafik ${cur.gi+1} von ${G.length}${g.klausur?" · "+g.klausur:""}</p>
@@ -268,9 +324,9 @@ function renderGraph(){
 }
 
 /* ================= Essay ================= */
-function openEssay(n,i){ cur.ch=n; cur.ei=i; cur.eph="schreiben"; cur.echecks={}; go("essay"); }
+function openEssay(n,i){ cur.ch=n; cur.ei=i; cur.eph="schreiben"; cur.echecks={}; cur.eprev=(state.essays||{})[ESSAYS[n][i].id]; go("essay"); }
 function renderEssay(){
-  const n=cur.ch, E=ESSAYS[n], e=E[cur.ei], st=(state.essays||{})[e.id];
+  const n=cur.ch, E=ESSAYS[n], e=E[cur.ei], st=cur.eprev;
   state.drafts=state.drafts||{}; const txt=state.drafts[e.id]||"";
   const per=Math.round(e.pts/e.k.length*10)/10;
   const pts=()=>Math.round(e.k.filter((_,j)=>cur.echecks[j]).length*per);
@@ -283,7 +339,7 @@ function renderEssay(){
       <div class="row" style="margin-top:10px"><button class="btn" id="eDone">Fertig, Erwartungshorizont zeigen</button>${st?`<span class="small muted">Zuletzt: ${st.p} von ${e.pts} P.</span>`:""}</div>`:`
       <div class="block"><h3>Erwartungshorizont</h3><p class="small muted">Hake ab, was in deinem Text klar vorkommt. Jeder Punkt zählt etwa ${String(per).replace(".",",")} P.</p>
         ${e.k.map((k,j)=>`<label class="check"><input type="checkbox" id="q${j}" ${cur.echecks[j]?"checked":""}><span>${k}</span></label>`).join("")}
-        <p class="pts" id="ep">${pts()} von ${e.pts} Punkten</p>
+        <p class="pts" id="ep">${pts()} von ${e.pts} Punkten</p>${st?`<p class="small muted" style="margin-top:-6px">Zuletzt: ${st.p} von ${st.max} P.</p>`:""}
         <div class="row"><button class="btn" id="eSave">Ergebnis speichern</button><button class="btn ghost" id="eCl">Für Claude kopieren</button><button class="btn ghost" id="eEdit">Text überarbeiten</button></div>
         <div id="eCopy"></div></div>
       <div class="block"><h3>Deine Antwort</h3><p style="white-space:pre-wrap">${esc(txt)||'<span class="muted">Kein Text geschrieben.</span>'}</p></div>
@@ -352,10 +408,13 @@ function renderStats(){
   const ready=CHAPTERS.filter(c=>LESSONS[c.n]);
   $("#app").innerHTML=`<h1>Statistik</h1>
     <div class="block"><h2>Letzte 7 Tage</h2>
-      <div class="week">${days.map(([d,n])=>`<div style="height:${Math.round(n/mx*100)}%" title="${n} Schritte"></div>`).join("")}</div>
-      <div class="weekl">${days.map(([d,n])=>`<span>${wd[d.getDay()]}<br>${n}</span>`).join("")}</div></div>
+      <p class="small muted" style="margin:0">Aktionen pro Tag: jede beantwortete Karte, Frage oder Rechenaufgabe zählt.</p>
+      <div class="week7">${days.map(([d,n],i)=>`<div class="d${i===6?" today":""}" title="${n===1?"1 Aktion":n+" Aktionen"}">
+        <div class="bw"><i style="height:${n?Math.max(4,Math.round(n/mx*100)):0}%"></i></div>
+        <span class="wd">${wd[d.getDay()]}</span><span class="dt">${d.getDate()}.${d.getMonth()+1}.</span>
+        <span class="n">${n||"–"}</span><span class="u">${n?(n===1?"Aktion":"Aktionen"):""}</span></div>`).join("")}</div></div>
     <div class="block"><h2>Nach Kapitel</h2>${ready.map(c=>{ const p=chapterProgress(c.n);
-      return `<div class="srow"><span>Kap. ${c.n}</span><span class="small muted">${[["Theorie",p.l,1],["Karten",p.k,(CARDS[c.n]||[]).length],["Rechnen",p.c,(CALC[c.n]||[]).length]].filter(x=>x[2]).map(x=>x[0]+" "+Math.round(x[1]*100)).join(" · ")}</span><span class="pts">${p.total} %</span></div>`;}).join("")}</div>
+      return `<div class="srow ch"><span>${c.title}</span><span class="small muted">${[["Theorie",p.l,1],["Karten",p.k,(CARDS[c.n]||[]).length],["Rechnen",p.c,(CALC[c.n]||[]).length]].filter(x=>x[2]).map(x=>x[0]+" "+Math.round(x[1]*100)).join(" · ")}</span><span class="pts">${p.total} %</span></div>`;}).join("")}</div>
     <div class="block"><h2>Rechenaufgaben</h2>${calcTypes(0).map(t=>{ const h=state.hist[t]; return `<div class="srow"><span>${TYPES[t].short}</span><span class="chip l${lvlOf(t)}">${LVL[lvlOf(t)]}</span><span>${h&&h.n?`${h.r}/${h.n}`:"–"}</span></div>`;}).join("")}</div>
     ${syncBox()}
     <div class="block"><h3>Fortschritt zurücksetzen</h3><p class="small muted">Löscht deinen gesamten Lernstand, auch auf den verbundenen Geräten.</p>

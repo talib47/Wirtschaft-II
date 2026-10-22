@@ -125,6 +125,8 @@ button{cursor:pointer}
 .weekl{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;font-size:.75rem;color:var(--muted);text-align:center}
 .srow{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:.92rem}
 .srow:first-of-type{border-top:0}
+.srow.ch{grid-template-columns:1fr auto}
+.srow.ch .small{grid-column:1/-1;grid-row:2}
 .srow span{font-variant-numeric:tabular-nums}
 
 /* Tableiste */
@@ -193,6 +195,65 @@ svg .sarrow{fill:var(--accent)}
 .pts{font-variant-numeric:tabular-nums;font-weight:600}
 .lnav{display:flex;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
 .crumb{background:none;border:0;padding:0;color:var(--accent);font-weight:600;font-size:.9rem;margin-bottom:8px}
+
+/* ===== Strukturierte Inhalte: Begriffslisten, Gegenüberstellungen, Beispielboxen, Formeln ===== */
+.eq{white-space:normal;overflow-wrap:break-word;overflow-x:visible;line-height:1.55;margin:6px 0}
+.pz{color:var(--muted);font-size:.9em}
+.dlist{display:grid;grid-template-columns:fit-content(42%) 1fr;margin:4px 0 8px}
+.dlist>b,.dlist>span{padding:6px 0;border-top:1px solid var(--line);min-width:0;overflow-wrap:break-word}
+.dlist>b{padding-right:14px;font-weight:600;hyphens:auto;-webkit-hyphens:auto}
+.dlist>b:first-child,.dlist>b:first-child+span{border-top:0}
+.dlist .eq{margin:4px 0 2px}
+.cmp{width:100%;border-collapse:collapse;font-size:.92rem;margin:6px 0 10px}
+.cmp th,.cmp td{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.cmp thead th{border-top:0;font-size:.78rem;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.cmp tbody th{font-weight:600;padding-left:0}
+.cmp td{overflow-wrap:break-word}
+@media (max-width:560px){
+  .cmp:not(.tight) thead{display:none}
+  .cmp:not(.tight),.cmp:not(.tight) tbody,.cmp:not(.tight) tr,.cmp:not(.tight) th,.cmp:not(.tight) td{display:block;width:100%}
+  .cmp:not(.tight) tr{border-top:1px solid var(--line);padding:6px 0}
+  .cmp:not(.tight) tr:first-child{border-top:0}
+  .cmp:not(.tight) tbody th,.cmp:not(.tight) td{border:0;padding:2px 0}
+  .cmp:not(.tight) td{display:grid;grid-template-columns:fit-content(45%) 1fr;gap:10px}
+  .cmp:not(.tight) td::before{content:attr(data-l);color:var(--muted);font-size:.8rem;padding-top:1px}
+}
+.bsp{border:1px solid var(--line);border-radius:12px;padding:10px 14px 4px;margin:12px 0;background:var(--bg)}
+.bsp .bh,.lesson .bsp .bh{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 2px}
+.bsp .dlist{margin:0}
+.lesson ol.steps{padding-left:1.3em;margin:0 0 .8em}
+.lesson ol.steps li{margin:.35em 0}
+.card{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.card .cctx{margin:0;font-size:.8rem;color:var(--muted);letter-spacing:.01em}
+.card .back{white-space:normal}
+.card .back p{margin:0 0 .5em}
+.card .back ul,.card .back ol{margin:0 0 .5em;padding-left:1.25em}
+.card .back li{margin:.2em 0}
+.card .back>:last-child{margin-bottom:0}
+.card .tap{font-size:.78rem;color:var(--muted);margin:0}
+.fb{margin-top:10px;border-left:3px solid var(--line);padding:2px 0 2px 12px;font-size:.92rem}
+.fb.good{border-color:var(--good)} .fb.bad{border-color:var(--bad)} .fb.idk{border-color:var(--gold)}
+.fb .fh{margin:0 0 2px;font-weight:600}
+.fb.good .fh{color:var(--good)} .fb.bad .fh{color:var(--bad)} .fb.idk .fh{color:var(--gold)}
+.fb .dlist{margin:0}
+.unc{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip.unk{color:var(--gold);border-color:var(--gold)}
+.copybox{width:100%;min-height:8rem;margin-top:8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);padding:8px;font-size:.85rem}
+.week7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:10px}
+.week7 .d{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.week7 .bw{height:80px;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.week7 .bw i{display:block;width:70%;max-width:2.2rem;background:var(--accent);opacity:.55;border-radius:4px 4px 0 0;min-height:2px}
+.week7 .wd{font-size:.78rem;font-weight:600;margin-top:6px}
+.week7 .dt{font-size:.68rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.week7 .n{font-size:.85rem;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+.week7 .u{font-size:.6rem;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.week7 .d.today .bw i{opacity:1}
+.week7 .d.today .wd{color:var(--accent)}
+.week7 .d.today{background:var(--accent-soft);border-radius:8px;padding-bottom:4px}
+.klist{display:grid;grid-template-columns:fit-content(40%) 1fr;font-size:.92rem;margin:4px 0 10px}
+.klist>b,.klist>span{padding:6px 0;border-top:1px solid var(--line)}
+.klist>b{padding-right:14px;font-weight:600}
+.klist>b:first-child,.klist>b:first-child+span{border-top:0}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px)}</style>
 </head>
@@ -211,7 +272,7 @@ function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 let state;
 try{ state=JSON.parse(lsGet(KEY)||"null"); }catch(e){ state=null; }
 if(!state||typeof state!=="object") state={};
-function norm(){ for(const k of ["lvl","streak","hist","days","lessons","box","graphs","essays","drafts"]) if(!state[k]||typeof state[k]!=="object") state[k]={}; }
+function norm(){ for(const k of ["lvl","streak","hist","days","lessons","box","graphs","essays","drafts","unclear"]) if(!state[k]||typeof state[k]!=="object") state[k]={}; }
 norm();
 function save(){ state.updated=Date.now(); lsSet(KEY,JSON.stringify(state)); schedulePush(); }
 
@@ -347,6 +408,54 @@ function judge(step,raw){
   if(step.rate){ if(p.pct) v=v/100; return close(v,step.ans)||close(v/100,step.ans); }
   if(step.pct){ return close(v,step.ans)||close(v*100,step.ans); }
   return close(v,step.ans);
+}
+
+/* ================= Textformat: Karten, Rückmeldungen, Beispielboxen =================
+   Schreibweise in den Inhalten (Karten-Rückseite b, Beispielboxen):
+   - Zeilen mit "- " werden Aufzählung, "1. " nummerierte Schritte
+   - "Begriff: Erklärung" wird Begriff fett, Erklärung daneben
+   - "$ Formel" wird Formelbox (bricht auf dem Handy um)
+   - "| Kopf | A | B" (mehrere Zeilen) wird Gegenüberstellung, auf dem Handy gestapelt
+   - **fett**, Y^N hochgestellt, Y_POT tiefgestellt; Klammern mit Wörtern werden leiser gesetzt */
+const nb=s=>String(s).replace(/(\d) (%|€|Prozentpunkte|Punkte|P\.|Tage|Minuten)/g,"$1&nbsp;$2");
+const subsup=s=>s.replace(/([A-Za-zΠ*])\^([A-Za-z]+)/g,"$1<sup>$2</sup>").replace(/([A-Za-zΠ])_([A-Za-z]{1,8})/g,"$1<sub>$2</sub>");
+const quietParens=s=>s.replace(/\(([^()]{2,})\)/g,(m,x)=>/^[A-Za-zÄÖÜäöüß„]/.test(x)&&/[A-Za-zÄÖÜäöüß]{3,}/.test(x)&&!/[=+−·<>\/]/.test(x)?`<span class="pz">(${x})</span>`:m);
+const inl=s=>quietParens(subsup(nb(String(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"))));
+const fx=s=>subsup(nb(s));
+const TERM=/^([^:=⇒]{1,42}): (.+)$/;
+function cmp(rows){
+  const h=rows[0], body=rows.slice(1);
+  const tight=rows.every(r=>r.every(c=>String(c).replace(/\*\*/g,"").length<=18));
+  return `<table class="cmp${tight?" tight":""}"><thead><tr>${h.map(x=>`<th>${inl(x)}</th>`).join("")}</tr></thead><tbody>${body.map(r=>`<tr><th scope="row">${inl(r[0])}</th>${r.slice(1).map((c,j)=>`<td data-l="${esc(String(h[j+1]).replace(/\*\*/g,"").replace(/[\^_]/g,""))}"><span>${inl(c)}</span></td>`).join("")}</tr>`).join("")}</tbody></table>`;
+}
+function richText(b){
+  const L=String(b).split("\n"); let out="", kind=null, items=[];
+  const flush=()=>{ if(!kind) return;
+    if(kind==="dl") out+=`<div class="dlist">${items.join("")}</div>`;
+    else out+=`<${kind}>${items.map(x=>`<li>${x}</li>`).join("")}</${kind}>`;
+    kind=null; items=[]; };
+  const open=k=>{ if(kind!==k){ flush(); kind=k; } };
+  for(let i=0;i<L.length;i++){ const l=L[i].trim(); let m;
+    if(!l){ flush(); continue; }
+    if((m=l.match(/^\$ ?(.*)$/))){ const box=`<div class="eq">${fx(m[1])}</div>`;
+      if((kind==="ol"||kind==="ul")&&items.length) items[items.length-1]+=box; else { flush(); out+=box; } continue; }
+    if(l.startsWith("|")){ flush(); const rows=[];
+      while(i<L.length&&L[i].trim().startsWith("|")){ rows.push(L[i].trim().replace(/^\||\|$/g,"").split("|").map(x=>x.trim())); i++; }
+      i--; out+=cmp(rows); continue; }
+    if((m=l.match(/^[-•] (.*)$/))){ open("ul"); items.push(termInline(m[1])); continue; }
+    if((m=l.match(/^\d+[.)] (.*)$/))){ open("ol"); items.push(termInline(m[1])); continue; }
+    if((m=l.match(TERM))){ open("dl"); items.push(`<b>${inl(m[1])}</b><span>${inl(m[2])}</span>`); continue; }
+    flush(); out+=`<p>${inl(l)}</p>`;
+  }
+  flush(); return out;
+}
+function termInline(s){ const m=s.match(TERM); return m? `<b>${inl(m[1])}:</b> ${inl(m[2])}` : inl(s); }
+/* Beispielbox für Lektionen: links Label, rechts Inhalt */
+function bsp(title,rows){ return `<div class="bsp"><p class="bh">${title}</p><div class="dlist">${rows.map(([k,v])=>`<b>${k}</b><span>${v.split("\n").map(x=>x.startsWith("$")?`<div class="eq">${fx(x.replace(/^\$ ?/,""))}</div>`:inl(x)).join("<br>")}</span>`).join("")}</div></div>`; }
+/* Text kopieren, sonst zum Markieren anzeigen */
+async function copyText(text,holder){
+  try{ await navigator.clipboard.writeText(text); toast("Kopiert. In den Claude-Chat einfügen."); return true; }
+  catch(x){ const h=$(holder); if(h){ h.innerHTML=`<textarea class="copybox" readonly>${esc(text)}</textarea>`; const t=h.querySelector("textarea"); t.focus(); t.select(); } toast("Text markiert, jetzt kopieren"); return false; }
 }
 
 /* ================= Modellbausteine (Schreibweise wie Kap. 5, van Treeck) ================= */
@@ -607,17 +716,17 @@ Object.assign(TYPES,{
         {lab:"Gleichgewichtiges BIP Y*", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = 1/(1 − c₁) · (c₀ + I)", calc:`Y* = 1/(1 − ${fmt(c1)}) · (${c0} + ${I}) = ${fmt(k)} · ${c0+I} = ${fmt(Y)}`, ans:Y, final:true},
         {lab:"Ersparnis S", why:"S = Y − C mit C = c₀ + c₁Y. Ergebnis: S = I.", f:"S = Y − (c₀ + c₁Y)", calc:`S = ${fmt(Y)} − (${c0} + ${fmt(c1)}·${fmt(Y)}) = ${fmt(r(Y-C))}`, ans:r(Y-C), final:true}];
       if(v==="I"){ const dI=pick([5,10,20]), Y2=r(k*(c0+I+dI));
-        return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
+        return {deut:`Mehr Investitionen erhöhen Y* um das ${fmt(k)}-Fache: um ${fmt(r(Y2-Y))} statt nur um ${dI}. Die Ersparnis steigt genau um ${dI}: Weil mehr investiert wird, wird mehr gespart (I → S).`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
           q:`Berechnen Sie Y* und die Ersparnis S. Danach steigen die Investitionen um ${dI}: Wie hoch sind jetzt Y* und S?`,
           steps:[...head,
             {lab:"Neues Y*", why:"Höhere Investitionen wirken mit dem Multiplikator.", f:"Y*neu = 1/(1 − c₁) · (c₀ + I + ΔI)", calc:`Y*neu = ${fmt(k)} · ${c0+I+dI} = ${fmt(Y2)}`, ans:Y2, final:true},
             {lab:"Neue Ersparnis S", why:"Keynesianisch: Die Investitionen bestimmen die Ersparnis (I → S).", f:"S = I", calc:`S = ${I+dI}`, ans:I+dI, final:true}]}; }
       if(v==="c0"){ const dc=pick([5,10,-5,-10]); if(c0+dc<=0) continue; const Y2=r(k*(c0+dc+I));
-        return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
+        return {deut:`Der autonome Konsum ${dc>0?"steigt":"sinkt"} um ${Math.abs(dc)}, Y* ${dc>0?"steigt":"sinkt"} um das ${fmt(k)}-Fache, also um ${fmt(Math.abs(r(Y2-Y)))}.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
           q:`Berechnen Sie Y* und die Ersparnis S. Danach ${dc>0?"steigt":"sinkt"} der autonome Konsum auf ${c0+dc}: Wie hoch ist jetzt Y*?`,
           steps:[...head,{lab:"Neues Y*", why:"Auch der autonome Konsum wirkt mit dem vollen Multiplikator.", f:"Y*neu = 1/(1 − c₁) · (c₀neu + I)", calc:`Y*neu = ${fmt(k)} · ${c0+dc+I} = ${fmt(Y2)}`, ans:Y2, final:true}]}; }
       const c1n=pick([.5,.6,.75].filter(x=>x<c1)); if(c1n===undefined) continue; const k2=1/(1-c1n), Y2=r(k2*(c0+I)); if(!nice(Y2,2)) continue;
-      return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
+      return {deut:`Sparparadox: Die Haushalte wollen mehr sparen, doch Y* fällt von ${fmt(Y)} auf ${fmt(Y2)}. Gespart wird am Ende genauso viel wie vorher: S = I = ${I}.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, Investitionen exogen. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I"],[c0,c1,I]),
         q:`Berechnen Sie Y* und S. Danach wollen die Haushalte mehr sparen: c<sub>1</sub> fällt auf ${fmt(c1n)}. Wie hoch sind jetzt Y* und S? (Sparparadox)`,
         steps:[...head,
           {lab:"Neues Y*", why:"Der Multiplikator sinkt mit der Konsumneigung.", f:"Y*neu = 1/(1 − c₁neu) · (c₀ + I)", calc:`Y*neu = 1/(1 − ${fmt(c1n)}) · ${c0+I} = ${fmt(Y2)}`, ans:Y2, final:true},
@@ -633,11 +742,11 @@ Object.assign(TYPES,{
         {lab:"Multiplikator 1/(1 − c₁ − a)", why:"Nachfragebedingte Investitionen verstärken die Kettenreaktion.", f:"1 / (1 − c₁ − a)", calc:`1 / (1 − ${fmt(c1)} − ${fmt(a)}) = ${fmt(d2(k))}`, ans:d2(k)},
         {lab:"Gleichgewichtiges BIP Y*", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = (c₀ + I_aut) / (1 − c₁ − a)", calc:`Y* = (${c0} + ${Ia}) / ${fmt(r(1-c1-a))} = ${fmt(d2(Y))}`, ans:d2(Y), final:true}];
       if(v){ const Ia2=Ia+1, Y2=r((c0+Ia2)*k);
-        return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
+        return {deut:`Steigen die autonomen Investitionen um 1, steigt Y* um den Multiplikator ${fmt(d2(k))}. Er ist größer als ohne Akzelerator, weil auch die Investitionen auf die Nachfrage reagieren.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
           q:`Ermitteln Sie Y*. Wie hoch ist Y*, wenn die autonomen Investitionen auf ${Ia2} steigen?`,
           steps:[...head,{lab:"Neues Y*", why:"ΔY = Multiplikator · ΔI_aut.", f:"Y*neu = (c₀ + I_aut,neu) / (1 − c₁ − a)", calc:`Y*neu = ${c0+Ia2} / ${fmt(r(1-c1-a))} = ${fmt(d2(Y2))}`, ans:d2(Y2), final:true}]}; }
       const a2=r(a+.1); if(c1+a2>=.95) continue; const Y2=r((c0+Ia)/(1-c1-a2));
-      return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
+      return {deut:`Ein größerer Akzelerator macht den Nenner kleiner und den Multiplikator größer: Y* steigt von ${fmt(d2(Y))} auf ${fmt(d2(Y2))}, obwohl sich die autonomen Ausgaben nicht ändern.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>, I = I<sub>aut</sub> + aY<sup>N</sup>.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I<sub>aut</sub>","a"],[c0,c1,Ia,a]),
         q:`Ermitteln Sie Y*. Wie verändert sich Y*, wenn der Akzelerator a auf ${fmt(a2)} steigt?`,
         steps:[...head,{lab:"Neues Y*", why:"Der Nenner wird kleiner, der Multiplikator größer.", f:"Y*neu = (c₀ + I_aut) / (1 − c₁ − a_neu)", calc:`Y*neu = ${c0+Ia} / ${fmt(r(1-c1-a2))} = ${fmt(d2(Y2))}`, ans:d2(Y2), final:true}]};
     }
@@ -646,7 +755,7 @@ Object.assign(TYPES,{
     for(;;){
       const c1=pick([.5,.6,.75,.8]), k=1/(1-c1), c0=rint(1,6), I=rint(2,8), Y=r(k*(c0+I)); if(!nice(Y,1)) continue;
       const YV=Math.ceil(Y)+rint(1,6), dI=1, c0n=r(YV*(1-c1)-(I-dI)); if(!nice(c0n,2)||c0n<=0) continue;
-      return {intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I","Y<sub>V</sub>"],[c0,c1,I,YV]),
+      return {deut:`Y* liegt um ${fmt(r(YV-Y))} unter Y<sub>V</sub>: Gleichgewicht bei Unterbeschäftigung. Damit nach dem Rückgang der Investitionen Vollbeschäftigung herrscht, müsste der autonome Konsum auf ${fmt(c0n)} steigen.`, intro:"Geschlossene Volkswirtschaft ohne Staat: C = c<sub>0</sub> + c<sub>1</sub>Y<sup>VT</sup>. Y<sup>A</sup> passt sich Y<sup>N</sup> an.", table:tbl(["c<sub>0</sub>","c<sub>1</sub>","I","Y<sub>V</sub>"],[c0,c1,I,YV]),
         q:`a) Wie hoch ist Y*? Herrscht Vollbeschäftigung? b) Die Investitionen fallen um ${dI} auf ${I-dI}. Wie hoch müsste der autonome Konsum sein, damit Vollbeschäftigung erreicht wird?`,
         steps:[
           {lab:"a) Gleichgewichtiges BIP Y*", why:"Multiplikator mal autonome Nachfrage.", f:"Y* = 1/(1 − c₁) · (c₀ + I)", calc:`Y* = ${fmt(k)} · ${c0+I} = ${fmt(Y)}`, ans:Y, final:true},
@@ -1195,71 +1304,121 @@ check:[
 
 LESSONS[4]=[
 {id:"4-1", t:"Das einfache keynesianische Modell", html:`
-<p>Geschlossene Volkswirtschaft ohne Staat: Y<sup>N</sup> = C + I.</p>
-<ul><li><b>Konsumfunktion</b> C = c₀ + c₁Y<sup>VT</sup>: c₀ ist der autonome Konsum, unabhängig vom Einkommen. c₁ ist die marginale Konsumneigung: Steigt das Einkommen um eine Einheit, steigt der Konsum um c₁ Einheiten (0 < c₁ < 1).</li>
-<li><b>Investitionen</b> I sind exogen, also außerhalb des Modells bestimmt: durch die animal spirits der Unternehmer:innen.</li>
-<li>Das Angebot passt sich der Nachfrage an: Y<sup>N</sup> → Y<sup>A</sup>, und Y<sup>A</sup> = Y<sup>N</sup> = Y<sup>VT</sup>.</li></ul>
-<p><b>Unterstellt die Konsumfunktion irrationale Haushalte?</b> Aus neoklassischer Sicht ja: Haushalte sollten nach dem erwarteten Lebenseinkommen entscheiden, nicht nach dem laufenden. Keynes betont aber, dass hyperrationale Entscheidungen über die Zeit unmöglich sind („In the long run, we are all dead“). Im Sinne der <b>bounded rationality</b> sind Gegenwart und jüngste Vergangenheit eine vernünftige Orientierung, wenn man wenig über die Zukunft weiß.</p>`,
+<p>Das Modell beschreibt eine geschlossene Volkswirtschaft (ohne Ausland) ohne Staat. Die Nachfrage besteht nur aus Konsum und Investitionen:</p>
+<div class="eq">Y<sup>N</sup> = C + I</div>
+<h3>Die drei Annahmen</h3>
+<div class="dlist">
+<b>Konsum</b><span><span class="eq" style="display:block">C = c₀ + c₁Y<sup>VT</sup></span><b>c₀</b>: autonomer Konsum <span class="pz">(unabhängig vom Einkommen, z. B. Miete und Lebensmittel)</span><br><b>c₁</b>: marginale Konsumneigung <span class="pz">(Anteil jedes zusätzlichen Euros, der ausgegeben wird, 0 &lt; c₁ &lt; 1)</span></span>
+<b>Investitionen</b><span>exogen <span class="pz">(außerhalb des Modells festgelegt)</span>: Sie hängen von der Stimmung der Unternehmer:innen ab <span class="pz">(animal spirits)</span>.</span>
+<b>Angebot</b><span>passt sich der Nachfrage an: Y<sup>A</sup> = Y<sup>N</sup> = Y<sup>VT</sup></span>
+</div>
+<h3>Sind die Haushalte irrational?</h3>
+<p>Die Konsumfunktion sagt: Haushalte richten ihren Konsum nach dem laufenden Einkommen. Ob das vernünftig ist, sehen die Schulen verschieden:</p>
+${cmp([["","Neoklassik","Keynes"],["Antwort","Ja, irrational","Nein, vernünftig"],["Begründung","Haushalte sollten nach dem erwarteten Lebenseinkommen planen.","Über die ferne Zukunft weiß man wenig („In the long run, we are all dead“). Gegenwart und jüngste Vergangenheit sind eine vernünftige Orientierung."],["Fachbegriff","Hyperrationalität (perfekte Planung über das ganze Leben)","begrenzte Rationalität (bounded rationality)"]])}`,
 check:[
- {q:"Was bedeutet c₁ = 0,8?", o:["80 % des Einkommens werden gespart","Von jedem zusätzlichen Euro Einkommen werden 80 Cent konsumiert","Der autonome Konsum beträgt 0,8","Die Investitionen steigen um 0,8"], a:1, ex:"c₁ ist die marginale Konsumneigung."},
- {q:"Was heißt „Investitionen sind exogen“?", o:["Sie hängen vom Zins ab","Sie werden außerhalb des Modells bestimmt","Sie sind null","Sie kommen aus dem Ausland"], a:1, ex:"Im einfachen Modell bestimmen die animal spirits I, nicht Variablen des Modells."}
+ {q:"Was bedeutet c₁ = 0,8?", o:["80 % des Einkommens werden gespart","Von jedem zusätzlichen Euro Einkommen werden 80 Cent konsumiert","Der autonome Konsum beträgt 0,8","Die Investitionen steigen um 0,8"], a:1,
+  ex:"c₁ ist die marginale Konsumneigung: der Anteil eines zusätzlichen Euros, der in den Konsum geht.",
+  w:["Genau umgekehrt: 0,8 wird ausgegeben. Gespart werden nur 20 Cent je zusätzlichem Euro (1 − c₁ = 0,2).",null,"Hier ist c₁ mit c₀ verwechselt. c₀ ist ein fester Betrag (autonomer Konsum), c₁ ein Anteil zwischen 0 und 1.","c₁ gehört zur Konsumfunktion. Die Investitionen sind im Modell fest vorgegeben und hängen nicht von c₁ ab."]},
+ {q:"Was heißt „Investitionen sind exogen“?", o:["Sie hängen vom Zins ab","Sie werden außerhalb des Modells bestimmt","Sie sind null","Sie kommen aus dem Ausland"], a:1,
+  ex:"Exogen heißt „von außen“: Keine Größe im Modell (etwa Y oder c₁) bestimmt I. Den Ausschlag gibt die Stimmung der Unternehmer:innen (animal spirits).",
+  w:["Das ist die neoklassische Sicht: Der Zins steuert die Investitionen. Im einfachen keynesianischen Modell kommt der Zins noch gar nicht vor.",null,"Exogen heißt nicht null, sondern fest vorgegeben, zum Beispiel I = 70.","„Von außen“ meint außerhalb des Modells, nicht aus dem Ausland. Das Modell hat gar kein Ausland."]}
 ]},
 {id:"4-2", t:"Das keynesianische Kreuz", html:`
-<p>Im Diagramm steht die Nachfrage Y<sup>N</sup> = c₀ + c₁Y + I als Gerade mit dem Achsenabschnitt c₀ + I und der Steigung c₁. Das Angebot ist die <b>45°-Linie</b> Y<sup>A</sup> = Y. Im Schnittpunkt liegt das Gleichgewicht Y*.</p>
+<p>Im Diagramm treffen Nachfrage und Angebot aufeinander:</p>
+<div class="dlist">
+<b>Nachfrage</b><span>Gerade Y<sup>N</sup> = c₀ + I + c₁Y mit Achsenabschnitt c₀ + I und Steigung c₁</span>
+<b>Angebot</b><span>45°-Linie Y<sup>A</sup> = Y <span class="pz">(Produktion gleich Nachfrage)</span></span>
+<b>Gleichgewicht</b><span>Schnittpunkt der beiden Linien, darunter auf der x-Achse liegt Y*</span>
+</div>
 {{fig:g4a0}}
-<p>Herleitung, so wie sie in der Klausur verlangt wird (2 Punkte):</p>
-<div class="eq">Y<sup>N</sup> = c₀ + c₁Y + I</div>
-<div class="eq">Y<sup>N</sup> = Y<sup>A</sup> = Y<sup>VT</sup> = Y  ⇒  Y = c₀ + c₁Y + I</div>
-<div class="eq">Y − c₁Y = c₀ + I  ⇒  (1 − c₁) · Y = c₀ + I</div>
-<div class="eq">Y* = 1/(1 − c₁) · (c₀ + I)</div>
-<div class="merk"><b>Merksatz</b>1/(1 − c₁) heißt Multiplikator. Er multipliziert die autonomen Ausgaben c₀ + I zum Gleichgewichtseinkommen.</div>`,
+<h3>Herleitung von Y* (in der Klausur 2 Punkte)</h3>
+<ol class="steps">
+<li>Nachfrage aufschreiben<div class="eq">Y<sup>N</sup> = c₀ + c₁Y + I</div></li>
+<li>Gleichgewicht einsetzen: Y<sup>N</sup> = Y<sup>A</sup> = Y<sup>VT</sup> = Y<div class="eq">Y = c₀ + c₁Y + I</div></li>
+<li>c₁Y nach links bringen und Y ausklammern<div class="eq">(1 − c₁) · Y = c₀ + I</div></li>
+<li>Durch (1 − c₁) teilen<div class="eq">Y* = 1/(1 − c₁) · (c₀ + I)</div></li>
+</ol>
+<div class="merk"><b>Merksatz</b>1/(1 − c₁) heißt Multiplikator. Er vervielfacht die autonomen Ausgaben c₀ + I zum Gleichgewichtseinkommen.</div>
+${bsp("Beispiel aus der Vorlesung",[["Gegeben","c₀ = 5, I = 15, c₁ = 0,8"],["Gesucht","Y*"],["Rechnung","$ Y* = 1/(1 − 0,8) · (5 + 15) = 5 · 20"],["Ergebnis","Y* = 100"],["Deutung","Autonome Ausgaben von 20 erzeugen ein Einkommen von 100, also das Fünffache."]])}`,
 check:[
- {q:"c₀ = 80, c₁ = 0,8, I = 70. Wie hoch ist Y*?", o:["150","600","750","187,5"], a:2, ex:"Y* = 1/0,2 · 150 = 5 · 150 = 750 (Aufgabenblatt 4, Aufgabe 2)."}
+ {q:"c₀ = 80, c₁ = 0,8, I = 70. Wie hoch ist Y*?", o:["150","600","750","187,5"], a:2,
+  ex:"Y* = 1/(1 − 0,8) · (80 + 70) = 5 · 150 = 750 (Aufgabenblatt 4, Aufgabe 2).",
+  w:["150 sind nur die autonomen Ausgaben c₀ + I. Der Multiplikator 1/(1 − c₁) fehlt.","600 = 0,8 · 750 ist der einkommensabhängige Konsum c₁Y, nicht das Einkommen selbst.",null,"187,5 = 150 / 0,8: Hier wurde durch c₁ geteilt. Richtig ist durch 1 − c₁ = 0,2."]}
 ]},
 {id:"4-3", t:"Die Logik des Multiplikators", html:`
-<p>Ein Unternehmen investiert 100 € mehr. Das sind 100 € Einnahmen für jemand anderen. Bei c₁ = 0,8 gibt diese Person 80 € aus. Die sind wieder Einkommen für eine dritte Person, die davon 64 € ausgibt, und so weiter:</p>
-<div class="eq">100 + 0,8·100 + 0,8²·100 + … = 1/(1 − 0,8) · 100 = 500</div>
-<p>Der Multiplikator ist 5. Im Diagramm verschiebt sich die Nachfragegerade um ΔI nach oben, und Y* steigt um ein Vielfaches davon.</p>
-<p>Was passiert mit der Ersparnis? Ohne Staat gilt S = Y − C. Steigen die Investitionen um 1 bei c₁ = 0,5, steigt Y um 2, der Konsum um 1, also die Ersparnis um 1. Es wird also nicht mehr investiert, weil mehr gespart wird, sondern <b>weil mehr investiert wird, wird mehr gespart</b> (I → S).</p>`,
+<p>Warum wird aus 100 € Investition mehr als 100 € Einkommen? Weil jede Ausgabe Einkommen für jemand anderen ist:</p>
+<ol class="steps">
+<li>Ein Unternehmen investiert 100 € mehr. Das sind 100 € Einkommen für den Maschinenbauer.</li>
+<li>Bei c₁ = 0,8 gibt er davon 80 € aus.</li>
+<li>Die 80 € sind Einkommen für die nächste Person. Sie gibt 64 € aus.</li>
+<li>Und so weiter: Jede Runde ist um 20 % kleiner als die vorige.</li>
+</ol>
+<div class="eq">100 + 80 + 64 + … = 1/(1 − 0,8) · 100 = 500</div>
+<div class="merk"><b>Merksatz</b>Der Multiplikator ist hier 5. Im Diagramm verschiebt sich die Nachfragegerade um ΔI nach oben, und Y* steigt um das Fünffache.</div>
+<h3>Und die Ersparnis?</h3>
+${bsp("Beispiel aus dem Skript",[["Gegeben","c₁ = 0,5, die Investitionen steigen um 1"],["Rechnung","$ ΔY = 1/(1 − 0,5) · 1 = 2\n$ ΔC = 0,5 · 2 = 1\n$ ΔS = ΔY − ΔC = 2 − 1 = 1"],["Ergebnis","Die Ersparnis steigt um 1, genau so viel wie die Investitionen."],["Deutung","Es wird nicht mehr investiert, weil mehr gespart wird. Sondern weil mehr investiert wird, wird mehr gespart (I → S)."]])}`,
 check:[
- {q:"c₁ = 0,75, die Investitionen steigen um 10. Um wie viel steigt Y*?", o:["7,5","10","30","40"], a:3, ex:"Multiplikator 1/0,25 = 4, also ΔY = 40."}
+ {q:"c₁ = 0,75, die Investitionen steigen um 10. Um wie viel steigt Y*?", o:["7,5","10","30","40"], a:3,
+  ex:"Multiplikator 1/(1 − 0,75) = 1/0,25 = 4, also ΔY = 4 · 10 = 40.",
+  w:["7,5 = 0,75 · 10 ist nur die zweite Ausgabenrunde, nicht die Summe aller Runden.","10 wäre das Ergebnis ohne Multiplikator. Die Kettenreaktion aus Ausgaben und Einkommen fehlt.","30 = 0,75/0,25 · 10 ist der Steuermultiplikator c₁/(1 − c₁) aus dem Modell mit Staat. Investitionen gehen voll in die Nachfrage ein und wirken mit 1/(1 − c₁).",null]}
 ]},
 {id:"4-4", t:"Das Sparparadox in Zahlen", html:`
-<p>Zahlenbeispiel der Vorlesung: c₀ = 5, I = 15, c₁ = 0,8. Dann ist Y* = (5 + 15)/(1 − 0,8) = 100.</p>
-<p>Nun wollen die Haushalte mehr sparen, c₁ fällt auf 0,5. Das neue Gleichgewicht:</p>
-<div class="eq">Y* = 1/(1 − 0,5) · (5 + 15) = 40</div>
-<p>Die Ersparnis bleibt bei S = I = 15: S = Y − C = 40 − (5 + 0,5 · 40) = 15. Die Haushalte wollten mehr sparen, erreicht haben sie nur ein viel niedrigeres Einkommen.</p>
+<p>Was passiert, wenn alle Haushalte gleichzeitig mehr sparen wollen? Zahlenbeispiel der Vorlesung mit c₀ = 5 und I = 15:</p>
+${cmp([["","Vorher","Alle sparen mehr"],["c₁","0,8","0,5"],["Y*","(5 + 15) / 0,2 = 100","(5 + 15) / 0,5 = 40"],["Konsum C","5 + 0,8 · 100 = 85","5 + 0,5 · 40 = 25"],["Ersparnis S = Y − C","15","15"]])}
+<div class="merk"><b>Sparparadox</b>Die Haushalte wollten mehr sparen. Erreicht haben sie nur ein viel niedrigeres Einkommen. Die Ersparnis bleibt bei S = I = 15.</div>
 <div class="merk"><b>Noch krasser mit Akzelerator</b>Hängen auch die Investitionen von der Nachfrage ab, sinken sie im Abschwung mit. Dann fällt die gesamtwirtschaftliche Ersparnis sogar, gerade weil alle mehr sparen wollen.</div>`,
 check:[
- {q:"Was passiert im keynesianischen Modell, wenn c₁ sinkt und I konstant bleibt?", o:["Y* steigt, S steigt","Y* sinkt, S bleibt gleich","Y* bleibt gleich, S steigt","Y* sinkt, S steigt"], a:1, ex:"S = I bleibt unverändert, nur das Einkommen sinkt."}
+ {q:"Was passiert im keynesianischen Modell, wenn c₁ sinkt und I konstant bleibt?", o:["Y* steigt, S steigt","Y* sinkt, S bleibt gleich","Y* bleibt gleich, S steigt","Y* sinkt, S steigt"], a:1,
+  ex:"Gesamtwirtschaftlich gilt S = I. Bleibt I gleich, bleibt auch S gleich. Es sinkt nur das Einkommen.",
+  w:["Das wäre die Sicht eines einzelnen Haushalts. Gesamtwirtschaftlich fehlt Konsumnachfrage, deshalb sinkt Y*.",null,"Y* hängt über den Multiplikator 1/(1 − c₁) von c₁ ab. Sinkt c₁, wird der Multiplikator kleiner und Y* sinkt.","Dass Y* sinkt, stimmt. S kann aber nicht steigen, denn S = I, und I bleibt gleich."]}
 ]},
 {id:"4-5", t:"Der Akzelerator", html:`
-<p>Ein etwas weniger einfaches Modell: Die Investitionen bestehen aus autonomen Investitionen und einem nachfragebedingten Teil.</p>
+<p>Bisher waren die Investitionen fest vorgegeben. Jetzt hängt ein Teil von ihnen von der Nachfrage ab:</p>
 <div class="eq">I = I<sub>aut</sub> + aY</div>
-<p>Unternehmen weiten ihre Kapazitäten aus, wenn die Nachfrage steigt (Keynes' Restaurant schafft mehr Tische an, wenn alle belegt sind). Damit wird</p>
+<div class="dlist">
+<b>I<sub>aut</sub></b><span>autonome Investitionen <span class="pz">(unabhängig von der Nachfrage)</span></span>
+<b>a</b><span>Akzelerator: wie stark die Investitionen auf die Nachfrage reagieren</span>
+</div>
+<p>Die Idee: Unternehmen bauen ihre Kapazitäten aus, wenn die Nachfrage dauerhaft steigt. In Keynes' Beispiel schafft ein Restaurant mehr Tische an, wenn ständig alle belegt sind. Für das Gleichgewicht gilt dann:</p>
 <div class="eq">Y* = 1/(1 − c₁ − a) · (c₀ + I<sub>aut</sub>)</div>
-<p>Der Multiplikator wird größer. Beispiel aus dem Skript: c₁ = 0,5, a = 0,1, Multiplikator 1/0,4 = 2,5. Steigen die Staatsausgaben um 1, steigen Y um 2,5, der Konsum um 1,25 und die Investitionen um 1,25: kein Crowding-out, sondern Crowding-in.</p>`,
+<p>Der Nenner wird kleiner, der Multiplikator also größer.</p>
+${bsp("Beispiel aus dem Skript",[["Gegeben","c₁ = 0,5, a = 0,1, die Staatsausgaben steigen um 1"],["Rechnung","$ Multiplikator = 1/(1 − 0,5 − 0,1) = 1/0,4 = 2,5\n$ ΔC = 0,5 · 2,5 = 1,25\n$ ΔI = 0,1 · 2,5 = 0,25"],["Ergebnis","Y steigt um 2,5, der Konsum um 1,25 und die Investitionen um 0,25."],["Deutung","Die privaten Investitionen werden nicht verdrängt, sondern mitgezogen: kein Crowding-out, sondern Crowding-in."],["Hinweis","Im Skript steht an dieser Stelle, auch die Investitionen stiegen um 1,25. Richtig ist 0,1 · 2,5 = 0,25, sonst ginge die Rechnung 2,5 = 1,25 + 0,25 + 1 nicht auf. Im Gegenbeispiel direkt danach rechnet das Skript selbst mit 0,25."]])}`,
 check:[
- {q:"c₁ = 0,5 und a = 0,2. Wie groß ist der Multiplikator?", o:["2","2,5","3,33","5"], a:2, ex:"1/(1 − 0,5 − 0,2) = 1/0,3 ≈ 3,33."}
+ {q:"c₁ = 0,5 und a = 0,2. Wie groß ist der Multiplikator?", o:["2","2,5","3,33","5"], a:2,
+  ex:"1/(1 − 0,5 − 0,2) = 1/0,3 ≈ 3,33.",
+  w:["2 = 1/(1 − 0,5) ist der Multiplikator ohne Akzelerator. Das a fehlt im Nenner.","2,5 = 1/0,4 wäre richtig für a = 0,1, hier ist a aber 0,2.",null,"5 = 1/0,2: Hier wurde nur a abgezogen und c₁ vergessen. Im Nenner stehen beide: 1 − c₁ − a."]}
 ]},
 {id:"4-6", t:"Output-Lücke und keynesianische Arbeitslosigkeit", html:`
-<p>Bis zum <b>Potenzialoutput</b> Y<sub>V</sub> (Vollbeschäftigung) folgt die Produktion der Nachfrage entlang der 45°-Linie. Wegen des Multiplikators führt schon ein kleiner Anstieg der autonomen Nachfrage zu einem großen Anstieg des BIP.</p>
-<table class="kv">
-<tr><td>A</td><td>Gleichgewicht bei Unterbeschäftigung: Schnittpunkt links von Y<sub>V</sub>, negative Output-Lücke</td></tr>
-<tr><td>B</td><td>Gleichgewicht bei Vollbeschäftigung: Lücke geschlossen</td></tr>
-<tr><td>C</td><td>Gleichgewicht bei Inflation: Schnittpunkt rechts von Y<sub>V</sub>, positive Output-Lücke, früher oder später Inflation</td></tr></table>
+<p>Bis zum <b>Produktionspotenzial</b> Y<sub>V</sub> <span class="pz">(Produktion bei Vollbeschäftigung)</span> folgt die Produktion der Nachfrage entlang der 45°-Linie. Wegen des Multiplikators führt schon ein kleiner Anstieg der autonomen Nachfrage zu einem großen Anstieg des BIP.</p>
+<p>Je nachdem, wo die Nachfragegerade die 45°-Linie schneidet, gibt es drei Fälle:</p>
+<div class="dlist">
+<b>A · Unterbeschäftigung</b><span>Schnittpunkt links von Y<sub>V</sub>, negative Output-Lücke</span>
+<b>B · Vollbeschäftigung</b><span>Schnittpunkt genau bei Y<sub>V</sub>, keine Lücke</span>
+<b>C · Inflation</b><span>Schnittpunkt rechts von Y<sub>V</sub>, positive Output-Lücke, früher oder später steigen die Preise</span>
+</div>
 {{fig:g4a}}
 <div class="merk"><b>Ursache auf dem Gütermarkt</b>Anders als im neoklassischen Modell wird keine fallende Grenzproduktivität der Arbeit angenommen. Höhere Güternachfrage führt zu mehr Beschäftigung, aber nicht unbedingt zu geringeren Reallöhnen.</div>`,
 check:[
- {q:"Der Schnittpunkt von Nachfrage und 45°-Linie liegt rechts von Y_V. Was droht?", o:["Deflation","Inflation","Arbeitslosigkeit","Nichts"], a:1, ex:"Positive Output-Lücke: Die Nachfrage übersteigt das Potenzial."}
+ {q:"Der Schnittpunkt von Nachfrage und 45°-Linie liegt rechts von Y_V. Was droht?", o:["Deflation","Inflation","Arbeitslosigkeit","Nichts"], a:1,
+  ex:"Rechts von Y_V ist die Nachfrage größer als das, was bei Vollbeschäftigung produziert werden kann (positive Output-Lücke). Früher oder später steigen die Preise.",
+  w:["Sinkende Preise (Deflation) wären eher bei zu wenig Nachfrage zu erwarten, also links von Y_V.",null,"Arbeitslosigkeit herrscht links von Y_V (negative Output-Lücke). Rechts davon ist die Nachfrage zu hoch, nicht zu niedrig.","Rechts von Y_V kann die Wirtschaft die Nachfrage auf Dauer nicht bedienen. Das bleibt nicht folgenlos."]}
 ]},
 {id:"4-7", t:"Das Kostenparadox", html:`
-<p>Haben Lohnbezieher:innen eine höhere Konsumneigung als Gewinnbezieher:innen, führt ein Anstieg der Reallöhne zu höherer Güternachfrage: Die Nachfragegerade wird steiler, Y* steigt (<b>Kaufkrafttheorie der Löhne</b>).</p>
+<p><b>Voraussetzung:</b> Lohnbezieher:innen geben einen größeren Teil ihres Einkommens aus als Gewinnbezieher:innen.</p>
+<ol class="steps">
+<li>Die Reallöhne steigen, Einkommen verschiebt sich von Gewinnen zu Löhnen.</li>
+<li>Die durchschnittliche Konsumneigung steigt, die Nachfragegerade wird steiler.</li>
+<li>Y* steigt. Das ist die <b>Kaufkrafttheorie der Löhne</b>.</li>
+</ol>
 {{fig:g4b}}
-<p>Das Paradox: Alle Unternehmen haben höhere Kosten, und trotzdem (gerade deswegen) können die gesamtwirtschaftlichen Gewinne steigen, denn Π = Y<sup>VT</sup> − W. Individuelle Lohnabschlüsse haben also externe Effekte.</p>
-<div class="merk"><b>Mikro-Makro-Paradoxa</b>Sparparadox und Kostenparadox zeigen dasselbe Muster: Was für einen einzelnen Haushalt oder ein einzelnes Unternehmen rational ist, kann gesamtwirtschaftlich das Gegenteil bewirken.</div>`,
+<div class="merk"><b>Das Paradox</b>Jedes Unternehmen hat höhere Kosten. Trotzdem, gerade deswegen, können die Gewinne insgesamt steigen, denn Π = Y<sup>VT</sup> − W. Einzelne Lohnabschlüsse haben also externe Effekte <span class="pz">(Wirkungen auf andere, die im eigenen Kalkül nicht vorkommen)</span>.</div>
+<h3>Mikro-Makro-Paradoxa</h3>
+<p>Spar- und Kostenparadox zeigen dasselbe Muster: Was für einen Einzelnen vernünftig ist, kann gesamtwirtschaftlich das Gegenteil bewirken.</p>
+${cmp([["","Einzeln vernünftig","Wenn es alle tun"],["Sparparadox","Ein Haushalt spart mehr.","Das Einkommen sinkt, die Ersparnis steigt nicht."],["Kostenparadox","Ein Unternehmen hält die Löhne niedrig.","Die Nachfrage sinkt, die Gewinne insgesamt können sinken."]])}`,
 check:[
- {q:"Wann führen höhere Löhne im keynesianischen Modell zu höherer Nachfrage?", o:["Immer","Wenn Lohnbezieher:innen eine höhere Konsumneigung haben als Gewinnbezieher:innen","Wenn die Zinsen steigen","Nie"], a:1, ex:"Dann steigt die durchschnittliche Konsumneigung, wenn der Lohnanteil steigt."}
+ {q:"Wann führen höhere Löhne im keynesianischen Modell zu höherer Nachfrage?", o:["Immer","Wenn Lohnbezieher:innen eine höhere Konsumneigung haben als Gewinnbezieher:innen","Wenn die Zinsen steigen","Nie"], a:1,
+  ex:"Dann fließt mehr Einkommen zu denen, die mehr davon ausgeben. Die durchschnittliche Konsumneigung und damit Y* steigen.",
+  w:["Nicht immer: Geben Lohnbezieher:innen zusätzliches Einkommen nicht stärker aus als Gewinnbezieher:innen, ändert die Umverteilung die Nachfrage nicht.",null,"Zinsen kommen im einfachen Modell ohne Staat nicht vor. Entscheidend ist, wer das Einkommen bekommt.","„Nie“ wäre die Sicht, dass Löhne nur Kosten sind. Im keynesianischen Modell sind Löhne auch Kaufkraft."]}
 ]}
 ];
 
@@ -1327,21 +1486,21 @@ CARDS[3]=[
  {id:"c3-22", f:"Ricardo: Wirkung steigender Renten", b:"Bei gegebener Produktion und Subsistenzlöhnen (Löhne, die gerade zum Überleben reichen) sinken Gewinne und Investitionen. Folgerung: Politik für Kapitalisten, gegen Grundbesitzer."}
 ];
 CARDS[4]=[
- {id:"c4-01", f:"Konsumfunktion im keynesianischen Modell", b:"C = c₀ + c₁Y. c₀ autonomer Konsum, c₁ marginale Konsumneigung (0 < c₁ < 1)."},
- {id:"c4-02", f:"Ist die keynesianische Konsumfunktion irrational?", b:"Neoklassisch ja (Haushalte sollten nach dem erwarteten Lebenseinkommen konsumieren). Keynes: Hyperrationalität (perfekte Planung über das ganze Leben) ist unmöglich, bei unsicherer Zukunft ist das laufende Einkommen eine vernünftige Orientierung (bounded rationality)."},
- {id:"c4-03", f:"Was heißt „Investitionen sind exogen“?", b:"Sie werden außerhalb des Modells bestimmt, durch die animal spirits (Stimmung und Erwartungen der Unternehmer:innen)."},
- {id:"c4-04", f:"Herleitung von Y* ohne Staat", b:"Y = c₀ + c₁Y + I ⇒ (1 − c₁)Y = c₀ + I ⇒ Y* = 1/(1 − c₁) · (c₀ + I)."},
- {id:"c4-05", f:"Wie entsteht die Multiplikatorwirkung?", b:"Jede Ausgabe ist Einkommen für andere, die davon den Anteil c₁ wieder ausgeben: 100 + 80 + 64 + … = 1/(1 − c₁) · 100."},
- {id:"c4-06", f:"Keynesianisches Kreuz", b:"Nachfragegerade Y^N = c₀ + I + c₁Y schneidet die 45°-Linie Y^A = Y im Gleichgewicht Y*."},
- {id:"c4-07", f:"Multiplikator mit Akzelerator", b:"I = I_aut + aY ⇒ Y* = 1/(1 − c₁ − a) · (c₀ + I_aut). Größer, weil auch die Investitionen auf die Nachfrage reagieren."},
- {id:"c4-08", f:"Warum ist der Multiplikator mit Akzelerator größer?", b:"Steigende Nachfrage löst zusätzlich Investitionen aus, die wieder Einkommen schaffen."},
- {id:"c4-09", f:"Negative und positive Output-Lücke", b:"Negativ: Y* < Y_POT (Produktionspotenzial, also Produktion bei Vollbeschäftigung), Unterbeschäftigung.\nPositiv: Y* > Y_POT, früher oder später Inflation."},
- {id:"c4-10", f:"Drei Konstellationen des Gleichgewichts", b:"Unterbeschäftigung (links vom Vollbeschäftigungsoutput Y_V), Vollbeschäftigung (bei Y_V), Inflation (rechts von Y_V)."},
- {id:"c4-11", f:"Wo liegt die Ursache keynesianischer Arbeitslosigkeit?", b:"Auf dem Gütermarkt: zu geringe Güternachfrage im Vergleich zum Vollbeschäftigungsoutput."},
- {id:"c4-12", f:"Sparparadox im Zahlenbeispiel", b:"c₀ = 5, I = 15: Bei c₁ = 0,8 ist Y = 100. Fällt c₁ auf 0,5, ist Y = 40. S bleibt 15 = I."},
- {id:"c4-13", f:"Kostenparadox (Kaufkrafttheorie der Löhne)", b:"Höhere Löhne erhöhen die Nachfrage, wenn Lohnbezieher:innen mehr konsumieren. Alle Unternehmen haben höhere Kosten, aber die Gewinne Π = Y − W (Einkommen minus Löhne) können steigen."},
- {id:"c4-14", f:"Unterschied Gleichgewichtsoutput vs. Vollbeschäftigungsoutput", b:"Gleichgewichtsoutput: Schnittpunkt von Nachfrage und Angebot (Y*). Vollbeschäftigungsoutput: Produktion bei Vollbeschäftigung (Y_V). Sie müssen nicht übereinstimmen."},
- {id:"c4-15", f:"„Sag mir, was du über die Kausalität von S = I denkst …“", b:"„… und ich sage dir, was für ein Ökonom du bist.“ S → I: neoklassisch. I → S: keynesianisch."}
+ {id:"c4-01", f:"Konsumfunktion im keynesianischen Modell", b:"$ C = c₀ + c₁Y\nc₀: **autonomer Konsum** (unabhängig vom Einkommen)\nc₁: **marginale Konsumneigung**, der Anteil jedes zusätzlichen Euros, der ausgegeben wird (zwischen 0 und 1)"},
+ {id:"c4-02", f:"Ist die keynesianische Konsumfunktion irrational?", b:"| | Neoklassik | Keynes\n| Antwort | Ja | Nein\n| Grund | Haushalte sollten nach dem erwarteten Lebenseinkommen konsumieren. | Perfekte Planung über das ganze Leben ist unmöglich (Hyperrationalität).\n| Folge | – | Bei unsicherer Zukunft ist das laufende Einkommen eine vernünftige Orientierung: **begrenzte Rationalität** (bounded rationality)."},
+ {id:"c4-03", f:"Was heißt „Investitionen sind exogen“?", b:"Sie werden **außerhalb des Modells** bestimmt, also nicht durch Y oder c₁.\nDen Ausschlag gibt die **Stimmung der Unternehmer:innen** (animal spirits)."},
+ {id:"c4-04", f:"Herleitung von Y* ohne Staat", b:"1. Gleichgewicht ansetzen\n$ Y = c₀ + c₁Y + I\n2. c₁Y nach links bringen, Y ausklammern\n$ (1 − c₁) · Y = c₀ + I\n3. Durch (1 − c₁) teilen\n$ Y* = 1/(1 − c₁) · (c₀ + I)"},
+ {id:"c4-05", f:"Wie entsteht die Multiplikatorwirkung?", b:"Jede Ausgabe ist **Einkommen für andere**. Die geben davon wieder den Anteil c₁ aus, und so weiter.\nBei c₁ = 0,8 wird aus 100 € Investition ein Einkommen von 500 €:\n$ 100 + 80 + 64 + … = 1/(1 − 0,8) · 100 = 500"},
+ {id:"c4-06", f:"Was zeigt das keynesianische Kreuz?", b:"Nachfrage: Gerade Y^N = c₀ + I + c₁Y\nAngebot: 45°-Linie Y^A = Y\nGleichgewicht Y*: Schnittpunkt der beiden Linien"},
+ {id:"c4-07", f:"Multiplikator mit Akzelerator", b:"$ I = I_aut + aY\n$ Y* = 1/(1 − c₁ − a) · (c₀ + I_aut)\na: **Akzelerator**, wie stark die Investitionen auf die Nachfrage reagieren\nDer Multiplikator wird **größer**, weil auch die Investitionen auf die Nachfrage reagieren."},
+ {id:"c4-08", f:"Warum ist der Multiplikator mit Akzelerator größer?", b:"Steigende Nachfrage löst **zusätzliche Investitionen** aus (Unternehmen bauen Kapazitäten aus).\nDiese Investitionen sind wieder Einkommen für andere. Die Kettenreaktion wird länger.\n$ 1/(1 − c₁ − a) > 1/(1 − c₁)"},
+ {id:"c4-09", f:"Negative und positive Output-Lücke", b:"| | Negativ | Positiv\n| Lage | Y* < Y_POT | Y* > Y_POT\n| Folge | Unterbeschäftigung (Arbeitslosigkeit) | früher oder später Inflation\nY_POT: **Produktionspotenzial**, die Produktion bei Vollbeschäftigung"},
+ {id:"c4-10", f:"Drei Konstellationen des Gleichgewichts", b:"- Unterbeschäftigung: Y* links vom Vollbeschäftigungsoutput Y_V\n- Vollbeschäftigung: Y* genau bei Y_V\n- Inflation: Y* rechts von Y_V"},
+ {id:"c4-11", f:"Wo liegt die Ursache keynesianischer Arbeitslosigkeit?", b:"Gütermarkt: Die Güternachfrage ist zu gering für Vollbeschäftigung.\nNicht der Arbeitsmarkt (zu hohe Löhne) wie in der Neoklassik."},
+ {id:"c4-12", f:"Sparparadox im Zahlenbeispiel", b:"Gegeben: c₀ = 5, I = 15\n| | Vorher | Alle sparen mehr\n| c₁ | 0,8 | 0,5\n| Y* | 100 | 40\n| S | 15 | 15\nDie Haushalte wollen mehr sparen, erreichen aber nur ein **niedrigeres Einkommen**. S bleibt gleich I."},
+ {id:"c4-13", f:"Kostenparadox (Kaufkrafttheorie der Löhne)", b:"Voraussetzung: Lohnbezieher:innen geben einen größeren Teil ihres Einkommens aus als Gewinnbezieher:innen.\nWirkung: Höhere Löhne erhöhen die Nachfrage und Y*.\nParadox: Alle Unternehmen haben höhere Kosten, trotzdem können die Gewinne insgesamt steigen.\n$ Π = Y − W"},
+ {id:"c4-14", f:"Unterschied Gleichgewichtsoutput vs. Vollbeschäftigungsoutput", b:"| | Gleichgewichtsoutput Y* | Vollbeschäftigungsoutput Y_V\n| Was? | Schnittpunkt von Nachfrage und Angebot | Produktion, wenn alle Arbeitswilligen Arbeit haben\n| Hängt ab von | der Nachfrage (Multiplikator) | Arbeitskräften und Produktivität\nBeide müssen **nicht übereinstimmen**. Die Differenz ist die Output-Lücke."},
+ {id:"c4-15", f:"„Sag mir, was du über die Kausalität von S = I denkst …“", b:"„… und ich sage dir, was für ein Ökonom du bist.“\n| | Neoklassik | Keynesianismus\n| Richtung | S → I | I → S\n| Bedeutung | Die Ersparnis finanziert über den Zins die Investitionen. | Die Investitionen schaffen über das Einkommen die Ersparnis."}
 ];
 
 GRAPHS[3]=[
@@ -1925,6 +2084,17 @@ const CARD_CTX={
  "c3-18":"Smith, Ricardo, Malthus, Marx im 18. und 19. Jahrhundert",
  "c3-20":"Zwei Begriffe von Karl Marx",
  "c3-22":"Ricardos Modell mit drei Klassen: Arbeiter, Kapitalisten, Grundbesitzer",
+ "c4-01":"Wie hängt der Konsum der Haushalte vom Einkommen ab?",
+ "c4-02":"Kritik an der Annahme C = c₀ + c₁Y",
+ "c4-03":"Annahme des einfachen keynesianischen Modells",
+ "c4-04":"Klausur Teil II: 2 Punkte für die Herleitung",
+ "c4-05":"Warum steigt Y stärker als die Investitionen?",
+ "c4-08":"Akzelerator: Investitionen hängen auch von der Nachfrage ab",
+ "c4-09":"Gleichgewicht Y* im Vergleich zum Produktionspotenzial",
+ "c4-11":"Keynesianisches Modell: Woher kommt Arbeitslosigkeit?",
+ "c4-12":"Zahlenbeispiel der Vorlesung: Alle Haushalte wollen mehr sparen",
+ "c4-13":"Löhne sind Kosten und zugleich Kaufkraft",
+ "c4-14":"Zwei Größen im keynesianischen Kreuz",
  "c4-06":"Das Diagramm zum keynesianischen Modell",
  "c4-07":"Die Investitionen hängen jetzt auch von der Nachfrage ab",
  "c4-10":"Wo schneidet die Nachfragegerade die 45°-Linie, verglichen mit dem Vollbeschäftigungsoutput?",
@@ -2066,6 +2236,7 @@ function renderHome(){
     <p class="eyebrow">Wirtschaft II · Makroökonomik</p>
     <h1>Lernpfad</h1>
     <p class="muted">Alles für die Klausur in einer App: Theorie lesen, Kurzfragen abfragen, rechnen, Grafiken zeichnen, Essays schreiben.</p>
+    ${homeReview()}
     ${dueCards(0).length?`<div class="block row between"><span><b>Heute fällig: ${dueCards(0).length} Karten</b><br><span class="small muted">Zuerst wiederholen, dann Neues lernen.</span></span><button class="btn" id="goDue">Wiederholen</button></div>`:""}
     <div class="block today">
       <p class="eyebrow">Als Nächstes · ${nx.label}</p>
@@ -2079,13 +2250,19 @@ function renderHome(){
       </button>`;}).join("")}</div></div>
     <div class="block">
       <h2>So ist die Klausur gebaut</h2>
-      <p class="small muted">Beide Altklausuren 2024: 60 Punkte in 60 Minuten, immer derselbe Aufbau. Falls die Klausur bei Bank 90 Minuten dauert, kommt wahrscheinlich Stoff dazu.</p>
+      <div class="klist">
+        <b>Termin</b><span>steht noch nicht fest (kommt über LSF bzw. Moodle)</span>
+        <b>Dauer</b><span>90 Minuten laut Modul. Die Altklausuren 2024 hatten 60 Minuten, also kommt eher mehr Stoff dazu.</span>
+        <b>Hilfsmittel</b><span>Taschenrechner, Geodreieck, Buntstifte</span>
+      </div>
+      <p class="small muted" style="margin:0 0 6px">Aufbau beider Altklausuren 2024, je 60 Punkte:</p>
       <div class="partlist">
-        <span>Teil I</span><span>Kurzfragen: Begriffe, BIP-Kritik, Salden, Schuldenquote</span><b>12 P.</b>
-        <span>Teil II</span><span>Rechnen: VGR-Tabelle, Modell mit Staat, eine Grafik</span><b>24 P.</b>
-        <span>Teil III</span><span>Essay: These aus mehreren Paradigmen diskutieren</span><b>24 P.</b>
+        <span>Teil I</span><span>Kurzfragen: Begriffe, BIP-Kritik, Salden, Schuldenquote</span><b>12&nbsp;P.</b>
+        <span>Teil II</span><span>Rechnen: VGR-Tabelle, Modell mit Staat, eine Grafik</span><b>24&nbsp;P.</b>
+        <span>Teil III</span><span>Essay: These aus mehreren Paradigmen diskutieren</span><b>24&nbsp;P.</b>
       </div>
     </div>`;
+  bindReview();
   $("#goNext").onclick=nx.go;
   if($("#goDue")) $("#goDue").onclick=()=>openCards(0);
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
@@ -2108,7 +2285,7 @@ function renderChapter(){
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
     </div></div>
     <div class="block"><h3>Lektionen</h3><p class="small muted" style="margin:0 0 6px">${tagOf("")} brauchst du für die Klausur. ${tagOf("1-1")} einmal lesen und abhaken.</p><div class="tlist">${L.map((x,i)=>{ const s=lessonState(x.id);
-      return `<button class="titem" data-i="${i}"><span class="t">${i+1}. ${x.t} ${tagOf(x.id)}</span><span class="chip ${s?(s.ok?"l3":"l2"):""}">${s?(s.ok?"sicher":"gelesen"):"offen"}</span></button>`;}).join("")}</div></div>`;
+      return `<button class="titem" data-i="${i}"><span class="t">${i+1}. ${x.t} ${tagOf(x.id)}</span>${isUnclear(x.id)?`<span class="chip unk">unklar</span>`:`<span class="chip ${s?(s.ok?"l3":"l2"):""}">${s?(s.ok?"sicher":"wiederholen"):"offen"}</span>`}</button>`;}).join("")}</div></div>`;
   bindCrumb(()=>go("home"));
   $("#mL").onclick=()=>openLesson(n,Math.max(0,L.findIndex(x=>!lessonState(x.id))));
   if($("#mK")) $("#mK").onclick=()=>openCards(n);
@@ -2122,18 +2299,21 @@ function renderChapter(){
 function openLesson(n,i){ cur.ch=n; cur.li=i; cur.ans={}; go("lesson"); }
 function renderLesson(){
   const n=cur.ch, L=LESSONS[n], x=L[cur.li];
-  const html=x.html.replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
+  const html=nb(x.html).replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
   const allAns=x.check.every((_,j)=>cur.ans[j]!==undefined);
   $("#app").innerHTML=`${backTo("Kapitel "+n)}
     <p class="eyebrow">Kapitel ${n} · Lektion ${cur.li+1} von ${L.length} ${tagOf(x.id)}</p>
     <article class="block lesson"><h1>${x.t}</h1>${html}</article>
+    <div class="block unc">${isUnclear(x.id)
+      ?`<span class="small" style="flex:1;min-width:12rem"><b>Als unklar markiert.</b> Den Prompt kannst du in Claude einfügen.</span><button class="btn ghost small" id="uncCopy">Prompt nochmal kopieren</button><button class="btn small" id="uncOk">Jetzt verstanden</button>`
+      :`<span class="small muted" style="flex:1;min-width:12rem">Etwas unklar? Markiert die Lektion und kopiert einen fertigen Prompt für Claude.</span><button class="btn ghost small" id="uncSet">Verstehe ich nicht</button>`}<div id="uncBox" style="width:100%"></div></div>
     ${wipoccBox(x.id)}
     <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>{ const a=cur.ans[j];
       return `<div style="margin-top:${j?16:4}px"><p style="margin:0"><b>${c.q}</b></p><div class="mc">${c.o.map((o,k)=>{
         const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
         return `<button data-j="${j}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${o}</button>`;}).join("")}
         ${a===undefined?`<button data-j="${j}" data-k="-1" class="idk">Weiß ich nicht</button>`:""}</div>
-        ${a!==undefined?`<p class="ex ${a===c.a?"res good":"res bad"}">${a===c.a?"Richtig. ":a===-1?"Gut, dass du ehrlich bist. Die Lektion kommt später wieder. ":"Nicht ganz. "}<span style="color:var(--ink)">${c.ex}</span></p>`:""}</div>`;}).join("")}
+        ${a!==undefined?feedback(c,a):""}</div>`;}).join("")}
     </div>
     <div class="lnav">
       ${cur.li>0?`<button class="btn ghost" id="prev">← Vorherige</button>`:"<span></span>"}
@@ -2146,6 +2326,10 @@ function renderLesson(){
       state.lessons[x.id]={ok, t:Date.now()}; logDay(); save(); }
     const y=window.scrollY; renderLesson(); window.scrollTo(0,y);
   });
+  const unc=()=>copyText(unclearPrompt(n,x),"#uncBox");
+  if($("#uncSet")) $("#uncSet").onclick=()=>{ state.unclear=state.unclear||{}; state.unclear[x.id]=Date.now(); save(); const y=window.scrollY; renderLesson(); window.scrollTo(0,y); unc(); };
+  if($("#uncCopy")) $("#uncCopy").onclick=unc;
+  if($("#uncOk")) $("#uncOk").onclick=()=>{ delete state.unclear[x.id]; save(); toast("Markierung entfernt"); const y=window.scrollY; renderLesson(); window.scrollTo(0,y); };
   if($("#prev")) $("#prev").onclick=()=>openLesson(n,cur.li-1);
   if($("#next")) $("#next").onclick=()=>openLesson(n,cur.li+1);
   if($("#fin")) $("#fin").onclick=()=>go("chapter");
@@ -2154,6 +2338,46 @@ function renderLesson(){
 const HINTERGRUND=new Set(["1-1","1-3","1-4","1-5","2-7","2-8","2-9","2-10","3-6","6-1","7-1","8-1","8-2","8-3","8-4"]);
 const tagOf=id=>HINTERGRUND.has(id)?'<span class="tag bg">Hintergrund</span>':'<span class="tag core">Klausurkern</span>';
 function logDay(){ const k=today(); state.days[k]=(state.days[k]||0)+1; }
+
+/* Rückmeldung zu Verständnisfragen: warum falsch, was richtig ist */
+function feedback(c,a){
+  const right=`<b>Richtig</b><span>${inl(c.o[c.a])}</span>`;
+  if(a===c.a) return `<div class="fb good"><p class="fh">Richtig.</p><p style="margin:0">${inl(c.ex)}</p></div>`;
+  if(a===-1) return `<div class="fb idk"><p class="fh">Kein Problem, die Frage kommt später noch einmal.</p><div class="dlist">${right}<b>Warum</b><span>${inl(c.ex)}</span></div></div>`;
+  const why=c.w&&c.w[a];
+  return `<div class="fb bad"><p class="fh">Nicht ganz.</p><div class="dlist">${why?`<b>Deine Wahl</b><span>${inl(why)}</span>`:""}${right}<b>${why?"Der Unterschied":"Warum"}</b><span>${inl(c.ex)}</span></div></div>`;
+}
+
+/* „Verstehe ich nicht“: Markierung und fertiger Prompt für Claude */
+const isUnclear=id=>!!(state.unclear||{})[id];
+function unclearPrompt(n,x){
+  const d=document.createElement("div"); d.innerHTML=x.html.replace(/\{\{fig:\w+\}\}/g,"[Grafik]");
+  d.querySelectorAll("li").forEach(li=>li.prepend("- ")); d.querySelectorAll("p,div,li,tr,h3").forEach(el=>el.append("\n"));
+  d.querySelectorAll("td,th").forEach(el=>el.append(" | "));
+  const txt=d.textContent.replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
+  const ch=CHAPTERS.find(c=>c.n===n);
+  return `Ich lerne für die Klausur „Einführung in die Makroökonomik“ (Wirtschaft II, UDE, Lehramt GyGe, Folien von Till van Treeck). Diese Lektion verstehe ich noch nicht.
+
+Thema: ${ch.title}
+Lektion: ${x.t}
+
+Lektionstext:
+${txt}
+
+Bitte erkläre mir das einfacher: kurze Sätze, Fachbegriffe kurz erklärt, mit einem Beispiel aus dem Alltag oder aus der Schule. Bleib bei den Begriffen und Formeln der Vorlesung. Stell mir danach zwei Kontrollfragen, damit ich prüfen kann, ob ich es verstanden habe. Die Lösungen bitte erst, wenn ich geantwortet habe.`;
+}
+function chapterOfCard(id){ const n=+String(id).replace(/^c(\d+)-.*/,"$1"), ch=CHAPTERS.find(c=>c.n===n); return ch?ch.title:""; }
+
+/* Startseite: unklare Lektionen und Fragen, die später wiederkommen */
+function lessonRef(id){ for(const ch of CHAPTERS){ const i=(LESSONS[ch.n]||[]).findIndex(x=>x.id===id); if(i>=0) return {n:ch.n,i,t:LESSONS[ch.n][i].t,ch:ch.title}; } return null; }
+function homeReview(){
+  const unc=Object.keys(state.unclear||{}).map(lessonRef).filter(Boolean);
+  const again=Object.entries(state.lessons||{}).filter(([id,v])=>v&&!v.ok&&v.t<dayStart()&&!isUnclear(id)).map(([id])=>lessonRef(id)).filter(Boolean);
+  if(!unc.length&&!again.length) return "";
+  const row=(r,lab)=>`<button class="titem rv" data-n="${r.n}" data-i="${r.i}"><span class="t">${r.t}</span><span class="chip ${lab==="unklar"?"unk":"l2"}">${lab}</span><span class="d">${r.ch}</span></button>`;
+  return `<div class="block"><h3>Nochmal anschauen</h3><p class="small muted" style="margin:0 0 4px">${unc.length?"Als unklar markiert oder ":""}mit Fragen, die du nicht gewusst hast.</p><div class="tlist">${unc.map(r=>row(r,"unklar")).join("")}${again.slice(0,5).map(r=>row(r,"Fragen")).join("")}</div></div>`;
+}
+function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
@@ -2191,11 +2415,13 @@ function renderCards(){
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" style="margin-top:8px"><div class="front">${c.f}</div>${CARD_CTX[c.id]?`<p class="cctx">${CARD_CTX[c.id]}</p>`:""}${cur.flip?`<div class="back">${c.b}</div>${cardInfoHTML(c.id)}`:""}</div>
+    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
   bindCrumb(()=>go(n?"chapter":"practice"));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
+  const cd=$("#card"); cd.onclick=e=>{ if(e.target.closest("a")) return; cur.flip=!cur.flip; renderCards(); };
+  cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } };
   const grade=ok=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), b1=ok?Math.min(5,Math.max(b0,1)+1):1;
     state.box[c.id]=b1;
     if(!cur.free||!ok||b1<b0){ const days=ok?(b0===5?35:INTERVAL[b1]):0; state.due[c.id]= ok? dayStart()+days*864e5 : Date.now(); }
@@ -2207,9 +2433,9 @@ function renderCards(){
 
 /* ================= Grafiken ================= */
 let gStrokes={};
-function openGraph(n,i){ cur.ch=n; cur.gi=i; cur.gshow=false; cur.gchecks={}; go("graph"); }
+function openGraph(n,i){ cur.ch=n; cur.gi=i; cur.gshow=false; cur.gchecks={}; cur.gprev=(state.graphs||{})[GRAPHS[n][i].id]; go("graph"); }
 function renderGraph(){
-  const n=cur.ch, G=GRAPHS[n], g=G[cur.gi], st=(state.graphs||{})[g.id];
+  const n=cur.ch, G=GRAPHS[n], g=G[cur.gi], st=cur.gprev;
   gStrokes[g.id]=gStrokes[g.id]||[];
   $("#app").innerHTML=`${backTo("Kapitel "+n)}
     <p class="eyebrow">Kapitel ${n} · Grafik ${cur.gi+1} von ${G.length}${g.klausur?" · "+g.klausur:""}</p>
@@ -2237,9 +2463,9 @@ function renderGraph(){
 }
 
 /* ================= Essay ================= */
-function openEssay(n,i){ cur.ch=n; cur.ei=i; cur.eph="schreiben"; cur.echecks={}; go("essay"); }
+function openEssay(n,i){ cur.ch=n; cur.ei=i; cur.eph="schreiben"; cur.echecks={}; cur.eprev=(state.essays||{})[ESSAYS[n][i].id]; go("essay"); }
 function renderEssay(){
-  const n=cur.ch, E=ESSAYS[n], e=E[cur.ei], st=(state.essays||{})[e.id];
+  const n=cur.ch, E=ESSAYS[n], e=E[cur.ei], st=cur.eprev;
   state.drafts=state.drafts||{}; const txt=state.drafts[e.id]||"";
   const per=Math.round(e.pts/e.k.length*10)/10;
   const pts=()=>Math.round(e.k.filter((_,j)=>cur.echecks[j]).length*per);
@@ -2252,7 +2478,7 @@ function renderEssay(){
       <div class="row" style="margin-top:10px"><button class="btn" id="eDone">Fertig, Erwartungshorizont zeigen</button>${st?`<span class="small muted">Zuletzt: ${st.p} von ${e.pts} P.</span>`:""}</div>`:`
       <div class="block"><h3>Erwartungshorizont</h3><p class="small muted">Hake ab, was in deinem Text klar vorkommt. Jeder Punkt zählt etwa ${String(per).replace(".",",")} P.</p>
         ${e.k.map((k,j)=>`<label class="check"><input type="checkbox" id="q${j}" ${cur.echecks[j]?"checked":""}><span>${k}</span></label>`).join("")}
-        <p class="pts" id="ep">${pts()} von ${e.pts} Punkten</p>
+        <p class="pts" id="ep">${pts()} von ${e.pts} Punkten</p>${st?`<p class="small muted" style="margin-top:-6px">Zuletzt: ${st.p} von ${st.max} P.</p>`:""}
         <div class="row"><button class="btn" id="eSave">Ergebnis speichern</button><button class="btn ghost" id="eCl">Für Claude kopieren</button><button class="btn ghost" id="eEdit">Text überarbeiten</button></div>
         <div id="eCopy"></div></div>
       <div class="block"><h3>Deine Antwort</h3><p style="white-space:pre-wrap">${esc(txt)||'<span class="muted">Kein Text geschrieben.</span>'}</p></div>
@@ -2321,10 +2547,13 @@ function renderStats(){
   const ready=CHAPTERS.filter(c=>LESSONS[c.n]);
   $("#app").innerHTML=`<h1>Statistik</h1>
     <div class="block"><h2>Letzte 7 Tage</h2>
-      <div class="week">${days.map(([d,n])=>`<div style="height:${Math.round(n/mx*100)}%" title="${n} Schritte"></div>`).join("")}</div>
-      <div class="weekl">${days.map(([d,n])=>`<span>${wd[d.getDay()]}<br>${n}</span>`).join("")}</div></div>
+      <p class="small muted" style="margin:0">Aktionen pro Tag: jede beantwortete Karte, Frage oder Rechenaufgabe zählt.</p>
+      <div class="week7">${days.map(([d,n],i)=>`<div class="d${i===6?" today":""}" title="${n===1?"1 Aktion":n+" Aktionen"}">
+        <div class="bw"><i style="height:${n?Math.max(4,Math.round(n/mx*100)):0}%"></i></div>
+        <span class="wd">${wd[d.getDay()]}</span><span class="dt">${d.getDate()}.${d.getMonth()+1}.</span>
+        <span class="n">${n||"–"}</span><span class="u">${n?(n===1?"Aktion":"Aktionen"):""}</span></div>`).join("")}</div></div>
     <div class="block"><h2>Nach Kapitel</h2>${ready.map(c=>{ const p=chapterProgress(c.n);
-      return `<div class="srow"><span>Kap. ${c.n}</span><span class="small muted">${[["Theorie",p.l,1],["Karten",p.k,(CARDS[c.n]||[]).length],["Rechnen",p.c,(CALC[c.n]||[]).length]].filter(x=>x[2]).map(x=>x[0]+" "+Math.round(x[1]*100)).join(" · ")}</span><span class="pts">${p.total} %</span></div>`;}).join("")}</div>
+      return `<div class="srow ch"><span>${c.title}</span><span class="small muted">${[["Theorie",p.l,1],["Karten",p.k,(CARDS[c.n]||[]).length],["Rechnen",p.c,(CALC[c.n]||[]).length]].filter(x=>x[2]).map(x=>x[0]+" "+Math.round(x[1]*100)).join(" · ")}</span><span class="pts">${p.total} %</span></div>`;}).join("")}</div>
     <div class="block"><h2>Rechenaufgaben</h2>${calcTypes(0).map(t=>{ const h=state.hist[t]; return `<div class="srow"><span>${TYPES[t].short}</span><span class="chip l${lvlOf(t)}">${LVL[lvlOf(t)]}</span><span>${h&&h.n?`${h.r}/${h.n}`:"–"}</span></div>`;}).join("")}</div>
     ${syncBox()}
     <div class="block"><h3>Fortschritt zurücksetzen</h3><p class="small muted">Löscht deinen gesamten Lernstand, auch auf den verbundenen Geräten.</p>
@@ -2588,13 +2817,17 @@ function renderTask(){
   return renderFree();
 }
 const eqLine=s=>`<div class="eq">${esc(s.calc)}</div>`;
+/* Lösungsschritt: Formel, Einsetzen, Begründung; am Ende Ergebnis und Deutung */
+const stepRows=s=>`<div class="dlist">${s.f?`<b>Formel</b><span><span class="eq" style="display:block">${esc(s.f)}</span></span>`:""}<b>Einsetzen</b><span><span class="eq" style="display:block">${esc(s.calc)}</span></span>${s.why?`<b>Warum</b><span>${s.why}</span>`:""}</div>`;
+const deutBox=d=>d.deut?`<div class="bsp"><p class="bh">Deutung</p><p style="margin:0 0 8px">${d.deut}</p></div>`:"";
 
 /* Stufe 1: vorgerechnet, Schritt für Schritt aufdecken */
 function renderWorked(){
   const S=task.data.steps, n=task.shown;
   $("#app").innerHTML=head()+`
     <div class="stack">${S.slice(0,n+1).map((s,i)=>`<div class="step">
-      <div class="lab">${i+1}. ${s.lab}</div><div class="why">${s.why}</div>${eqLine(s)}</div>`).join("")}</div>
+      <div class="lab">${i+1}. ${s.lab}</div>${stepRows(s)}</div>`).join("")}</div>
+    ${n>=S.length-1?deutBox(task.data):""}
     <div class="row" style="margin-top:14px">${n<S.length-1?`<button class="btn" id="more">Nächster Schritt</button>`:`<button class="btn" id="self">Jetzt selbst rechnen</button>`}</div>`;
   bindHead();
   if($("#more")) $("#more").onclick=()=>{ task.shown++; renderWorked(); };
@@ -2612,7 +2845,7 @@ function renderGuided(){
       <div id="out"></div></div>`;
   }).join("");
   $("#app").innerHTML=head()+`<div class="stack">${html}</div>
-    ${task.done?finishBox():padHTML()}`;
+    ${task.done?deutBox(task.data)+finishBox():padHTML()}`;
   bindHead(); bindPad();
   if(task.done){ bindFinish(); return; }
   const inp=$("#in"); inp.focus({preventScroll:true});
@@ -2650,7 +2883,7 @@ function renderFree(){
     F.forEach(([s,i])=>{ const el=$("#f"+i), res=judge(s,el.value); if(!res) all=false;
       el.disabled=true; $("#o"+i).innerHTML=`<p class="res ${res?"good":"bad"}">${res?"Richtig":"Richtig wäre "+fmt(s.ans)+(s.rate?" (= "+fmt(s.ans*100)+" Prozentpunkte)":"")+(s.pct?" %":"")}</p>`; });
     task.done=true; record(all); $("#chkAll").remove();
-    $("#sol").innerHTML=`<div class="block"><h3>Lösungsweg</h3><div class="stack">${S.map((s,i)=>`<div><div class="small" style="font-weight:600">${i+1}. ${s.lab}</div>${eqLine(s)}</div>`).join("")}</div></div>`+finishBox(all);
+    $("#sol").innerHTML=`<div class="block"><h3>Lösungsweg</h3><div class="stack">${S.map((s,i)=>`<div><div class="small" style="font-weight:600">${i+1}. ${s.lab}</div>${stepRows(s)}</div>`).join("")}</div>${deutBox(task.data)}</div>`+finishBox(all);
     bindFinish();
   };
 }
