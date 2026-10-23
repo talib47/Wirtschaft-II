@@ -21,7 +21,7 @@ function head(){
       <button class="btn ghost small" id="back">← Liste</button>
       <div class="seg" role="group" aria-label="Stufe">${[1,2,3].map(l=>`<button data-l="${l}" aria-pressed="${task.lvl===l}">${LVL[l]}</button>`).join("")}</div>
     </div>
-    <p class="eyebrow">${task.mix?"Gemischt · ":""}${T.name}</p>
+    <div class="row between" style="margin:0 0 .3em"><p class="eyebrow" style="margin:0">${task.mix?"Gemischt · ":""}${T.name}</p><button class="btn ghost small" id="lex">Symbole</button></div>
     <div class="block">
       <p class="small">${d.intro}</p>
       ${d.table}
@@ -30,6 +30,7 @@ function head(){
 }
 function bindHead(){
   $("#back").onclick=()=>go("calc");
+  $("#lex").onclick=showLexicon;
   document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{ const l=+b.dataset.l; state.lvl[task.t]=l; state.streak[task.t]=0; save(); task.lvl=l; task.cur=0; task.shown=0; task.first={}; task.done=false; task.checks={}; render(); });
 }
 function renderTask(){

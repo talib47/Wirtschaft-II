@@ -261,6 +261,13 @@ svg .sarrow{fill:var(--accent)}
 .klist>b,.klist>span{padding:6px 0;border-top:1px solid var(--line)}
 .klist>b{padding-right:14px;font-weight:600}
 .klist>b:first-child,.klist>b:first-child+span{border-top:0}
+.card .front.symf{font-size:2.2rem;font-family:var(--serif);text-align:center;padding:.3em 0}
+.lex>b.sy{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--accent);min-width:3.2rem}
+.lex>span>span{display:block;margin-top:2px}
+.lex .lexeq{margin:4px 0;font-size:.85rem}
+.lexwarn{color:var(--bad)}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;display:flex;justify-content:center;align-items:flex-end}
+.sheetin{background:var(--bg);width:100%;max-width:42rem;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:16px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px))}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px)}</style>
 </head>
@@ -2256,6 +2263,130 @@ const CARD_CTX={
  "c8-12":"Deutschland im Licht der Gesamtrechnung"
 };
 
+/* ================= Symbole und Formeln =================
+   Jedes Zeichen der Vorlesung einmal erklärt: Bedeutung, wofür, Mini-Beispiel, wo es vorkommt.
+   Daraus entstehen zwei Kartenstapel (Symbol → Bedeutung und Bedeutung → Symbol) und das Lexikon.
+   Felder: id (bleibt fest, sonst geht der Lernstand verloren), s Symbol, n Bedeutung kurz,
+   bed, wof, bsp, wo, merk (Eselsbrücke), falle (typische Verwechslung), formel (für die Rückrichtung) */
+const SYMBOL_GROUPS=[
+ {id:"vgr", t:"Volkswirtschaftliche Gesamtrechnung", kap:2, items:[
+  {id:"y", s:"Y", n:"Bruttoinlandsprodukt, zugleich das Einkommen",
+   bed:"das **BIP**: alles, was in einem Jahr im Inland produziert wird. Weil jede Produktion bei jemandem als Einkommen ankommt, steht Y auch für das Einkommen.",
+   wof:"Hauptgröße fast jeder Rechnung: Produktion = Nachfrage = Einkommen",
+   bsp:"Y = 100 heißt: Güter im Wert von 100 (z. B. Mrd. €) wurden produziert, und 100 wurden als Einkommen verteilt.",
+   wo:"überall, vor allem in der VGR-Tabelle und im keynesianischen Modell", merk:"Y wie englisch yield, „Ertrag“"},
+  {id:"ya", s:"Y^A", n:"BIP von der Entstehungsseite (Angebot)",
+   bed:"die **Produktion**, also der Marktwert aller im Inland hergestellten Güter",
+   wof:"zeigt, wie das BIP entsteht: durch Arbeit mal Produktivität",
+   bsp:"50 € je Arbeitsstunde · 2 Mrd. Stunden = 100 Mrd. €", wo:"Entstehungsseite, Gleichgewicht Y^A = Y^N", merk:"A wie Angebot",
+   formel:"Y^A = (Y/H) · H"},
+  {id:"yn", s:"Y^N", n:"BIP von der Verwendungsseite (Nachfrage)",
+   bed:"die **Nachfrage** nach im Inland produzierten Gütern",
+   wof:"zeigt, wofür die Produktion verwendet wird",
+   bsp:"60 + 13 + 20 + 7 = 100 (Zahlen aus dem Skript)", wo:"Verwendungsseite, keynesianisches Kreuz", merk:"N wie Nachfrage",
+   formel:"Y^N = C + I + G + (X − M)"},
+  {id:"yvt", s:"Y^VT", n:"BIP von der Verteilungsseite (Einkommen)",
+   bed:"die **Einkommen**, die an Inländer:innen verteilt werden (Bruttonationaleinkommen)",
+   wof:"zeigt, wer das Einkommen bekommt: Arbeit und Kapital oder Haushalte, Unternehmen, Staat",
+   bsp:"Löhne 55 + Gewinne 45 = 100", wo:"Verteilungsseite, Konsumfunktion C = c₀ + c₁Y^VT", merk:"VT wie Verteilung",
+   formel:"Y^VT = W + Π = Y_HH + Y_F + Y_St"},
+  {id:"yh", s:"Y/H", n:"Arbeitsproduktivität (Output je Stunde)",
+   bed:"**Produktion je gearbeiteter Stunde**. H steht für hours, die gearbeiteten Stunden.",
+   wof:"Steigt Y/H, kann man mit weniger Stunden dasselbe produzieren.",
+   bsp:"Y = 100, H = 2 ⇒ Y/H = 50", wo:"Entstehungsseite, Arbeitszeit und Klima (CO₂ = (CO₂/Y) · Y)", merk:"H wie hours",
+   formel:"Y/H = Produktion / Arbeitsstunden"},
+  {id:"c", s:"C", n:"privater Konsum",
+   bed:"die **Konsumausgaben der Haushalte**",
+   wof:"größter Teil der Nachfrage",
+   bsp:"Lebensmittel, Kleidung, Kino. Im Skript: C = 60 von Y = 100.", wo:"Verwendungsseite, Konsumfunktion", merk:"C wie consumption",
+   formel:"C = Konsumausgaben der Haushalte"},
+  {id:"i", s:"I", n:"private Investitionen",
+   bed:"Ausgaben der Unternehmen für **neue Maschinen, Gebäude, Anlagen**",
+   wof:"erhöhen den Kapitalstock und damit die künftige Produktion",
+   bsp:"Eine Bäckerei kauft einen neuen Ofen. Im Skript: I = 13.", wo:"Verwendungsseite, S = I, Multiplikator", merk:"I wie investment",
+   falle:"Aktien oder Geld auf dem Sparbuch sind **keine** Investitionen in diesem Sinn, das ist Geldanlage.",
+   formel:"I = Ausgaben für Maschinen, Gebäude, Anlagen"},
+  {id:"g", s:"G", n:"Staatsausgaben für Güter und Dienstleistungen",
+   bed:"die **Nachfrage des Staates** nach Konsum- und Investitionsgütern",
+   wof:"Hebel der Fiskalpolitik: mehr G erhöht direkt die Nachfrage",
+   bsp:"Der Staat baut eine Schule oder kauft Polizeiautos. Im Skript: G = 20.", wo:"Verwendungsseite, Staatsausgabenmultiplikator", merk:"G wie government",
+   falle:"Renten, Bürgergeld und Subventionen gehören **nicht** zu G. Das sind Transfers, im Modell senken sie die Einnahmen T.",
+   formel:"G = Staatsnachfrage nach Gütern und Dienstleistungen"},
+  {id:"xm", s:"X − M", n:"Nettoexporte (Exporte minus Importe)",
+   bed:"**Exporte X minus Importe M**. In der Vorlesung gilt vereinfacht: X − M = Leistungsbilanz.",
+   wof:"Positiv heißt Leistungsbilanzüberschuss: Das Ausland verschuldet sich beim Inland.",
+   bsp:"Exporte 30, Importe 23 ⇒ X − M = 7", wo:"Verwendungsseite, Salden-Aufgaben, Exportüberschüsse", merk:"X wie eXport, M wie iMport",
+   formel:"X − M = Exporte − Importe"},
+  {id:"w", s:"W", n:"Löhne (Arbeitseinkommen)",
+   bed:"die **Lohnsumme** aller Beschäftigten",
+   wof:"funktionale Verteilung: Was bekommt die Arbeit?",
+   bsp:"Im Skript: W = 55 von Y = 100, die Lohnquote W/Y ist also 55 %.", wo:"Verteilungsseite, Kostenparadox, Kalecki", merk:"W wie wages",
+   formel:"W = Lohnsumme"},
+  {id:"pi", s:"Π", n:"Gewinne (Kapitaleinkommen)",
+   bed:"die **Gewinne**, also das Einkommen aus Kapital. Π ist das große griechische P, wie Profit.",
+   wof:"funktionale Verteilung: Was bekommt das Kapital?",
+   bsp:"Y = 100, W = 55 ⇒ Π = 45", wo:"Verteilungsseite, Marx, Kalecki", merk:"Π wie Profit",
+   falle:"Das kleine **π** ist die Inflationsrate, ein ganz anderes Zeichen.",
+   formel:"Π = Y − W"},
+  {id:"yhh", s:"Y_HH", n:"verfügbares Einkommen der Haushalte",
+   bed:"was den **Haushalten** nach Steuern und Transfers bleibt",
+   wof:"sektorale Verteilung; davon wird konsumiert und gespart",
+   bsp:"Löhne + Zinsen + Kindergeld − Steuern und Sozialbeiträge. Im Skript: Y_HH = 67.", wo:"sektorale Verteilung, Finanzierungssalden", merk:"HH wie Haushalte",
+   formel:"Y_HH = Löhne + Kapitaleinkommen + Transfers − Steuern und Abgaben"},
+  {id:"yf", s:"Y_F", n:"verfügbares Einkommen der Unternehmen",
+   bed:"was den **Unternehmen** bleibt: einbehaltene Gewinne",
+   wof:"sektorale Verteilung; daraus finanzieren Unternehmen Investitionen",
+   bsp:"nicht ausgeschüttete Gewinne + Subventionen − Steuern. Im Skript: Y_F = 15.", wo:"sektorale Verteilung, Finanzierungssalden", merk:"F wie firms",
+   formel:"Y_F = einbehaltene Gewinne + Subventionen − Steuern und Abgaben"},
+  {id:"yst", s:"Y_St", n:"verfügbares Einkommen des Staates",
+   bed:"die **Einnahmen des Staates** nach Abzug dessen, was er weitergibt",
+   wof:"sektorale Verteilung; Y_St − G ist der Finanzierungssaldo des Staates",
+   bsp:"Steuern 30, Transfers und Subventionen 12 ⇒ Y_St = 18", wo:"sektorale Verteilung, Staatsdefizit", merk:"St wie Staat; T wie taxes, Z wie Zuschüsse",
+   formel:"Y_St = T − Z"},
+  {id:"s", s:"S", n:"Ersparnis",
+   bed:"der **nicht konsumierte Teil des Einkommens**",
+   wof:"In der geschlossenen Volkswirtschaft gilt immer S = I. Umstritten ist, was was verursacht.",
+   bsp:"Y = 100, C = 85 ⇒ S = 15", wo:"S = I, Sparparadox, Klassenmodelle", merk:"S wie saving",
+   formel:"S = Y − C"}
+ ]}
+];
+const isFormula=f=>!!f&&!/[a-zäöüß]{4,}/.test(f.split(" = ").slice(1).join(" = "));
+const SYMBOLS=SYMBOL_GROUPS.flatMap(g=>g.items.map(x=>Object.assign({g:g.id, gt:g.t},x)));
+function symBack(x){
+  return [isFormula(x.formel)?`$ ${x.formel}`:"", `Bedeutung: ${x.bed}`, `Wofür: ${x.wof}`, `Beispiel: ${x.bsp}`, `Kommt vor: ${x.wo}`, x.falle?`Achtung: ${x.falle}`:""].filter(Boolean).join("\n");
+}
+function symBackRev(x){ return [`$ ${x.formel?x.formel:x.s}`, x.formel&&!x.formel.startsWith(x.s+" ")?`Zeichen: ${x.s}`:"", `Beispiel: ${x.bsp}`, x.falle?`Achtung: ${x.falle}`:""].filter(Boolean).join("\n"); }
+CARDS.sym=SYMBOLS.map(x=>({id:"s-"+x.id, f:x.s, b:symBack(x)}));
+CARDS.symr=SYMBOLS.map(x=>({id:"r-"+x.id, f:x.n, b:symBackRev(x)}));
+SYMBOLS.forEach(x=>{ CARD_CTX["s-"+x.id]="Zeichen · "+x.gt+" · Was bedeutet es?"; CARD_CTX["r-"+x.id]="Zeichen · "+x.gt+" · Wie schreibt man es?"; if(x.merk) CARD_INFO["s-"+x.id]=CARD_INFO["r-"+x.id]="Merkhilfe: "+x.merk; });
+const DECK_NAME={sym:"Symbole", symr:"Symbole umgekehrt"};
+
+/* Lexikon: alle Zeichen nach Themen */
+function lexiconHTML(){
+  return SYMBOL_GROUPS.map(g=>`<div class="block"><h3>${g.t}</h3><div class="dlist lex">${g.items.map(x=>`<b class="sy">${fx(x.s)}</b><span>${inl(x.n)}${isFormula(x.formel)?`<span class="eq lexeq">${fx(x.formel)}</span>`:""}<span class="small muted">${inl(x.bsp)}</span>${x.falle?`<span class="small lexwarn">${inl(x.falle)}</span>`:""}</span>`).join("")}</div></div>`).join("")
+   +`<p class="small muted">Weitere Zeichen (Modell mit Staat und Zins, Neuer Konsens, Kalecki) folgen.</p>`;
+}
+function renderSym(){
+  const st=n=>{ const A=allCards(n); return `${dueCards(n).length} fällig · ${A.filter(x=>!isSeen(x.id)).length} neu`; };
+  $("#app").innerHTML=`${backTo("Üben")}<p class="eyebrow">Grundlagen für Teil II</p><h1>Symbole und Formeln</h1>
+    <p class="muted">Jedes Zeichen der Vorlesung mit Bedeutung und Mini-Beispiel. Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, wie die anderen Karten.</p>
+    <div class="block"><div class="modes">
+      <button class="mode" id="sy1"><span class="t">Symbol → Bedeutung</span><span class="n">${st("sym")}</span><span class="d">Vorne steht das Zeichen, z. B. Y<sub>St</sub>. Sag, was es bedeutet.</span></button>
+      <button class="mode" id="sy2"><span class="t">Bedeutung → Symbol</span><span class="n">${st("symr")}</span><span class="d">Vorne steht die Bedeutung. Schreib das Zeichen und die Formel auf, wie in der Klausur.</span></button>
+    </div></div>
+    <h2 style="margin-top:18px">Lexikon</h2>${lexiconHTML()}`;
+  bindCrumb(()=>go("practice"));
+  $("#sy1").onclick=()=>openCards("sym"); $("#sy2").onclick=()=>openCards("symr");
+}
+/* Lexikon als Blatt über einer Aufgabe, ohne sie zu verlassen */
+function showLexicon(){
+  const d=document.createElement("div"); d.className="sheet"; d.setAttribute("role","dialog"); d.setAttribute("aria-label","Symbol-Lexikon");
+  d.innerHTML=`<div class="sheetin"><div class="row between" style="margin-bottom:8px"><h2 style="margin:0">Symbole</h2><button class="btn ghost small" id="lexX">Schließen</button></div>${lexiconHTML()}</div>`;
+  document.body.appendChild(d); document.body.style.overflow="hidden";
+  const close=()=>{ d.remove(); document.body.style.overflow=""; };
+  d.querySelector("#lexX").onclick=close; d.onclick=e=>{ if(e.target===d) close(); };
+}
+
 /* ================= Grafiken (SVG, Raster 400 × 300) ================= */
 const tri=(x,y,dir,cls)=>{ const s=7, p={up:[[x,y],[x-s/1.6,y+s],[x+s/1.6,y+s]],right:[[x,y],[x-s,y-s/1.6],[x-s,y+s/1.6]],down:[[x,y],[x-s/1.6,y-s],[x+s/1.6,y-s]]}[dir]; return `<polygon class="${cls}" points="${p.map(q=>q.join(",")).join(" ")}"/>`; };
 const ln=(x1,y1,x2,y2,cls)=>`<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
@@ -2338,13 +2469,13 @@ function nextStep(){
 /* ================= Navigation ================= */
 let view="home", task=null, cur={};
 const TABS=[["home","Lernpfad"],["practice","Üben"],["stats","Statistik"]];
-const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice"};
+const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice",sym:"practice"};
 function renderNav(){
   $("#nav").innerHTML=TABS.map(([k,l])=>`<button data-v="${k}"${TAB_OF[view]===k?' aria-current="page"':""}>${l}</button>`).join("");
   $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 }
 function go(v){ view=v; render(); window.scrollTo(0,0); }
-function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz})[view](); }
+function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz,sym:renderSym})[view](); }
 const backTo=(label,fn)=>`<button class="crumb" id="crumb">← ${label}</button>`;
 function bindCrumb(fn){ const b=$("#crumb"); if(b) b.onclick=fn; }
 
@@ -2399,6 +2530,7 @@ function renderChapter(){
     <div class="block"><div class="modes">
       <button class="mode" id="mL"><span class="t">Theorie</span><span class="n">${nl}/${L.length}</span><span class="d">${L.length} kurze Lektionen mit Verständnisfragen. Hier fängst du an.</span></button>
       ${K.length?`<button class="mode" id="mK"><span class="t">Karten</span><span class="n">${dueCards(n).length} fällig · ${K.filter(x=>!isSeen(x.id)).length} neu</span><span class="d">Kurzfragen für Teil I. Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder.</span></button>`:""}
+      ${SYMBOL_GROUPS.some(g=>g.kap===n)?`<button class="mode" id="mS"><span class="t">Symbole</span><span class="n">${SYMBOL_GROUPS.filter(g=>g.kap===n).reduce((k,g)=>k+g.items.length,0)} Zeichen</span><span class="d">Erst die Zeichen sicher kennen, dann rechnet es sich leichter.</span></button>`:""}
       ${C.length?`<button class="mode" id="mC"><span class="t">Rechnen</span><span class="n">${nc}/${C.length} frei</span><span class="d">Teil II mit immer neuen Zahlen: erst vorgerechnet, dann geführt, dann frei.</span></button>`:""}
       ${G.length?`<button class="mode" id="mG"><span class="t">Grafiken</span><span class="n">${ng}/${G.length}</span><span class="d">Mit dem Stift zeichnen, dann die Musterlösung darüberlegen.</span></button>`:""}
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
@@ -2408,6 +2540,7 @@ function renderChapter(){
   bindCrumb(()=>go("home"));
   $("#mL").onclick=()=>openLesson(n,Math.max(0,L.findIndex(x=>!lessonState(x.id))));
   if($("#mK")) $("#mK").onclick=()=>openCards(n);
+  if($("#mS")) $("#mS").onclick=()=>go("sym");
   if($("#mC")) $("#mC").onclick=()=>{ cur.calcCh=n; go("calc"); };
   if($("#mG")) $("#mG").onclick=()=>openGraph(n,Math.max(0,G.findIndex(x=>!(state.graphs||{})[x.id])));
   if($("#mE")) $("#mE").onclick=()=>openEssay(n,Math.max(0,E.findIndex(x=>!(state.essays||{})[x.id])));
@@ -2499,6 +2632,8 @@ function homeReview(){
 function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
+const deckLabel=n=>DECK_NAME[n]?"Symbole":n?"Kapitel "+n:"Üben";
+const deckBack=n=>DECK_NAME[n]?go("sym"):n?go("chapter"):go("practice");
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
 /* Wiederholung mit Fälligkeitsdatum (wie Anki): sicherer gewusst = längerer Abstand */
 const INTERVAL=[0,0,1,3,7,16];   // Tage bis zur nächsten Abfrage je Fach; Fach 5 erneut gewusst: 35 Tage
@@ -2525,19 +2660,19 @@ function renderCards(){
     const left=dueCards(n).length+(n?allCards(n).filter(x=>!isSeen(x.id)).length:0);
     const nextDue=allCards(n).filter(x=>isSeen(x.id)&&!isDue(x.id)).map(x=>(state.due||{})[x.id]).sort((a,b)=>a-b)[0];
     const when=nextDue? Math.round((dayStart(nextDue)-dayStart())/864e5) : null;
-    $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
+    $("#app").innerHTML=`${backTo(deckLabel(n))}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
       <div class="block">${D.length?`<p>${cur.right} von ${D.length} Antworten gewusst.</p>`:""}
       <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, nicht gewusste sofort noch einmal.</p>
       <div class="row">${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button></div></div>`;
-    bindCrumb(()=>go(n?"chapter":"practice")); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>go(n?"chapter":"practice"); return;
+    bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>deckBack(n); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
-  $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
+  $("#app").innerHTML=`${backTo(deckLabel(n))}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
+    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front${n==="sym"?" symf":""}">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
-  bindCrumb(()=>go(n?"chapter":"practice"));
+  bindCrumb(()=>deckBack(n));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
   const cd=$("#card"); cd.onclick=e=>{ if(e.target.closest("a")) return; cur.flip=!cur.flip; renderCards(); };
   cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } };
@@ -2626,12 +2761,14 @@ function renderPractice(){
     <p class="muted">Gemischt aus allen fertigen Kapiteln (${ready.join(", ")}). Gemischtes Üben ist anstrengender als blockweises, bleibt aber deutlich besser hängen.</p>
     <div class="block"><div class="modes">
       <button class="mode" id="pK"><span class="t">Fällige Karten</span><span class="n">${dueCards(0).length} fällig</span><span class="d">Alle Karten aus allen Kapiteln, die heute dran sind. Neue Karten lernst du im jeweiligen Kapitel.</span></button>
+      <button class="mode" id="pS"><span class="t">Symbole und Formeln</span><span class="n">${dueCards("sym").length+dueCards("symr").length} fällig</span><span class="d">Was bedeuten Y, Π, G oder X − M? Mit Mini-Beispielen und Lexikon zum Nachschlagen.</span></button>
       <button class="mode" id="pC"><span class="t">Rechnen gemischt</span><span class="d">Wechselnde Aufgabentypen, bevorzugt was dir schwerfällt.</span></button>
       <button class="mode" id="pL"><span class="t">Alle Rechenaufgaben</span><span class="d">Einzelne Typen gezielt üben.</span></button>
       <button class="mode" id="pKz"><span class="t">Kurzfragen schreiben</span><span class="n">${Object.keys(state.kurz||{}).length}/${KURZ.length}</span><span class="d">Teil I wie in der Klausur: kurze Antwort schreiben, mit dem Erwartungshorizont vergleichen.</span></button>
       <button class="mode" id="pX"><span class="t">Probeklausur</span><span class="n">${state.examRun?"läuft":(state.exams||[]).length+"×"}</span><span class="d">Alle drei Teile mit Timer, jedes Mal neu zusammengestellt.</span></button>
     </div></div>`;
   $("#pK").onclick=()=>openCards(0);
+  $("#pS").onclick=()=>go("sym");
   $("#pC").onclick=()=>startTask(recommend(),true);
   $("#pL").onclick=()=>{ cur.calcCh=0; go("calc"); };
   $("#pKz").onclick=openKurz;
@@ -2917,7 +3054,7 @@ function head(){
       <button class="btn ghost small" id="back">← Liste</button>
       <div class="seg" role="group" aria-label="Stufe">${[1,2,3].map(l=>`<button data-l="${l}" aria-pressed="${task.lvl===l}">${LVL[l]}</button>`).join("")}</div>
     </div>
-    <p class="eyebrow">${task.mix?"Gemischt · ":""}${T.name}</p>
+    <div class="row between" style="margin:0 0 .3em"><p class="eyebrow" style="margin:0">${task.mix?"Gemischt · ":""}${T.name}</p><button class="btn ghost small" id="lex">Symbole</button></div>
     <div class="block">
       <p class="small">${d.intro}</p>
       ${d.table}
@@ -2926,6 +3063,7 @@ function head(){
 }
 function bindHead(){
   $("#back").onclick=()=>go("calc");
+  $("#lex").onclick=showLexicon;
   document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{ const l=+b.dataset.l; state.lvl[task.t]=l; state.streak[task.t]=0; save(); task.lvl=l; task.cur=0; task.shown=0; task.first={}; task.done=false; task.checks={}; render(); });
 }
 function renderTask(){

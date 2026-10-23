@@ -80,13 +80,13 @@ function nextStep(){
 /* ================= Navigation ================= */
 let view="home", task=null, cur={};
 const TABS=[["home","Lernpfad"],["practice","Üben"],["stats","Statistik"]];
-const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice"};
+const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice",sym:"practice"};
 function renderNav(){
   $("#nav").innerHTML=TABS.map(([k,l])=>`<button data-v="${k}"${TAB_OF[view]===k?' aria-current="page"':""}>${l}</button>`).join("");
   $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 }
 function go(v){ view=v; render(); window.scrollTo(0,0); }
-function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz})[view](); }
+function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz,sym:renderSym})[view](); }
 const backTo=(label,fn)=>`<button class="crumb" id="crumb">← ${label}</button>`;
 function bindCrumb(fn){ const b=$("#crumb"); if(b) b.onclick=fn; }
 
@@ -141,6 +141,7 @@ function renderChapter(){
     <div class="block"><div class="modes">
       <button class="mode" id="mL"><span class="t">Theorie</span><span class="n">${nl}/${L.length}</span><span class="d">${L.length} kurze Lektionen mit Verständnisfragen. Hier fängst du an.</span></button>
       ${K.length?`<button class="mode" id="mK"><span class="t">Karten</span><span class="n">${dueCards(n).length} fällig · ${K.filter(x=>!isSeen(x.id)).length} neu</span><span class="d">Kurzfragen für Teil I. Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder.</span></button>`:""}
+      ${SYMBOL_GROUPS.some(g=>g.kap===n)?`<button class="mode" id="mS"><span class="t">Symbole</span><span class="n">${SYMBOL_GROUPS.filter(g=>g.kap===n).reduce((k,g)=>k+g.items.length,0)} Zeichen</span><span class="d">Erst die Zeichen sicher kennen, dann rechnet es sich leichter.</span></button>`:""}
       ${C.length?`<button class="mode" id="mC"><span class="t">Rechnen</span><span class="n">${nc}/${C.length} frei</span><span class="d">Teil II mit immer neuen Zahlen: erst vorgerechnet, dann geführt, dann frei.</span></button>`:""}
       ${G.length?`<button class="mode" id="mG"><span class="t">Grafiken</span><span class="n">${ng}/${G.length}</span><span class="d">Mit dem Stift zeichnen, dann die Musterlösung darüberlegen.</span></button>`:""}
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
@@ -150,6 +151,7 @@ function renderChapter(){
   bindCrumb(()=>go("home"));
   $("#mL").onclick=()=>openLesson(n,Math.max(0,L.findIndex(x=>!lessonState(x.id))));
   if($("#mK")) $("#mK").onclick=()=>openCards(n);
+  if($("#mS")) $("#mS").onclick=()=>go("sym");
   if($("#mC")) $("#mC").onclick=()=>{ cur.calcCh=n; go("calc"); };
   if($("#mG")) $("#mG").onclick=()=>openGraph(n,Math.max(0,G.findIndex(x=>!(state.graphs||{})[x.id])));
   if($("#mE")) $("#mE").onclick=()=>openEssay(n,Math.max(0,E.findIndex(x=>!(state.essays||{})[x.id])));
@@ -241,6 +243,8 @@ function homeReview(){
 function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
+const deckLabel=n=>DECK_NAME[n]?"Symbole":n?"Kapitel "+n:"Üben";
+const deckBack=n=>DECK_NAME[n]?go("sym"):n?go("chapter"):go("practice");
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
 /* Wiederholung mit Fälligkeitsdatum (wie Anki): sicherer gewusst = längerer Abstand */
 const INTERVAL=[0,0,1,3,7,16];   // Tage bis zur nächsten Abfrage je Fach; Fach 5 erneut gewusst: 35 Tage
@@ -267,19 +271,19 @@ function renderCards(){
     const left=dueCards(n).length+(n?allCards(n).filter(x=>!isSeen(x.id)).length:0);
     const nextDue=allCards(n).filter(x=>isSeen(x.id)&&!isDue(x.id)).map(x=>(state.due||{})[x.id]).sort((a,b)=>a-b)[0];
     const when=nextDue? Math.round((dayStart(nextDue)-dayStart())/864e5) : null;
-    $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
+    $("#app").innerHTML=`${backTo(deckLabel(n))}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
       <div class="block">${D.length?`<p>${cur.right} von ${D.length} Antworten gewusst.</p>`:""}
       <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, nicht gewusste sofort noch einmal.</p>
       <div class="row">${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button></div></div>`;
-    bindCrumb(()=>go(n?"chapter":"practice")); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>go(n?"chapter":"practice"); return;
+    bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>deckBack(n); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
-  $("#app").innerHTML=`${backTo(n?"Kapitel "+n:"Üben")}
+  $("#app").innerHTML=`${backTo(deckLabel(n))}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
+    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front${n==="sym"?" symf":""}">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
     ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
       :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
-  bindCrumb(()=>go(n?"chapter":"practice"));
+  bindCrumb(()=>deckBack(n));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
   const cd=$("#card"); cd.onclick=e=>{ if(e.target.closest("a")) return; cur.flip=!cur.flip; renderCards(); };
   cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } };
@@ -368,12 +372,14 @@ function renderPractice(){
     <p class="muted">Gemischt aus allen fertigen Kapiteln (${ready.join(", ")}). Gemischtes Üben ist anstrengender als blockweises, bleibt aber deutlich besser hängen.</p>
     <div class="block"><div class="modes">
       <button class="mode" id="pK"><span class="t">Fällige Karten</span><span class="n">${dueCards(0).length} fällig</span><span class="d">Alle Karten aus allen Kapiteln, die heute dran sind. Neue Karten lernst du im jeweiligen Kapitel.</span></button>
+      <button class="mode" id="pS"><span class="t">Symbole und Formeln</span><span class="n">${dueCards("sym").length+dueCards("symr").length} fällig</span><span class="d">Was bedeuten Y, Π, G oder X − M? Mit Mini-Beispielen und Lexikon zum Nachschlagen.</span></button>
       <button class="mode" id="pC"><span class="t">Rechnen gemischt</span><span class="d">Wechselnde Aufgabentypen, bevorzugt was dir schwerfällt.</span></button>
       <button class="mode" id="pL"><span class="t">Alle Rechenaufgaben</span><span class="d">Einzelne Typen gezielt üben.</span></button>
       <button class="mode" id="pKz"><span class="t">Kurzfragen schreiben</span><span class="n">${Object.keys(state.kurz||{}).length}/${KURZ.length}</span><span class="d">Teil I wie in der Klausur: kurze Antwort schreiben, mit dem Erwartungshorizont vergleichen.</span></button>
       <button class="mode" id="pX"><span class="t">Probeklausur</span><span class="n">${state.examRun?"läuft":(state.exams||[]).length+"×"}</span><span class="d">Alle drei Teile mit Timer, jedes Mal neu zusammengestellt.</span></button>
     </div></div>`;
   $("#pK").onclick=()=>openCards(0);
+  $("#pS").onclick=()=>go("sym");
   $("#pC").onclick=()=>startTask(recommend(),true);
   $("#pL").onclick=()=>{ cur.calcCh=0; go("calc"); };
   $("#pKz").onclick=openKurz;
