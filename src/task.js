@@ -142,7 +142,7 @@ function finishBox(ok){
   return `<div class="block" style="margin-top:14px">
     <h3>${ok?"Fehlerfrei":"Geschafft, mit Fehlern"}</h3>
     <p class="small muted">${ok?"Gut so.":"Schau dir den markierten Schritt nochmal an, die nächste Aufgabe hat neue Zahlen."} Stufe jetzt: ${LVL[l]}.</p>
-    <div class="row"><button class="btn" id="next">${task.mix?"Nächste Aufgabe":"Neue Zahlen"}</button><button class="btn ghost" id="list">Zur Liste</button></div></div>`;
+    <div class="row">${sess?sessBtn():`<button class="btn" id="next">${task.mix?"Nächste Aufgabe":"Neue Zahlen"}</button><button class="btn ghost" id="list">Zur Liste</button>`}</div></div>`;
 }
 function bindFinish(){ if($("#next")) $("#next").onclick=nextTask; if($("#list")) $("#list").onclick=()=>go("calc"); }
 

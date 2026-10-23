@@ -20,6 +20,11 @@ python3 build.py      # erzeugt index.html neu
 | `cardinfo.js` | Kontextzeile (Vorderseite) und dezente i-Infos (Rückseite) je Karte |
 | `wipocc.js` | Links zu passenden Erklärseiten je Lektion |
 | `views.js` | Startseite, Kapitel, Lektionen, Karten mit Wiederholungsplan, Statistik |
+| `symbols.js` | Symbole und Formeln: Karten in beide Richtungen und Lexikon |
+| `recall.js` | Verständnisfragen: erst abrufen, dann Auswahl; eigener Wiederholungsplan (`state.qbox`) |
+| `who.js` | „Wer sagt das?“: Aussagen den Denkschulen zuordnen |
+| `session.js` | Tägliche Einheit „Heute“: gemischte Schritte mit Schrittleiste |
+| `plan.js` | Klausurtermin, Probeklausur-Plan, Schwachstellen in der Statistik |
 | `gfx2.js` | SVG-Grafiken |
 | `exam.js` | Kurzfragen und Probeklausur mit Timer und Selbstbewertung |
 | `task.js`, `start.js` | Aufgabenansicht, Start, Zoom, Token aus dem Link |

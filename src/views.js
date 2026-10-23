@@ -80,13 +80,13 @@ function nextStep(){
 /* ================= Navigation ================= */
 let view="home", task=null, cur={};
 const TABS=[["home","Lernpfad"],["practice","Üben"],["stats","Statistik"]];
-const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice",sym:"practice"};
+const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice",sym:"practice",recall:"practice",who:"practice",sessdone:"home"};
 function renderNav(){
   $("#nav").innerHTML=TABS.map(([k,l])=>`<button data-v="${k}"${TAB_OF[view]===k?' aria-current="page"':""}>${l}</button>`).join("");
   $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 }
 function go(v){ view=v; render(); window.scrollTo(0,0); }
-function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz,sym:renderSym})[view](); }
+function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz,sym:renderSym,recall:renderRecall,who:renderWho,sessdone:renderHome})[view](); }
 const backTo=(label,fn)=>`<button class="crumb" id="crumb">← ${label}</button>`;
 function bindCrumb(fn){ const b=$("#crumb"); if(b) b.onclick=fn; }
 
@@ -97,9 +97,9 @@ function renderHome(){
     <p class="eyebrow">Wirtschaft II · Makroökonomik</p>
     <h1>Lernpfad</h1>
     <p class="muted">Alles für die Klausur in einer App: Theorie lesen, Kurzfragen abfragen, rechnen, Grafiken zeichnen, Essays schreiben.</p>
+    ${todayBlock()}
     ${homeReview()}
-    ${dueCards(0).length?`<div class="block row between"><span><b>Heute fällig: ${dueCards(0).length} Karten</b><br><span class="small muted">Zuerst wiederholen, dann Neues lernen.</span></span><button class="btn" id="goDue">Wiederholen</button></div>`:""}
-    <div class="block today">
+    <div class="block">
       <p class="eyebrow">Als Nächstes · ${nx.label}</p>
       <h2>${nx.title}</h2>
       <button class="btn" id="goNext">Weiter lernen</button>
@@ -112,7 +112,7 @@ function renderHome(){
     <div class="block">
       <h2>So ist die Klausur gebaut</h2>
       <div class="klist">
-        <b>Termin</b><span>steht noch nicht fest (kommt über LSF bzw. Moodle)</span>
+        <b>Termin</b><span>${examDateTs()?`${fmtDate(examDateTs())} ${new Date(examDateTs()).getFullYear()}, noch ${Math.max(0,Math.ceil((examDateTs()-dayStart())/864e5))} Tage`:`steht noch nicht fest. Eintragen kannst du ihn unter Statistik.`}</span>
         <b>Dauer</b><span>90 Minuten laut Modul. Die Altklausuren 2024 hatten 60 Minuten, also kommt eher mehr Stoff dazu.</span>
         <b>Hilfsmittel</b><span>Taschenrechner, Geodreieck, Buntstifte</span>
       </div>
@@ -125,7 +125,7 @@ function renderHome(){
     </div>`;
   bindReview();
   $("#goNext").onclick=nx.go;
-  if($("#goDue")) $("#goDue").onclick=()=>openCards(0);
+  $("#goSess").onclick=()=>{ if(sess) runStep(); else startSession(); };
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
 }
 
@@ -141,7 +141,7 @@ function renderChapter(){
     <div class="block"><div class="modes">
       <button class="mode" id="mL"><span class="t">Theorie</span><span class="n">${nl}/${L.length}</span><span class="d">${L.length} kurze Lektionen mit Verständnisfragen. Hier fängst du an.</span></button>
       ${K.length?`<button class="mode" id="mK"><span class="t">Karten</span><span class="n">${dueCards(n).length} fällig · ${K.filter(x=>!isSeen(x.id)).length} neu</span><span class="d">Kurzfragen für Teil I. Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder.</span></button>`:""}
-      ${SYMBOL_GROUPS.some(g=>g.kap===n)?`<button class="mode" id="mS"><span class="t">Symbole</span><span class="n">${SYMBOL_GROUPS.filter(g=>g.kap===n).reduce((k,g)=>k+g.items.length,0)} Zeichen</span><span class="d">Erst die Zeichen sicher kennen, dann rechnet es sich leichter.</span></button>`:""}
+      ${SYMBOL_GROUPS.some(g=>[].concat(g.kap).includes(n))?`<button class="mode" id="mS"><span class="t">Symbole</span><span class="n">${SYMBOL_GROUPS.filter(g=>[].concat(g.kap).includes(n)).reduce((k,g)=>k+g.items.length,0)} Zeichen</span><span class="d">Erst die Zeichen sicher kennen, dann rechnet es sich leichter.</span></button>`:""}
       ${C.length?`<button class="mode" id="mC"><span class="t">Rechnen</span><span class="n">${nc}/${C.length} frei</span><span class="d">Teil II mit immer neuen Zahlen: erst vorgerechnet, dann geführt, dann frei.</span></button>`:""}
       ${G.length?`<button class="mode" id="mG"><span class="t">Grafiken</span><span class="n">${ng}/${G.length}</span><span class="d">Mit dem Stift zeichnen, dann die Musterlösung darüberlegen.</span></button>`:""}
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
@@ -159,7 +159,7 @@ function renderChapter(){
 }
 
 /* ================= Lektion ================= */
-function openLesson(n,i){ cur.ch=n; cur.li=i; cur.ans={}; go("lesson"); }
+function openLesson(n,i){ cur.ch=n; cur.li=i; cur.ans={}; cur.shown={}; go("lesson"); }
 function renderLesson(){
   const n=cur.ch, L=LESSONS[n], x=L[cur.li];
   const html=nb(x.html).replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
@@ -171,20 +171,17 @@ function renderLesson(){
       ?`<span class="small" style="flex:1;min-width:12rem"><b>Als unklar markiert.</b> Den Prompt kannst du in Claude einfügen.</span><button class="btn ghost small" id="uncCopy">Prompt nochmal kopieren</button><button class="btn small" id="uncOk">Jetzt verstanden</button>`
       :`<span class="small muted" style="flex:1;min-width:12rem">Etwas unklar? Markiert die Lektion und kopiert einen fertigen Prompt für Claude.</span><button class="btn ghost small" id="uncSet">Verstehe ich nicht</button>`}<div id="uncBox" style="width:100%"></div></div>
     ${wipoccBox(x.id)}
-    <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>{ const a=cur.ans[j];
-      return `<div style="margin-top:${j?16:4}px"><p style="margin:0"><b>${c.q}</b></p><div class="mc">${c.o.map((o,k)=>{
-        const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
-        return `<button data-j="${j}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${o}</button>`;}).join("")}
-        ${a===undefined?`<button data-j="${j}" data-k="-1" class="idk">Weiß ich nicht</button>`:""}</div>
-        ${a!==undefined?feedback(c,a):""}</div>`;}).join("")}
+    <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>qBlock(c,j,cur.ans[j],(cur.shown||{})[j],j===0)).join("")}
     </div>
     <div class="lnav">
       ${cur.li>0?`<button class="btn ghost" id="prev">← Vorherige</button>`:"<span></span>"}
-      ${allAns?(cur.li<L.length-1?`<button class="btn" id="next">Nächste Lektion →</button>`:`<button class="btn" id="fin">Kapitel-Übersicht</button>`):`<span class="small muted">Beantworte die Fragen, dann geht es weiter.</span>`}
+      ${allAns&&sess&&sess.steps[sess.i]&&sess.steps[sess.i].k==="lesson"?sessBtn():allAns?(cur.li<L.length-1?`<button class="btn" id="next">Nächste Lektion →</button>`:`<button class="btn" id="fin">Kapitel-Übersicht</button>`):`<span class="small muted">Beantworte die Fragen, dann geht es weiter.</span>`}
     </div>`;
   bindCrumb(()=>go("chapter"));
-  document.querySelectorAll(".mc button").forEach(b=>b.onclick=()=>{
-    const j=+b.dataset.j, k=+b.dataset.k; if(cur.ans[j]!==undefined) return; cur.ans[j]=k;
+  const keep=f=>{ const y=window.scrollY; f(); renderLesson(); window.scrollTo(0,y); };
+  document.querySelectorAll("[data-show]").forEach(b=>b.onclick=()=>keep(()=>{ cur.shown=cur.shown||{}; cur.shown[+b.dataset.show]=true; }));
+  document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{
+    const j=+b.dataset.q, k=+b.dataset.k; if(cur.ans[j]!==undefined) return; cur.ans[j]=k; qGrade(qid(x.id,j),k===x.check[j].a);
     if(x.check.every((_,q)=>cur.ans[q]!==undefined)){ state.lessons=state.lessons||{}; const ok=x.check.every((c,q)=>cur.ans[q]===c.a);
       state.lessons[x.id]={ok, t:Date.now()}; logDay(); save(); }
     const y=window.scrollY; renderLesson(); window.scrollTo(0,y);
@@ -235,10 +232,10 @@ function chapterOfCard(id){ const n=+String(id).replace(/^c(\d+)-.*/,"$1"), ch=C
 function lessonRef(id){ for(const ch of CHAPTERS){ const i=(LESSONS[ch.n]||[]).findIndex(x=>x.id===id); if(i>=0) return {n:ch.n,i,t:LESSONS[ch.n][i].t,ch:ch.title}; } return null; }
 function homeReview(){
   const unc=Object.keys(state.unclear||{}).map(lessonRef).filter(Boolean);
-  const again=Object.entries(state.lessons||{}).filter(([id,v])=>v&&!v.ok&&v.t<dayStart()&&!isUnclear(id)).map(([id])=>lessonRef(id)).filter(Boolean);
-  if(!unc.length&&!again.length) return "";
+  const again=[];
+  if(!unc.length) return "";
   const row=(r,lab)=>`<button class="titem rv" data-n="${r.n}" data-i="${r.i}"><span class="t">${r.t}</span><span class="chip ${lab==="unklar"?"unk":"l2"}">${lab}</span><span class="d">${r.ch}</span></button>`;
-  return `<div class="block"><h3>Nochmal anschauen</h3><p class="small muted" style="margin:0 0 4px">${unc.length?"Als unklar markiert oder ":""}mit Fragen, die du nicht gewusst hast.</p><div class="tlist">${unc.map(r=>row(r,"unklar")).join("")}${again.slice(0,5).map(r=>row(r,"Fragen")).join("")}</div></div>`;
+  return `<div class="block"><h3>Nochmal anschauen</h3><p class="small muted" style="margin:0 0 4px">Als unklar markiert. Tippe auf „Jetzt verstanden“ in der Lektion, wenn es sitzt.</p><div class="tlist">${unc.map(r=>row(r,"unklar")).join("")}${again.slice(0,5).map(r=>row(r,"Fragen")).join("")}</div></div>`;
 }
 function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
@@ -252,7 +249,7 @@ const dayStart=(t=Date.now())=>{ const d=new Date(t); d.setHours(0,0,0,0); retur
 const isSeen=id=>!!(state.box||{})[id];
 const isDue=id=>isSeen(id) && ((state.due||{})[id]||0)<=Date.now();
 function dueCards(n){ return allCards(n).filter(x=>isDue(x.id)).sort((a,b)=>((state.due||{})[a.id]||0)-((state.due||{})[b.id]||0)); }
-function openCards(n,free){ cur.cardCh=n; cur.free=!!free; cur.deck=free?buildDeck(n):buildDueDeck(n); cur.ci=0; cur.flip=false; cur.right=0; cur.requeued={}; go("cards"); }
+function openCards(n,free,deck){ cur.cardCh=n; cur.free=!!free; cur.deck=deck?deck.slice():(free?buildDeck(n):buildDueDeck(n)); cur.ci=0; cur.flip=false; cur.right=0; cur.unsure=0; cur.cstrokes=[]; cur.requeued={}; go("cards"); }
 function buildDueDeck(n){
   const due=dueCards(n), fresh=n? allCards(n).filter(x=>!isSeen(x.id)) : [];
   return due.concat(fresh).slice(0,Math.max(10,Math.min(due.length,30)));
@@ -272,28 +269,36 @@ function renderCards(){
     const nextDue=allCards(n).filter(x=>isSeen(x.id)&&!isDue(x.id)).map(x=>(state.due||{})[x.id]).sort((a,b)=>a-b)[0];
     const when=nextDue? Math.round((dayStart(nextDue)-dayStart())/864e5) : null;
     $("#app").innerHTML=`${backTo(deckLabel(n))}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
-      <div class="block">${D.length?`<p>${cur.right} von ${D.length} Antworten gewusst.</p>`:""}
-      <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, nicht gewusste sofort noch einmal.</p>
-      <div class="row">${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button></div></div>`;
-    bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>deckBack(n); return;
+      <div class="block">${D.length?`<p>${cur.right} sicher, ${cur.unsure||0} unsicher, ${D.length-cur.right-(cur.unsure||0)} nicht gewusst.</p>`:""}
+      <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Sichere Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, unsichere morgen, nicht gewusste sofort noch einmal.</p>
+      <div class="row">${sess?sessBtn():`${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button>`}</div></div>`;
+    bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); if($("#free")) $("#free").onclick=()=>openCards(n,true); if($("#out")) $("#out").onclick=()=>deckBack(n); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(deckLabel(n))}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front${n==="sym"?" symf":""}">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
-    ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
-      :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
+    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p>${n==="sym"?`<div class="front symf">${fx(symMain(c.f))}${symIn(c.f)?`<span class="symin">in ${fx(symIn(c.f))}</span>`:""}</div>`:`<div class="front">${inl(c.f)}</div>`}${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
+    ${cur.pad?`<div class="pad cardpad"><span class="ph">Hier hinschreiben</span><canvas id="cpad" aria-label="Schreibfeld für die Antwort"></canvas><div class="tools"><button id="cpU">Zurück</button><button id="cpX">Leeren</button></div></div>`:""}
+    ${cur.flip?`<div class="grade"><button class="btn warn" id="no">Nicht gewusst</button><button class="btn ghost" id="mid">Unsicher</button><button class="btn" id="yes">Sicher</button></div>`
+      :`<div class="row"><button class="btn" id="flip" style="flex:1">Antwort zeigen</button><button class="btn ghost" id="padT">${cur.pad?"Schreibfeld aus":"Schreibfeld"}</button></div><p class="small muted" style="margin-top:8px">Erst antworten, im Kopf oder im Schreibfeld, dann aufdecken. Ehrlich bewerten: „Unsicher“, wenn du nur ungefähr wusstest.</p>`}`;
   bindCrumb(()=>deckBack(n));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
   const cd=$("#card"); cd.onclick=e=>{ if(e.target.closest("a")) return; cur.flip=!cur.flip; renderCards(); };
   cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } };
-  const grade=ok=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), b1=ok?Math.min(5,Math.max(b0,1)+1):1;
-    state.box[c.id]=b1;
-    if(!cur.free||!ok||b1<b0){ const days=ok?(b0===5?35:INTERVAL[b1]):0; state.due[c.id]= ok? dayStart()+days*864e5 : Date.now(); }
-    if(ok) cur.right++; else if((cur.requeued[c.id]||0)<2){ cur.requeued[c.id]=(cur.requeued[c.id]||0)+1; D.push(c); }
-    logDay(); save(); cur.ci++; cur.flip=false; renderCards(); };
-  if($("#yes")) $("#yes").onclick=()=>grade(true);
-  if($("#no")) $("#no").onclick=()=>grade(false);
+  if(cur.pad){ const sf=drawSurface($("#cpad"),cur.cstrokes); $("#cpU").onclick=()=>sf.undo(); $("#cpX").onclick=()=>sf.clear(); }
+  if($("#padT")) $("#padT").onclick=()=>{ cur.pad=!cur.pad; renderCards(); };
+  /* Bewertung: 2 sicher (nächstes Fach), 1 unsicher (Fach bleibt, morgen wieder), 0 nicht gewusst (Fach 1, gleich nochmal) */
+  const grade=lv=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), old=state.due[c.id]||0;
+    const b1= lv===2? Math.min(5,Math.max(b0,1)+1) : lv===1? Math.max(1,b0) : 1;
+    const nd= lv===2? dayStart()+(b0===5?35:INTERVAL[b1])*864e5 : lv===1? dayStart()+864e5 : Date.now();
+    if(!cur.free){ state.box[c.id]=b1; state.due[c.id]=nd; }
+    else if(lv<2){ state.box[c.id]=Math.min(b0||1,b1); state.due[c.id]=Math.min(old||nd,nd); }
+    if(lv===2) cur.right++; else if(lv===1) cur.unsure=(cur.unsure||0)+1;
+    else { state.lapses=state.lapses||{}; state.lapses[c.id]=(state.lapses[c.id]||0)+1; if((cur.requeued[c.id]||0)<2){ cur.requeued[c.id]=(cur.requeued[c.id]||0)+1; D.push(c); } }
+    logDay(); save(); cur.ci++; cur.flip=false; cur.cstrokes=[]; renderCards(); };
+  if($("#yes")) $("#yes").onclick=()=>grade(2);
+  if($("#mid")) $("#mid").onclick=()=>grade(1);
+  if($("#no")) $("#no").onclick=()=>grade(0);
 }
 
 /* ================= Grafiken ================= */
@@ -372,6 +377,8 @@ function renderPractice(){
     <p class="muted">Gemischt aus allen fertigen Kapiteln (${ready.join(", ")}). Gemischtes Üben ist anstrengender als blockweises, bleibt aber deutlich besser hängen.</p>
     <div class="block"><div class="modes">
       <button class="mode" id="pK"><span class="t">Fällige Karten</span><span class="n">${dueCards(0).length} fällig</span><span class="d">Alle Karten aus allen Kapiteln, die heute dran sind. Neue Karten lernst du im jeweiligen Kapitel.</span></button>
+      <button class="mode" id="pR"><span class="t">Verständnisfragen</span><span class="n">${qDue().length} fällig</span><span class="d">Die Fragen aus den Lektionen kommen mit wachsendem Abstand wieder. Erst selbst überlegen, dann die Auswahl.</span></button>
+      <button class="mode" id="pW"><span class="t">Wer sagt das?</span><span class="d">Aussagen den Denkschulen zuordnen. Das Gerüst für den Essay in Teil III.</span></button>
       <button class="mode" id="pS"><span class="t">Symbole und Formeln</span><span class="n">${dueCards("sym").length+dueCards("symr").length} fällig</span><span class="d">Was bedeuten Y, Π, G oder X − M? Mit Mini-Beispielen und Lexikon zum Nachschlagen.</span></button>
       <button class="mode" id="pC"><span class="t">Rechnen gemischt</span><span class="d">Wechselnde Aufgabentypen, bevorzugt was dir schwerfällt.</span></button>
       <button class="mode" id="pL"><span class="t">Alle Rechenaufgaben</span><span class="d">Einzelne Typen gezielt üben.</span></button>
@@ -380,6 +387,8 @@ function renderPractice(){
     </div></div>`;
   $("#pK").onclick=()=>openCards(0);
   $("#pS").onclick=()=>go("sym");
+  $("#pR").onclick=()=>openRecall();
+  $("#pW").onclick=()=>openWho(8);
   $("#pC").onclick=()=>startTask(recommend(),true);
   $("#pL").onclick=()=>{ cur.calcCh=0; go("calc"); };
   $("#pKz").onclick=openKurz;
@@ -422,9 +431,11 @@ function renderStats(){
     <div class="block"><h2>Nach Kapitel</h2>${ready.map(c=>{ const p=chapterProgress(c.n);
       return `<div class="srow ch"><span>${c.title}</span><span class="small muted">${[["Theorie",p.l,1],["Karten",p.k,(CARDS[c.n]||[]).length],["Rechnen",p.c,(CALC[c.n]||[]).length]].filter(x=>x[2]).map(x=>x[0]+" "+Math.round(x[1]*100)).join(" · ")}</span><span class="pts">${p.total} %</span></div>`;}).join("")}</div>
     <div class="block"><h2>Rechenaufgaben</h2>${calcTypes(0).map(t=>{ const h=state.hist[t]; return `<div class="srow"><span>${TYPES[t].short}</span><span class="chip l${lvlOf(t)}">${LVL[lvlOf(t)]}</span><span>${h&&h.n?`${h.r}/${h.n}`:"–"}</span></div>`;}).join("")}</div>
+    ${examPlanBlock()}
+    ${weakBlock()}
     ${syncBox()}
     <div class="block"><h3>Fortschritt zurücksetzen</h3><p class="small muted">Löscht deinen gesamten Lernstand, auch auf den verbundenen Geräten.</p>
       <button class="btn warn" id="rst">${statsArmed?"Wirklich zurücksetzen":"Zurücksetzen"}</button></div>`;
-  bindSync();
+  bindSync(); bindExamPlan(); bindWeak();
   $("#rst").onclick=()=>{ if(!statsArmed){ statsArmed=true; renderStats(); return; } state={}; norm(); save(); flushPush(); statsArmed=false; toast("Zurückgesetzt"); renderStats(); };
 }

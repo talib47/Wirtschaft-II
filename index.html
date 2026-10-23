@@ -237,6 +237,10 @@ svg .sarrow{fill:var(--accent)}
 .card .back li{margin:.2em 0}
 .card .back>:last-child{margin-bottom:0}
 .ml ol,.ml ul{padding-left:1.25em;margin:0 0 .5em} .ml li{margin:.25em 0} .ml p{margin:0 0 .5em}
+.grade{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.grade .btn{padding:12px 6px}
+.cardpad{margin:0 0 12px}
+.cardpad canvas{height:170px}
 .card .tap{font-size:.78rem;color:var(--muted);margin:0}
 .fb{margin-top:10px;border-left:3px solid var(--line);padding:2px 0 2px 12px;font-size:.92rem}
 .fb.good{border-color:var(--good)} .fb.bad{border-color:var(--bad)} .fb.idk{border-color:var(--gold)}
@@ -261,6 +265,17 @@ svg .sarrow{fill:var(--accent)}
 .klist>b,.klist>span{padding:6px 0;border-top:1px solid var(--line)}
 .klist>b{padding-right:14px;font-weight:600}
 .klist>b:first-child,.klist>b:first-child+span{border-top:0}
+#sessbar{position:sticky;top:0;z-index:7;background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+#sessbar .sbin{max-width:42rem;margin:0 auto;display:flex;gap:8px;align-items:center;padding:8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px))}
+#sessbar .sbt{flex:1;min-width:0;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plan{margin:6px 0 12px;padding-left:1.3em}
+.plan li{margin:.35em 0}
+.plan li span{display:block;font-size:.84rem;color:var(--muted)}
+.who{font-family:var(--serif);font-size:1.2rem;font-weight:600;line-height:1.35;margin:0 0 6px}
+.weak{margin:4px 0 8px;padding-left:1.2em;font-size:.92rem}
+.weak li{margin:.2em 0}
+.dateinp{padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:.92rem}
+.card .front .symin{display:block;font-size:.9rem;font-family:var(--sans);font-weight:400;color:var(--muted);margin-top:6px}
 .card .front.symf{font-size:2.2rem;font-family:var(--serif);text-align:center;padding:.3em 0}
 .lex>b.sy{font-family:var(--serif);font-size:1.15rem;font-weight:600;color:var(--accent);min-width:3.2rem}
 .lex>span>span{display:block;margin-top:2px}
@@ -272,6 +287,7 @@ svg .sarrow{fill:var(--accent)}
 <style>:root{padding-top:env(safe-area-inset-top,0px)}</style>
 </head>
 <body>
+<div id="sessbar" hidden></div>
 <main id="app"></main>
 <nav id="nav"></nav>
 <div class="zoom" role="group" aria-label="Schriftgröße"><button id="zIn" aria-label="Größer">+</button><button id="zOut" aria-label="Kleiner">−</button></div>
@@ -286,7 +302,7 @@ function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 let state;
 try{ state=JSON.parse(lsGet(KEY)||"null"); }catch(e){ state=null; }
 if(!state||typeof state!=="object") state={};
-function norm(){ for(const k of ["lvl","streak","hist","days","lessons","box","graphs","essays","drafts","unclear"]) if(!state[k]||typeof state[k]!=="object") state[k]={}; }
+function norm(){ for(const k of ["lvl","streak","hist","days","lessons","box","graphs","essays","drafts","unclear","qbox","qlapses","lapses","who","sessions"]) if(!state[k]||typeof state[k]!=="object") state[k]={}; }
 norm();
 function save(){ state.updated=Date.now(); lsSet(KEY,JSON.stringify(state)); schedulePush(); }
 
@@ -2347,10 +2363,205 @@ const SYMBOL_GROUPS=[
    bed:"der **nicht konsumierte Teil des Einkommens**",
    wof:"In der geschlossenen Volkswirtschaft gilt immer S = I. Umstritten ist, was was verursacht.",
    bsp:"Y = 100, C = 85 ⇒ S = 15", wo:"S = I, Sparparadox, Klassenmodelle", merk:"S wie saving",
-   formel:"S = Y − C"}
+   formel:"S = Y − C"},
+  {id:"fs", s:"FS", n:"Finanzierungssaldo eines Sektors",
+   bed:"**Einnahmen minus Ausgaben** eines Sektors: Privatsektor (FS_P), Staat (FS_St), Ausland (FS_AL)",
+   wof:"Die drei Salden summieren sich immer zu null. Überschüsse gibt es nur paarweise.",
+   bsp:"Privatsektor +5 %, Leistungsbilanz ausgeglichen ⇒ Staat −5 %", wo:"Salden-Aufgaben in Teil I, Eurokrise", merk:"FS wie Finanzierungssaldo; P privat, St Staat, AL Ausland",
+   falle:"Das Ausland hat den Saldo M − X: Ein Leistungsbilanzüberschuss des Inlands ist ein Defizit des Auslands.",
+   formel:"FS_P + FS_St + FS_AL = 0"}
+ ]},
+ {id:"keyn", t:"Keynesianisches Modell", kap:4, items:[
+  {id:"c0", s:"c₀", n:"autonomer Konsum",
+   bed:"der Konsum, der **unabhängig vom Einkommen** stattfindet",
+   wof:"Teil der autonomen Nachfrage, wird mit dem Multiplikator vervielfacht",
+   bsp:"Gegessen und gewohnt wird auch ohne Einkommen, notfalls aus Ersparnissen. In der Vorlesung: c₀ = 5.", wo:"Konsumfunktion, Gleichgewicht Y*", merk:"0 wie „bei null Einkommen“",
+   formel:"C = c₀ + c₁Y"},
+  {id:"c1", s:"c₁", n:"marginale Konsumneigung",
+   bed:"der **Anteil jedes zusätzlichen Euros**, der ausgegeben wird (zwischen 0 und 1)",
+   wof:"bestimmt die Größe des Multiplikators: je größer c₁, desto größer 1/(1 − c₁)",
+   bsp:"c₁ = 0,8: Von 100 € mehr Einkommen werden 80 € ausgegeben und 20 € gespart.", wo:"Konsumfunktion, alle Multiplikatoren", merk:"1 wie „ein Euro mehr“",
+   falle:"1 − c₁ ist der Anteil, der gespart wird, nicht c₁.",
+   formel:"C = c₀ + c₁Y"},
+  {id:"ystar", s:"Y*", n:"gleichgewichtiges Einkommen",
+   bed:"das BIP, bei dem **Nachfrage und Angebot übereinstimmen**, im Diagramm der Schnittpunkt mit der 45°-Linie",
+   wof:"Hauptergebnis jeder Modellrechnung; der Vergleich mit Y_POT zeigt die Output-Lücke",
+   bsp:"c₀ = 5, I = 15, c₁ = 0,8 ⇒ Y* = 5 · 20 = 100", wo:"Teil II der Klausur, Herleitung", merk:"Stern = Gleichgewicht",
+   formel:"Y* = 1/(1 − c₁) · (c₀ + I)"},
+  {id:"mult", s:"1/(1 − c₁)", n:"Multiplikator der Staatsausgaben",
+   bed:"der Faktor, mit dem eine zusätzliche autonome Ausgabe das Einkommen **vervielfacht**",
+   wof:"ΔY = Multiplikator · ΔG (oder ΔI, Δc₀)",
+   bsp:"c₁ = 0,8 ⇒ 1/0,2 = 5: 1 Mrd. € mehr Staatsausgaben ergeben 5 Mrd. € mehr BIP.", wo:"keynesianisches Modell, Fiskalpolitik",
+   falle:"Für Steuern gilt der kleinere Multiplikator c₁/(1 − c₁).",
+   formel:"ΔY = 1/(1 − c₁) · ΔG"},
+  {id:"delta", s:"Δ", n:"Veränderung einer Größe",
+   bed:"das griechische **Delta**, gelesen „Veränderung von“",
+   wof:"zeigt, um wie viel sich etwas ändert, nicht wie hoch es ist",
+   bsp:"G steigt von 20 auf 22 ⇒ ΔG = 2", wo:"ΔY, ΔG, ΔT, Δi in den Rechenaufgaben", merk:"Δ wie Differenz",
+   formel:"ΔG = G_neu − G_alt"},
+  {id:"ypot", s:"Y_POT", n:"Produktionspotenzial (Vollbeschäftigungsoutput)",
+   bed:"das BIP, das bei **Vollbeschäftigung** produziert werden könnte. In der Vorlesung auch Y_V.",
+   wof:"Vergleichsmaßstab für die Output-Lücke",
+   bsp:"Y* = 90, Y_POT = 100 ⇒ Lücke −10, also Unterbeschäftigung", wo:"keynesianisches Kreuz, Modell mit Staat, Neuer Konsens", merk:"POT wie Potenzial, V wie Vollbeschäftigung",
+   falle:"Y_POT ist nicht beobachtbar, nur geschätzt (Randwertproblem).",
+   formel:"Output-Lücke = Y* − Y_POT"},
+  {id:"akz", s:"a (in I = I_aut + aY)", n:"Akzelerator",
+   bed:"wie stark die **Investitionen auf die Nachfrage** reagieren",
+   wof:"macht den Multiplikator größer: 1/(1 − c₁ − a)",
+   bsp:"a = 0,1: Steigt Y um 10, steigen die Investitionen um 1.", wo:"Akzelerator-Modell, Crowding-in", merk:"a wie accelerare, „beschleunigen“",
+   falle:"Nicht verwechseln mit a_W und a_Π bei Kalecki: Dort ist a der autonome Konsum.",
+   formel:"I = I_aut + aY"},
+  {id:"iaut", s:"I_aut", n:"autonome Investitionen",
+   bed:"der Teil der Investitionen, der **nicht von der Nachfrage** abhängt",
+   wof:"Teil der autonomen Ausgaben im Akzelerator-Modell",
+   bsp:"I = 8 + 0,1Y (Skript) ⇒ I_aut = 8", wo:"Akzelerator-Modell", merk:"aut wie autonom",
+   formel:"I = I_aut + aY"}
+ ]},
+ {id:"staat", t:"Staat, Zins und Schulden", kap:5, items:[
+  {id:"t", s:"T", n:"Steuern und Abgaben (Einnahmen des Staates)",
+   bed:"die **Einnahmen des Staates** aus Steuern und Abgaben. Transfers senken im Modell T.",
+   wof:"Hebel der Fiskalpolitik: Eine Steuersenkung erhöht das verfügbare Einkommen Y − T.",
+   bsp:"Y = 100, T = 20 ⇒ verfügbares Einkommen 80", wo:"Konsumfunktion mit Staat, Budgetsaldo", merk:"T wie taxes",
+   falle:"Mehr Arbeitslosengeld erhöht nicht G, sondern senkt T.",
+   formel:"C = c₀ + c₁(Y − T)"},
+  {id:"mt", s:"c₁/(1 − c₁)", n:"Steuermultiplikator (Betrag)",
+   bed:"um wie viel Y* steigt, wenn die Steuern um 1 **sinken**",
+   wof:"kleiner als der Ausgabenmultiplikator, weil ein Teil der Entlastung gespart wird",
+   bsp:"c₁ = 0,6 ⇒ 0,6/0,4 = 1,5 (Ausgaben: 2,5)", wo:"Fiskalpolitik, Teil II der Klausur",
+   falle:"Die Differenz zum Ausgabenmultiplikator ist immer genau 1.",
+   formel:"ΔY = −c₁/(1 − c₁) · ΔT"},
+  {id:"bs", s:"BS", n:"Budgetsaldo des Staates",
+   bed:"**Einnahmen minus Ausgaben** des Staates im Modell",
+   wof:"positiv = Überschuss, negativ = Defizit",
+   bsp:"T = 20, G = 25 ⇒ BS = −5, also ein Defizit von 5", wo:"Fiskalpolitik, Schuldenbremse", merk:"BS wie Budgetsaldo",
+   formel:"BS = T − G"},
+  {id:"dinv", s:"d (in I = d − n·i)", n:"zinsunabhängige Investitionen",
+   bed:"die Investitionen **bei einem Zins von null**",
+   wof:"Teil der autonomen Nachfrage im Modell mit Zentralbank",
+   bsp:"I = 20 − 100 · i ⇒ d = 20", wo:"Investitionsfunktion, Modell mit Staat und Zins",
+   falle:"Nicht verwechseln mit der Defizitquote d in D = d/g.",
+   formel:"I = d − n·i"},
+  {id:"n", s:"n", n:"Zinsreagibilität der Investitionen",
+   bed:"wie stark die Investitionen auf den **Zins** reagieren",
+   wof:"Je größer n, desto wirksamer die Geldpolitik. n ≈ 0 heißt Investitionsfalle.",
+   bsp:"n = 100: Sinkt der Zins um 0,01 (einen Prozentpunkt), steigt I um 1.", wo:"Investitionsfunktion, Δi-Aufgaben",
+   falle:"Der Zins steht als Dezimalzahl in der Formel: 3 % = 0,03.",
+   formel:"I = d − n·i"},
+  {id:"zins", s:"i", n:"Zins (von der Zentralbank gesetzt)",
+   bed:"der **Zinssatz**, den die Zentralbank im Modell steuert",
+   wof:"Hebel der Geldpolitik: niedrigeres i, mehr Investitionen",
+   bsp:"Die Zentralbank senkt von 4 % auf 3,5 %, also i von 0,04 auf 0,035.", wo:"Investitionsfunktion, i/Y-Diagramm, Zinsregel", merk:"i wie interest",
+   falle:"Kleines i ist der Zins, großes I die Investitionen.",
+   formel:"Realzins = Nominalzins − Inflation"},
+  {id:"dq", s:"d (in D = d/g)", n:"Defizitquote",
+   bed:"das **Haushaltsdefizit in % des BIP**",
+   wof:"bestimmt zusammen mit g die langfristige Schuldenstandquote",
+   bsp:"Defizit 30 Mrd. € bei einem BIP von 1.000 Mrd. € ⇒ d = 3 %", wo:"Schuldenmechanik, Stabilitätspakt", merk:"d wie deficit",
+   falle:"Nicht verwechseln mit d in I = d − n·i.",
+   formel:"D = d / g"},
+  {id:"gq", s:"g (in D = d/g)", n:"Wachstum des nominalen BIP",
+   bed:"die **Wachstumsrate des nominalen BIP**, inklusive Preissteigerung",
+   wof:"Nenner der Schuldenmechanik: mehr Wachstum, niedrigere Quote",
+   bsp:"Das BIP steigt von 1.000 auf 1.050 ⇒ g = 5 %", wo:"Schuldenmechanik", merk:"g wie growth",
+   falle:"Nicht verwechseln mit der Akkumulationsrate g = I/K bei Kalecki.",
+   formel:"D = d / g"},
+  {id:"dd", s:"D", n:"Schuldenstandquote (langfristig)",
+   bed:"die **Staatsschuld in % des BIP**, auf die es langfristig hinausläuft",
+   wof:"Maßstab für die Tragfähigkeit der Staatsschuld",
+   bsp:"d = 3 %, g = 5 % ⇒ D = 60 %", wo:"Teil I der Klausur, Stabilitätspakt", merk:"D wie debt",
+   formel:"D = d / g"}
+ ]},
+ {id:"konsens", t:"Neuer Konsens und Arbeitsmarkt", kap:6, items:[
+  {id:"pis", s:"π", n:"Inflationsrate",
+   bed:"das kleine griechische p: die **Inflationsrate**, also der Anstieg der Preise in %",
+   wof:"Zielgröße der Zentralbank",
+   bsp:"π = 2 %: Ein Warenkorb für 100 € kostet nach einem Jahr 102 €.", wo:"Phillips-Kurve, Zinsregel, Lohn-Preis-Spirale", merk:"π wie Preise",
+   falle:"Das große Π steht für Gewinne.",
+   formel:"π = f(U)"},
+  {id:"pit", s:"π^T", n:"Inflationsziel der Zentralbank",
+   bed:"die **angestrebte Inflationsrate**",
+   wof:"Liegt die Inflation darüber, erhöht die Zentralbank den Zins.",
+   bsp:"EZB: unter, aber nahe 2 %", wo:"Zinsregel, Inflation Targeting", merk:"T wie target",
+   formel:"iₜ = iₜ₋₁ + k · (πₜ₋₁ − π^T)"},
+  {id:"k", s:"k", n:"Reaktionsstärke der Zentralbank",
+   bed:"wie **stark** die Zentralbank den Zins ändert, wenn die Inflation vom Ziel abweicht (k > 0)",
+   wof:"größeres k, größerer Zinsschritt",
+   bsp:"k = 0,5, Inflation einen Punkt über dem Ziel ⇒ Zins plus 0,5 Punkte", wo:"Zinsregel",
+   formel:"iₜ = iₜ₋₁ + k · (πₜ₋₁ − π^T)"},
+  {id:"itt", s:"iₜ, iₜ₋₁", n:"Zins heute und in der Vorperiode",
+   bed:"Der Index t zählt die **Perioden**: t ist jetzt, t−1 die Periode davor.",
+   wof:"In der Zinsregel baut der neue Zins auf dem alten auf.",
+   bsp:"iₜ₋₁ = 2 %, Inflation 4 %, Ziel 2 %, k = 1 ⇒ iₜ = 4 %", wo:"Zinsregel, Lohn-Preis-Spirale (t1, t2, t3)", merk:"t wie time",
+   formel:"iₜ = iₜ₋₁ + k · (πₜ₋₁ − π^T)"},
+  {id:"u", s:"U", n:"Arbeitslosenquote",
+   bed:"der **Anteil der Arbeitslosen** an den Erwerbspersonen",
+   wof:"x-Achse der Phillips-Kurve",
+   bsp:"4 Mio. Arbeitslose bei 40 Mio. Erwerbspersonen ⇒ U = 10 %", wo:"Phillips-Kurve", merk:"U wie unemployment",
+   formel:"π = f(U)"},
+  {id:"nairu", s:"NAIRU", n:"Arbeitslosenquote, bei der sich die Inflation nicht beschleunigt",
+   bed:"die Arbeitslosenquote, bei der die Inflation **konstant** bleibt (non-accelerating inflation rate of unemployment)",
+   wof:"Gleichgewicht am Arbeitsmarkt; die langfristige Phillips-Kurve ist dort senkrecht",
+   bsp:"Liegt die Arbeitslosigkeit darunter, steigt die Inflation Jahr für Jahr.", wo:"Monetarismus, Neuer Konsens, Hysterese",
+   falle:"Die EU-Kommission schätzt die ähnliche NAWRU, gemessen an Löhnen statt Preisen."},
+  {id:"wp", s:"w/p", n:"Reallohn",
+   bed:"der **Nominallohn w geteilt durch das Preisniveau p**: was man sich vom Lohn wirklich kaufen kann",
+   wof:"y-Achse im Arbeitsmarktdiagramm mit Lohn- und Preissetzung",
+   bsp:"Löhne +3 %, Preise +3 % ⇒ Reallohn unverändert", wo:"neoklassischer Arbeitsmarkt, Lohn-Preis-Spirale",
+   falle:"Kleines w ist bei Kalecki der Lohnanteil.",
+   formel:"Reallohn = w / p"},
+  {id:"e", s:"E", n:"Beschäftigung (Arbeitsvolumen)",
+   bed:"die **Beschäftigung**; E* ist das Gleichgewicht",
+   wof:"x-Achse im Arbeitsmarktdiagramm",
+   bsp:"E₁ rechts von E*: Beschäftigung über dem Gleichgewicht, es droht eine Lohn-Preis-Spirale.", wo:"Lohnsetzung und Preissetzung, Hysterese", merk:"E wie employment",
+   falle:"In der Gesamtrechnung steht E für die Erwerbstätigen (H/E = Stunden je Person)."}
+ ]},
+ {id:"kalecki", t:"Kalecki und Verteilung", kap:[7,8], items:[
+  {id:"wl", s:"w (Lohnanteil)", n:"Lohnanteil am Einkommen",
+   bed:"der **Anteil der Löhne** am Einkommen",
+   wof:"beschreibt die Verteilung: W = w · Y, Π = (1 − w) · Y",
+   bsp:"w = 0,6, Y = 1.000 ⇒ W = 600, Π = 400", wo:"Kostenparadox, Kalecki",
+   falle:"Großes W ist die Lohnsumme, w/p im Arbeitsmarkt der Reallohn.",
+   formel:"W = w · Y"},
+  {id:"aw", s:"a_W, a_Π", n:"autonomer Konsum der Lohn- und der Gewinnbezieher",
+   bed:"der **einkommensunabhängige Konsum** der Arbeiter:innen (a_W) und der Gewinnbezieher:innen (a_Π)",
+   wof:"Teil der autonomen Nachfrage im Kalecki-Modell",
+   bsp:"Vorlesung: a_W = 60, a_Π = 40", wo:"kaleckianische Konsumfunktion",
+   falle:"Nicht verwechseln mit dem Akzelerator a.",
+   formel:"C = a_W + a_Π + b_W · W + b_Π · Π"},
+  {id:"bw", s:"b_W, b_Π", n:"Konsumneigung aus Löhnen und aus Gewinnen",
+   bed:"welcher **Anteil** der Löhne (b_W) bzw. der Gewinne (b_Π) konsumiert wird",
+   wof:"b_W > b_Π ist die Grundlage des Kostenparadoxes",
+   bsp:"Vorlesung: b_W = 0,9, b_Π = 0,5", wo:"Kostenparadox, Aufgabenblatt 7", merk:"b spielt hier die Rolle von c₁ im einfachen Modell",
+   formel:"C = a_W + a_Π + b_W · W + b_Π · Π"},
+  {id:"sw", s:"S_W", n:"Ersparnis aus Löhnen",
+   bed:"was die **Lohnbezieher:innen sparen**: Nettolohn minus Konsum",
+   wof:"senkt in Kaleckis Gewinngleichung die Gewinne",
+   bsp:"Nettolöhne 600, Konsum 570 ⇒ S_W = 30", wo:"Gewinngleichung, Wachstumsmodelle",
+   formel:"S_W = W_netto − C_W"},
+  {id:"cpi", s:"C_Π", n:"Konsum aus Gewinnen",
+   bed:"die **Konsumausgaben der Gewinnbezieher:innen**",
+   wof:"erhöht in Kaleckis Gewinngleichung die Gewinne",
+   bsp:"Ausgeschüttete Gewinne werden für Luxusgüter ausgegeben.", wo:"Gewinngleichung, „Gewinne ohne Investitionen“",
+   formel:"Π_netto = C_Π + I − S_W + (G − T) + (X − M)"},
+  {id:"r", s:"r", n:"Profitrate",
+   bed:"die **Gewinne im Verhältnis zum Kapitalstock**",
+   wof:"Der Abstand r − g zeigt „Gewinne ohne Investitionen“.",
+   bsp:"Π = 10, K = 100 ⇒ r = 10 %", wo:"postkeynesianische Wachstumsmodelle", merk:"r wie rate of profit",
+   formel:"r = Π / K"},
+  {id:"ga", s:"g (in g = I/K)", n:"Akkumulationsrate",
+   bed:"die **Investitionen im Verhältnis zum Kapitalstock**: wie schnell der Kapitalstock wächst",
+   wof:"Vergleich mit der Profitrate r",
+   bsp:"I = 5, K = 100 ⇒ g = 5 %", wo:"Gewinngleichung, Wachstumsmodelle",
+   falle:"Nicht verwechseln mit dem BIP-Wachstum g in D = d/g.",
+   formel:"g = I / K"},
+  {id:"kk", s:"K", n:"Kapitalstock",
+   bed:"der Bestand an **Maschinen, Gebäuden und Anlagen**",
+   wof:"Bestandsgröße; Investitionen vergrößern ihn",
+   bsp:"Eine Fabrik mit allen ihren Maschinen gehört zum Kapitalstock.", wo:"Profitrate, Akkumulationsrate"}
  ]}
 ];
 const isFormula=f=>!!f&&!/[a-zäöüß]{4,}/.test(f.split(" = ").slice(1).join(" = "));
+const symMain=s=>s.replace(/ \(in .*\)$/,""), symIn=s=>(s.match(/ \(in (.*)\)$/)||[])[1]||"";
 const SYMBOLS=SYMBOL_GROUPS.flatMap(g=>g.items.map(x=>Object.assign({g:g.id, gt:g.t},x)));
 function symBack(x){
   return [isFormula(x.formel)?`$ ${x.formel}`:"", `Bedeutung: ${x.bed}`, `Wofür: ${x.wof}`, `Beispiel: ${x.bsp}`, `Kommt vor: ${x.wo}`, x.falle?`Achtung: ${x.falle}`:""].filter(Boolean).join("\n");
@@ -2363,8 +2574,7 @@ const DECK_NAME={sym:"Symbole", symr:"Symbole umgekehrt"};
 
 /* Lexikon: alle Zeichen nach Themen */
 function lexiconHTML(){
-  return SYMBOL_GROUPS.map(g=>`<div class="block"><h3>${g.t}</h3><div class="dlist lex">${g.items.map(x=>`<b class="sy">${fx(x.s)}</b><span>${inl(x.n)}${isFormula(x.formel)?`<span class="eq lexeq">${fx(x.formel)}</span>`:""}<span class="small muted">${inl(x.bsp)}</span>${x.falle?`<span class="small lexwarn">${inl(x.falle)}</span>`:""}</span>`).join("")}</div></div>`).join("")
-   +`<p class="small muted">Weitere Zeichen (Modell mit Staat und Zins, Neuer Konsens, Kalecki) folgen.</p>`;
+  return SYMBOL_GROUPS.map(g=>`<div class="block"><h3>${g.t}</h3><div class="dlist lex">${g.items.map(x=>`<b class="sy">${fx(symMain(x.s))}</b><span>${inl(x.n)}${symIn(x.s)?`<span class="small muted">in ${fx(symIn(x.s))}</span>`:""}${isFormula(x.formel)?`<span class="eq lexeq">${fx(x.formel)}</span>`:""}<span class="small muted">${inl(x.bsp)}</span>${x.falle?`<span class="small lexwarn">${inl(x.falle)}</span>`:""}</span>`).join("")}</div></div>`).join("");
 }
 function renderSym(){
   const st=n=>{ const A=allCards(n); return `${dueCards(n).length} fällig · ${A.filter(x=>!isSeen(x.id)).length} neu`; };
@@ -2469,13 +2679,13 @@ function nextStep(){
 /* ================= Navigation ================= */
 let view="home", task=null, cur={};
 const TABS=[["home","Lernpfad"],["practice","Üben"],["stats","Statistik"]];
-const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice",sym:"practice"};
+const TAB_OF={home:"home",chapter:"home",lesson:"home",graph:"home",essay:"home",cards:"practice",calc:"practice",task:"practice",practice:"practice",stats:"stats",exam:"practice",kurz:"practice",sym:"practice",recall:"practice",who:"practice",sessdone:"home"};
 function renderNav(){
   $("#nav").innerHTML=TABS.map(([k,l])=>`<button data-v="${k}"${TAB_OF[view]===k?' aria-current="page"':""}>${l}</button>`).join("");
   $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.v));
 }
 function go(v){ view=v; render(); window.scrollTo(0,0); }
-function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz,sym:renderSym})[view](); }
+function render(){ renderNav(); ({home:renderHome,chapter:renderChapter,lesson:renderLesson,cards:renderCards,graph:renderGraph,essay:renderEssay,practice:renderPractice,calc:renderCalc,task:renderTask,stats:renderStats,exam:renderExam,kurz:renderKurz,sym:renderSym,recall:renderRecall,who:renderWho,sessdone:renderHome})[view](); }
 const backTo=(label,fn)=>`<button class="crumb" id="crumb">← ${label}</button>`;
 function bindCrumb(fn){ const b=$("#crumb"); if(b) b.onclick=fn; }
 
@@ -2486,9 +2696,9 @@ function renderHome(){
     <p class="eyebrow">Wirtschaft II · Makroökonomik</p>
     <h1>Lernpfad</h1>
     <p class="muted">Alles für die Klausur in einer App: Theorie lesen, Kurzfragen abfragen, rechnen, Grafiken zeichnen, Essays schreiben.</p>
+    ${todayBlock()}
     ${homeReview()}
-    ${dueCards(0).length?`<div class="block row between"><span><b>Heute fällig: ${dueCards(0).length} Karten</b><br><span class="small muted">Zuerst wiederholen, dann Neues lernen.</span></span><button class="btn" id="goDue">Wiederholen</button></div>`:""}
-    <div class="block today">
+    <div class="block">
       <p class="eyebrow">Als Nächstes · ${nx.label}</p>
       <h2>${nx.title}</h2>
       <button class="btn" id="goNext">Weiter lernen</button>
@@ -2501,7 +2711,7 @@ function renderHome(){
     <div class="block">
       <h2>So ist die Klausur gebaut</h2>
       <div class="klist">
-        <b>Termin</b><span>steht noch nicht fest (kommt über LSF bzw. Moodle)</span>
+        <b>Termin</b><span>${examDateTs()?`${fmtDate(examDateTs())} ${new Date(examDateTs()).getFullYear()}, noch ${Math.max(0,Math.ceil((examDateTs()-dayStart())/864e5))} Tage`:`steht noch nicht fest. Eintragen kannst du ihn unter Statistik.`}</span>
         <b>Dauer</b><span>90 Minuten laut Modul. Die Altklausuren 2024 hatten 60 Minuten, also kommt eher mehr Stoff dazu.</span>
         <b>Hilfsmittel</b><span>Taschenrechner, Geodreieck, Buntstifte</span>
       </div>
@@ -2514,7 +2724,7 @@ function renderHome(){
     </div>`;
   bindReview();
   $("#goNext").onclick=nx.go;
-  if($("#goDue")) $("#goDue").onclick=()=>openCards(0);
+  $("#goSess").onclick=()=>{ if(sess) runStep(); else startSession(); };
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
 }
 
@@ -2530,7 +2740,7 @@ function renderChapter(){
     <div class="block"><div class="modes">
       <button class="mode" id="mL"><span class="t">Theorie</span><span class="n">${nl}/${L.length}</span><span class="d">${L.length} kurze Lektionen mit Verständnisfragen. Hier fängst du an.</span></button>
       ${K.length?`<button class="mode" id="mK"><span class="t">Karten</span><span class="n">${dueCards(n).length} fällig · ${K.filter(x=>!isSeen(x.id)).length} neu</span><span class="d">Kurzfragen für Teil I. Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder.</span></button>`:""}
-      ${SYMBOL_GROUPS.some(g=>g.kap===n)?`<button class="mode" id="mS"><span class="t">Symbole</span><span class="n">${SYMBOL_GROUPS.filter(g=>g.kap===n).reduce((k,g)=>k+g.items.length,0)} Zeichen</span><span class="d">Erst die Zeichen sicher kennen, dann rechnet es sich leichter.</span></button>`:""}
+      ${SYMBOL_GROUPS.some(g=>[].concat(g.kap).includes(n))?`<button class="mode" id="mS"><span class="t">Symbole</span><span class="n">${SYMBOL_GROUPS.filter(g=>[].concat(g.kap).includes(n)).reduce((k,g)=>k+g.items.length,0)} Zeichen</span><span class="d">Erst die Zeichen sicher kennen, dann rechnet es sich leichter.</span></button>`:""}
       ${C.length?`<button class="mode" id="mC"><span class="t">Rechnen</span><span class="n">${nc}/${C.length} frei</span><span class="d">Teil II mit immer neuen Zahlen: erst vorgerechnet, dann geführt, dann frei.</span></button>`:""}
       ${G.length?`<button class="mode" id="mG"><span class="t">Grafiken</span><span class="n">${ng}/${G.length}</span><span class="d">Mit dem Stift zeichnen, dann die Musterlösung darüberlegen.</span></button>`:""}
       ${E.length?`<button class="mode" id="mE"><span class="t">Essay</span><span class="n">${ne}/${E.length}</span><span class="d">Teil III im Klausurformat mit Erwartungshorizont.</span></button>`:""}
@@ -2548,7 +2758,7 @@ function renderChapter(){
 }
 
 /* ================= Lektion ================= */
-function openLesson(n,i){ cur.ch=n; cur.li=i; cur.ans={}; go("lesson"); }
+function openLesson(n,i){ cur.ch=n; cur.li=i; cur.ans={}; cur.shown={}; go("lesson"); }
 function renderLesson(){
   const n=cur.ch, L=LESSONS[n], x=L[cur.li];
   const html=nb(x.html).replace(/\{\{fig:(\w+)\}\}/g,(_,id)=>figSVG(id,true));
@@ -2560,20 +2770,17 @@ function renderLesson(){
       ?`<span class="small" style="flex:1;min-width:12rem"><b>Als unklar markiert.</b> Den Prompt kannst du in Claude einfügen.</span><button class="btn ghost small" id="uncCopy">Prompt nochmal kopieren</button><button class="btn small" id="uncOk">Jetzt verstanden</button>`
       :`<span class="small muted" style="flex:1;min-width:12rem">Etwas unklar? Markiert die Lektion und kopiert einen fertigen Prompt für Claude.</span><button class="btn ghost small" id="uncSet">Verstehe ich nicht</button>`}<div id="uncBox" style="width:100%"></div></div>
     ${wipoccBox(x.id)}
-    <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>{ const a=cur.ans[j];
-      return `<div style="margin-top:${j?16:4}px"><p style="margin:0"><b>${c.q}</b></p><div class="mc">${c.o.map((o,k)=>{
-        const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
-        return `<button data-j="${j}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${o}</button>`;}).join("")}
-        ${a===undefined?`<button data-j="${j}" data-k="-1" class="idk">Weiß ich nicht</button>`:""}</div>
-        ${a!==undefined?feedback(c,a):""}</div>`;}).join("")}
+    <div class="block"><h3>Kurz prüfen</h3>${x.check.map((c,j)=>qBlock(c,j,cur.ans[j],(cur.shown||{})[j],j===0)).join("")}
     </div>
     <div class="lnav">
       ${cur.li>0?`<button class="btn ghost" id="prev">← Vorherige</button>`:"<span></span>"}
-      ${allAns?(cur.li<L.length-1?`<button class="btn" id="next">Nächste Lektion →</button>`:`<button class="btn" id="fin">Kapitel-Übersicht</button>`):`<span class="small muted">Beantworte die Fragen, dann geht es weiter.</span>`}
+      ${allAns&&sess&&sess.steps[sess.i]&&sess.steps[sess.i].k==="lesson"?sessBtn():allAns?(cur.li<L.length-1?`<button class="btn" id="next">Nächste Lektion →</button>`:`<button class="btn" id="fin">Kapitel-Übersicht</button>`):`<span class="small muted">Beantworte die Fragen, dann geht es weiter.</span>`}
     </div>`;
   bindCrumb(()=>go("chapter"));
-  document.querySelectorAll(".mc button").forEach(b=>b.onclick=()=>{
-    const j=+b.dataset.j, k=+b.dataset.k; if(cur.ans[j]!==undefined) return; cur.ans[j]=k;
+  const keep=f=>{ const y=window.scrollY; f(); renderLesson(); window.scrollTo(0,y); };
+  document.querySelectorAll("[data-show]").forEach(b=>b.onclick=()=>keep(()=>{ cur.shown=cur.shown||{}; cur.shown[+b.dataset.show]=true; }));
+  document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{
+    const j=+b.dataset.q, k=+b.dataset.k; if(cur.ans[j]!==undefined) return; cur.ans[j]=k; qGrade(qid(x.id,j),k===x.check[j].a);
     if(x.check.every((_,q)=>cur.ans[q]!==undefined)){ state.lessons=state.lessons||{}; const ok=x.check.every((c,q)=>cur.ans[q]===c.a);
       state.lessons[x.id]={ok, t:Date.now()}; logDay(); save(); }
     const y=window.scrollY; renderLesson(); window.scrollTo(0,y);
@@ -2624,10 +2831,10 @@ function chapterOfCard(id){ const n=+String(id).replace(/^c(\d+)-.*/,"$1"), ch=C
 function lessonRef(id){ for(const ch of CHAPTERS){ const i=(LESSONS[ch.n]||[]).findIndex(x=>x.id===id); if(i>=0) return {n:ch.n,i,t:LESSONS[ch.n][i].t,ch:ch.title}; } return null; }
 function homeReview(){
   const unc=Object.keys(state.unclear||{}).map(lessonRef).filter(Boolean);
-  const again=Object.entries(state.lessons||{}).filter(([id,v])=>v&&!v.ok&&v.t<dayStart()&&!isUnclear(id)).map(([id])=>lessonRef(id)).filter(Boolean);
-  if(!unc.length&&!again.length) return "";
+  const again=[];
+  if(!unc.length) return "";
   const row=(r,lab)=>`<button class="titem rv" data-n="${r.n}" data-i="${r.i}"><span class="t">${r.t}</span><span class="chip ${lab==="unklar"?"unk":"l2"}">${lab}</span><span class="d">${r.ch}</span></button>`;
-  return `<div class="block"><h3>Nochmal anschauen</h3><p class="small muted" style="margin:0 0 4px">${unc.length?"Als unklar markiert oder ":""}mit Fragen, die du nicht gewusst hast.</p><div class="tlist">${unc.map(r=>row(r,"unklar")).join("")}${again.slice(0,5).map(r=>row(r,"Fragen")).join("")}</div></div>`;
+  return `<div class="block"><h3>Nochmal anschauen</h3><p class="small muted" style="margin:0 0 4px">Als unklar markiert. Tippe auf „Jetzt verstanden“ in der Lektion, wenn es sitzt.</p><div class="tlist">${unc.map(r=>row(r,"unklar")).join("")}${again.slice(0,5).map(r=>row(r,"Fragen")).join("")}</div></div>`;
 }
 function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
@@ -2641,7 +2848,7 @@ const dayStart=(t=Date.now())=>{ const d=new Date(t); d.setHours(0,0,0,0); retur
 const isSeen=id=>!!(state.box||{})[id];
 const isDue=id=>isSeen(id) && ((state.due||{})[id]||0)<=Date.now();
 function dueCards(n){ return allCards(n).filter(x=>isDue(x.id)).sort((a,b)=>((state.due||{})[a.id]||0)-((state.due||{})[b.id]||0)); }
-function openCards(n,free){ cur.cardCh=n; cur.free=!!free; cur.deck=free?buildDeck(n):buildDueDeck(n); cur.ci=0; cur.flip=false; cur.right=0; cur.requeued={}; go("cards"); }
+function openCards(n,free,deck){ cur.cardCh=n; cur.free=!!free; cur.deck=deck?deck.slice():(free?buildDeck(n):buildDueDeck(n)); cur.ci=0; cur.flip=false; cur.right=0; cur.unsure=0; cur.cstrokes=[]; cur.requeued={}; go("cards"); }
 function buildDueDeck(n){
   const due=dueCards(n), fresh=n? allCards(n).filter(x=>!isSeen(x.id)) : [];
   return due.concat(fresh).slice(0,Math.max(10,Math.min(due.length,30)));
@@ -2661,28 +2868,36 @@ function renderCards(){
     const nextDue=allCards(n).filter(x=>isSeen(x.id)&&!isDue(x.id)).map(x=>(state.due||{})[x.id]).sort((a,b)=>a-b)[0];
     const when=nextDue? Math.round((dayStart(nextDue)-dayStart())/864e5) : null;
     $("#app").innerHTML=`${backTo(deckLabel(n))}<h1>${D.length?(left?"Runde geschafft":"Für heute erledigt"):"Nichts fällig"}</h1>
-      <div class="block">${D.length?`<p>${cur.right} von ${D.length} Antworten gewusst.</p>`:""}
-      <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Gewusste Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, nicht gewusste sofort noch einmal.</p>
-      <div class="row">${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button></div></div>`;
-    bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); $("#free").onclick=()=>openCards(n,true); $("#out").onclick=()=>deckBack(n); return;
+      <div class="block">${D.length?`<p>${cur.right} sicher, ${cur.unsure||0} unsicher, ${D.length-cur.right-(cur.unsure||0)} nicht gewusst.</p>`:""}
+      <p class="small muted">${left?`Noch ${left} Karten fällig oder neu.`:`Alle Karten${n?" dieses Kapitels":""} sind auf dem Stand. ${when!=null?`Die nächsten werden ${when<=0?"heute":when===1?"morgen":"in "+when+" Tagen"} fällig.`:""}`} Sichere Karten kommen nach 1, 3, 7, 16 und 35 Tagen wieder, unsichere morgen, nicht gewusste sofort noch einmal.</p>
+      <div class="row">${sess?sessBtn():`${left?`<button class="btn" id="again">Weiter</button>`:""}<button class="btn ghost" id="free">Freiwillig weiterüben</button><button class="btn ghost" id="out">Fertig</button>`}</div></div>`;
+    bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); if($("#free")) $("#free").onclick=()=>openCards(n,true); if($("#out")) $("#out").onclick=()=>deckBack(n); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
   $("#app").innerHTML=`${backTo(deckLabel(n))}
     <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></div>
-    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p><div class="front${n==="sym"?" symf":""}">${inl(c.f)}</div>${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
-    ${cur.flip?`<div class="row"><button class="btn" id="yes" style="flex:1">Gewusst</button><button class="btn warn" id="no" style="flex:1">Nicht gewusst</button></div>`
-      :`<button class="btn" id="flip" style="width:100%">Antwort zeigen</button><p class="small muted" style="margin-top:8px">Erst im Kopf oder auf dem Schmierzettel antworten, dann aufdecken.</p>`}`;
+    <div class="block card" id="card" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p>${n==="sym"?`<div class="front symf">${fx(symMain(c.f))}${symIn(c.f)?`<span class="symin">in ${fx(symIn(c.f))}</span>`:""}</div>`:`<div class="front">${inl(c.f)}</div>`}${cur.flip?`<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div>
+    ${cur.pad?`<div class="pad cardpad"><span class="ph">Hier hinschreiben</span><canvas id="cpad" aria-label="Schreibfeld für die Antwort"></canvas><div class="tools"><button id="cpU">Zurück</button><button id="cpX">Leeren</button></div></div>`:""}
+    ${cur.flip?`<div class="grade"><button class="btn warn" id="no">Nicht gewusst</button><button class="btn ghost" id="mid">Unsicher</button><button class="btn" id="yes">Sicher</button></div>`
+      :`<div class="row"><button class="btn" id="flip" style="flex:1">Antwort zeigen</button><button class="btn ghost" id="padT">${cur.pad?"Schreibfeld aus":"Schreibfeld"}</button></div><p class="small muted" style="margin-top:8px">Erst antworten, im Kopf oder im Schreibfeld, dann aufdecken. Ehrlich bewerten: „Unsicher“, wenn du nur ungefähr wusstest.</p>`}`;
   bindCrumb(()=>deckBack(n));
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
   const cd=$("#card"); cd.onclick=e=>{ if(e.target.closest("a")) return; cur.flip=!cur.flip; renderCards(); };
   cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } };
-  const grade=ok=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), b1=ok?Math.min(5,Math.max(b0,1)+1):1;
-    state.box[c.id]=b1;
-    if(!cur.free||!ok||b1<b0){ const days=ok?(b0===5?35:INTERVAL[b1]):0; state.due[c.id]= ok? dayStart()+days*864e5 : Date.now(); }
-    if(ok) cur.right++; else if((cur.requeued[c.id]||0)<2){ cur.requeued[c.id]=(cur.requeued[c.id]||0)+1; D.push(c); }
-    logDay(); save(); cur.ci++; cur.flip=false; renderCards(); };
-  if($("#yes")) $("#yes").onclick=()=>grade(true);
-  if($("#no")) $("#no").onclick=()=>grade(false);
+  if(cur.pad){ const sf=drawSurface($("#cpad"),cur.cstrokes); $("#cpU").onclick=()=>sf.undo(); $("#cpX").onclick=()=>sf.clear(); }
+  if($("#padT")) $("#padT").onclick=()=>{ cur.pad=!cur.pad; renderCards(); };
+  /* Bewertung: 2 sicher (nächstes Fach), 1 unsicher (Fach bleibt, morgen wieder), 0 nicht gewusst (Fach 1, gleich nochmal) */
+  const grade=lv=>{ state.box=state.box||{}; state.due=state.due||{}; const b0=cardBox(c.id), old=state.due[c.id]||0;
+    const b1= lv===2? Math.min(5,Math.max(b0,1)+1) : lv===1? Math.max(1,b0) : 1;
+    const nd= lv===2? dayStart()+(b0===5?35:INTERVAL[b1])*864e5 : lv===1? dayStart()+864e5 : Date.now();
+    if(!cur.free){ state.box[c.id]=b1; state.due[c.id]=nd; }
+    else if(lv<2){ state.box[c.id]=Math.min(b0||1,b1); state.due[c.id]=Math.min(old||nd,nd); }
+    if(lv===2) cur.right++; else if(lv===1) cur.unsure=(cur.unsure||0)+1;
+    else { state.lapses=state.lapses||{}; state.lapses[c.id]=(state.lapses[c.id]||0)+1; if((cur.requeued[c.id]||0)<2){ cur.requeued[c.id]=(cur.requeued[c.id]||0)+1; D.push(c); } }
+    logDay(); save(); cur.ci++; cur.flip=false; cur.cstrokes=[]; renderCards(); };
+  if($("#yes")) $("#yes").onclick=()=>grade(2);
+  if($("#mid")) $("#mid").onclick=()=>grade(1);
+  if($("#no")) $("#no").onclick=()=>grade(0);
 }
 
 /* ================= Grafiken ================= */
@@ -2761,6 +2976,8 @@ function renderPractice(){
     <p class="muted">Gemischt aus allen fertigen Kapiteln (${ready.join(", ")}). Gemischtes Üben ist anstrengender als blockweises, bleibt aber deutlich besser hängen.</p>
     <div class="block"><div class="modes">
       <button class="mode" id="pK"><span class="t">Fällige Karten</span><span class="n">${dueCards(0).length} fällig</span><span class="d">Alle Karten aus allen Kapiteln, die heute dran sind. Neue Karten lernst du im jeweiligen Kapitel.</span></button>
+      <button class="mode" id="pR"><span class="t">Verständnisfragen</span><span class="n">${qDue().length} fällig</span><span class="d">Die Fragen aus den Lektionen kommen mit wachsendem Abstand wieder. Erst selbst überlegen, dann die Auswahl.</span></button>
+      <button class="mode" id="pW"><span class="t">Wer sagt das?</span><span class="d">Aussagen den Denkschulen zuordnen. Das Gerüst für den Essay in Teil III.</span></button>
       <button class="mode" id="pS"><span class="t">Symbole und Formeln</span><span class="n">${dueCards("sym").length+dueCards("symr").length} fällig</span><span class="d">Was bedeuten Y, Π, G oder X − M? Mit Mini-Beispielen und Lexikon zum Nachschlagen.</span></button>
       <button class="mode" id="pC"><span class="t">Rechnen gemischt</span><span class="d">Wechselnde Aufgabentypen, bevorzugt was dir schwerfällt.</span></button>
       <button class="mode" id="pL"><span class="t">Alle Rechenaufgaben</span><span class="d">Einzelne Typen gezielt üben.</span></button>
@@ -2769,6 +2986,8 @@ function renderPractice(){
     </div></div>`;
   $("#pK").onclick=()=>openCards(0);
   $("#pS").onclick=()=>go("sym");
+  $("#pR").onclick=()=>openRecall();
+  $("#pW").onclick=()=>openWho(8);
   $("#pC").onclick=()=>startTask(recommend(),true);
   $("#pL").onclick=()=>{ cur.calcCh=0; go("calc"); };
   $("#pKz").onclick=openKurz;
@@ -2811,11 +3030,262 @@ function renderStats(){
     <div class="block"><h2>Nach Kapitel</h2>${ready.map(c=>{ const p=chapterProgress(c.n);
       return `<div class="srow ch"><span>${c.title}</span><span class="small muted">${[["Theorie",p.l,1],["Karten",p.k,(CARDS[c.n]||[]).length],["Rechnen",p.c,(CALC[c.n]||[]).length]].filter(x=>x[2]).map(x=>x[0]+" "+Math.round(x[1]*100)).join(" · ")}</span><span class="pts">${p.total} %</span></div>`;}).join("")}</div>
     <div class="block"><h2>Rechenaufgaben</h2>${calcTypes(0).map(t=>{ const h=state.hist[t]; return `<div class="srow"><span>${TYPES[t].short}</span><span class="chip l${lvlOf(t)}">${LVL[lvlOf(t)]}</span><span>${h&&h.n?`${h.r}/${h.n}`:"–"}</span></div>`;}).join("")}</div>
+    ${examPlanBlock()}
+    ${weakBlock()}
     ${syncBox()}
     <div class="block"><h3>Fortschritt zurücksetzen</h3><p class="small muted">Löscht deinen gesamten Lernstand, auch auf den verbundenen Geräten.</p>
       <button class="btn warn" id="rst">${statsArmed?"Wirklich zurücksetzen":"Zurücksetzen"}</button></div>`;
-  bindSync();
+  bindSync(); bindExamPlan(); bindWeak();
   $("#rst").onclick=()=>{ if(!statsArmed){ statsArmed=true; renderStats(); return; } state={}; norm(); save(); flushPush(); statsArmed=false; toast("Zurückgesetzt"); renderStats(); };
+}
+
+/* ================= Verständnisfragen: erst selbst abrufen, dann Auswahl; Wiederholung mit Abstand =================
+   Jede Frage aus den Lektionen bekommt ein eigenes Fach wie eine Karteikarte (state.qbox).
+   Ältere Antworten (vor dieser Funktion) werden aus state.lessons abgeleitet, ohne etwas zu speichern. */
+const qid=(lid,j)=>lid+"#"+j;
+function allQuestions(){ const out=[]; for(const ch of CHAPTERS) for(const L of (LESSONS[ch.n]||[])) L.check.forEach((c,j)=>out.push({id:qid(L.id,j), lid:L.id, n:ch.n, c, lt:L.t, li:(LESSONS[ch.n]||[]).indexOf(L)})); return out; }
+function qInfo(id){
+  const s=(state.qbox||{})[id]; if(s) return s;
+  const ls=(state.lessons||{})[id.split("#")[0]]; if(!ls) return null;
+  return ls.ok? {b:2, due:dayStart(ls.t)+3*864e5} : {b:1, due:dayStart(ls.t)+864e5};
+}
+function qDue(){ const now=Date.now(); return allQuestions().filter(q=>{ const s=qInfo(q.id); return s&&s.due<=now; }).sort((a,b)=>qInfo(a.id).due-qInfo(b.id).due); }
+function qGrade(id,ok){
+  state.qbox=state.qbox||{}; const s=qInfo(id)||{b:0};
+  const b1= ok? Math.min(5,Math.max(s.b,1)+1) : 1;
+  state.qbox[id]={b:b1, due:dayStart()+(ok?(s.b===5?35:INTERVAL[b1]):1)*864e5};
+  if(!ok){ state.qlapses=state.qlapses||{}; state.qlapses[id]=(state.qlapses[id]||0)+1; }
+  save();
+}
+/* Eine Frage: erst nur die Frage, dann auf Wunsch die Auswahl */
+function qBlock(c,key,a,shown,first){
+  const opts= a!==undefined || shown;
+  return `<div class="qb" style="margin-top:${first?4:18}px"><p style="margin:0"><b>${inl(c.q)}</b></p>
+    ${opts?`<div class="mc">${c.o.map((o,k)=>{ const cls=a===undefined?"":(k===c.a?"r":(k===a?"w":""));
+        return `<button data-q="${key}" data-k="${k}" class="${cls}" ${a!==undefined?"disabled":""}>${inl(o)}</button>`; }).join("")}
+        ${a===undefined?`<button data-q="${key}" data-k="-1" class="idk">Weiß ich nicht</button>`:""}</div>`
+      :`<p class="small muted" style="margin:6px 0 8px">Erst selbst überlegen, am besten in einem Satz. Dann die Auswahl zeigen.</p>
+        <div class="row"><button class="btn small" data-show="${key}">Auswahl zeigen</button><button class="btn ghost small" data-q="${key}" data-k="-1">Weiß ich nicht</button></div>`}
+    ${a!==undefined?feedback(c,a):""}</div>`;
+}
+/* Übungsmodus: fällige Verständnisfragen aus allen Lektionen */
+function openRecall(list){ const L=list||qDue().slice(0,8); cur.rq={list:L, i:0, ans:undefined, shown:false, right:0}; go("recall"); }
+function renderRecall(){
+  const R=cur.rq, L=R.list;
+  if(R.i>=L.length){
+    const left=qDue().length;
+    $("#app").innerHTML=`${backTo("Üben")}<h1>${L.length?"Runde geschafft":"Nichts fällig"}</h1><div class="block">
+      ${L.length?`<p>${R.right} von ${L.length} richtig.</p>`:`<p>Gerade ist keine Verständnisfrage fällig. Neue Fragen kommen mit jeder Lektion dazu.</p>`}
+      <p class="small muted">Richtige Fragen kommen nach 1, 3, 7, 16 und 35 Tagen wieder, falsche schon morgen. ${left?`Noch ${left} fällig.`:""}</p>
+      <div class="row">${sess?sessBtn():`${left?`<button class="btn" id="rAgain">Weiter</button>`:""}<button class="btn ghost" id="rOut">Fertig</button>`}</div></div>`;
+    bindCrumb(()=>go("practice")); if($("#rAgain")) $("#rAgain").onclick=()=>openRecall(); if($("#rOut")) $("#rOut").onclick=()=>go("practice"); return;
+  }
+  const q=L[R.i], ch=CHAPTERS.find(c=>c.n===q.n);
+  $("#app").innerHTML=`${backTo("Üben")}
+    <p class="eyebrow">Verständnisfrage ${R.i+1} von ${L.length}</p>
+    <div class="block"><p class="small muted" style="margin:0 0 2px">${ch.title} · ${q.lt}</p>${qBlock(q.c,"r",R.ans,R.shown,true)}</div>
+    ${R.ans!==undefined?`<div class="row"><button class="btn" id="rNext">Weiter</button><button class="btn ghost" id="rLes">Zur Lektion</button></div>`:""}`;
+  bindCrumb(()=>go("practice"));
+  document.querySelectorAll("[data-show]").forEach(b=>b.onclick=()=>{ R.shown=true; renderRecall(); });
+  document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{ if(R.ans!==undefined) return; const k=+b.dataset.k; R.ans=k; const ok=k===q.c.a; if(ok) R.right++; logDay(); qGrade(q.id,ok); renderRecall(); });
+  if($("#rNext")) $("#rNext").onclick=()=>{ R.i++; R.ans=undefined; R.shown=false; renderRecall(); window.scrollTo(0,0); };
+  if($("#rLes")) $("#rLes").onclick=()=>openLesson(q.n,q.li);
+}
+
+/* ================= „Wer sagt das?“: Aussagen den Denkschulen zuordnen =================
+   Trainiert das Unterscheiden der Paradigmen, das Gerüst für den Essay in Teil III.
+   s Schule (Schlüssel aus SCHOOLS), alt ähnliche Schulen, die nicht als falsche Antwort angeboten werden. */
+const SCHOOLS={nk:"Neoklassik", key:"Keynesianismus", mon:"Monetarismus / Neuklassik", syn:"Neoklassische Synthese", nc:"Neuer Konsens", pk:"Postkeynesianismus", kl:"Klassik / Marxismus"};
+const WHO=[
+ {id:"w01", t:"Staatsausgaben verdrängen private Investitionen, weil die Produktion durch das Angebot begrenzt ist.", s:"nk", alt:["mon"], ex:"Crowding-out: Bei voller Auslastung geht jede zusätzliche Staatsausgabe zu Lasten privater Ausgaben."},
+ {id:"w02", t:"Bei unterausgelasteten Kapazitäten ziehen Staatsausgaben private Ausgaben mit.", s:"key", alt:["pk"], ex:"Crowding-in über den Multiplikator: Die Nachfrage bestimmt die Produktion."},
+ {id:"w03", t:"Kreditfinanzierte Staatsausgaben verpuffen, weil die Haushalte für künftige Steuern sparen.", s:"mon", alt:["nk"], ex:"Ricardianische Äquivalenz der Neuklassik: Der Multiplikator geht gegen null."},
+ {id:"w04", t:"Kurzfristig zählt die Nachfrage, langfristig bestimmt der Arbeitsmarkt die Produktion.", s:"nc", alt:["syn"], ex:"Der Neue Konsens (Neukeynesianismus): kurzfristig keynesianisch, langfristig neoklassisch, mit Inflation Targeting."},
+ {id:"w05", t:"Eine lange Nachfrageschwäche senkt das Produktionspotenzial dauerhaft.", s:"pk", alt:["key"], ex:"Hysterese: Langzeitarbeitslose verlieren Qualifikationen, Investitionen bleiben aus. Nachfrage wirkt auch langfristig."},
+ {id:"w06", t:"Das Angebot schafft sich seine eigene Nachfrage.", s:"nk", alt:["kl","mon"], ex:"Das Saysche Gesetz, Grundsatz der Neoklassik: Ersparnis wird über den Zins zu Investitionen."},
+ {id:"w07", t:"Die Investitionen bestimmen über das Einkommen die Ersparnis.", s:"key", alt:["pk"], ex:"I → S: Höhere Investitionen erhöhen über den Multiplikator das Einkommen, davon wird mehr gespart."},
+ {id:"w08", t:"Die Ersparnis bestimmt über den Zins die Investitionen.", s:"nk", alt:["mon","syn","nc"], ex:"S → I über den Zinsmechanismus auf dem Kapitalmarkt."},
+ {id:"w09", t:"Arbeiter:innen produzieren mehr Wert, als sie als Lohn erhalten.", s:"kl", ex:"Mehrwert und Ausbeutung bei Marx."},
+ {id:"w10", t:"Langfristig ist die Phillips-Kurve senkrecht: Nachfragepolitik bringt nur Inflation.", s:"mon", alt:["nc"], ex:"Natürliche Arbeitslosigkeit (NAIRU) nach Friedman: kein dauerhafter Zielkonflikt."},
+ {id:"w11", t:"Die Zentralbank richtet den Zins an einem Inflationsziel aus, die Fiskalpolitik bleibt passiv.", s:"nc", ex:"Inflation Targeting mit Zinsregel, passive Fiskalpolitik (Stabilitätspakt, Schuldenbremse)."},
+ {id:"w12", t:"Staatsverschuldung ist kein Hindernis für Vollbeschäftigungspolitik.", s:"pk", alt:["key"], ex:"Functional Finance: Die Fiskalpolitik spielt die zentrale Rolle gegen Arbeitslosigkeit."},
+ {id:"w13", t:"Arbeitslosigkeit entsteht durch zu hohe Löhne, die Lösung ist Deregulierung.", s:"nk", alt:["mon","nc"], ex:"Arbeitslosigkeit entsteht auf dem Arbeitsmarkt, etwa durch Mindestlohn oder Gewerkschaften."},
+ {id:"w14", t:"Arbeitslosigkeit entsteht durch zu geringe Güternachfrage.", s:"key", alt:["pk"], ex:"Die Ursache liegt auf dem Gütermarkt: Gleichgewicht bei Unterbeschäftigung."},
+ {id:"w15", t:"Exportüberschüsse spiegeln die Sparwünsche der Menschen, etwa Vorsorge für das Alter.", s:"nk", alt:["mon"], ex:"Ein mögliches Gleichgewicht der Präferenzen (so argumentiert Michael Hüther)."},
+ {id:"w16", t:"Exportüberschüsse zeigen eine zu schwache Binnennachfrage, die ins Ausland verlagert wird.", s:"key", alt:["pk"], ex:"Andere Länder müssen sich verschulden. Streben alle Überschüsse an, fehlt weltweit Nachfrage."},
+ {id:"w17", t:"Höhere Löhne können die Gewinne erhöhen, weil aus Löhnen mehr konsumiert wird.", s:"pk", alt:["key"], ex:"Kostenparadox mit kaleckianischer Konsumfunktion: b_W > b_Π."},
+ {id:"w18", t:"Mehr Beschäftigung ohne Inflation erreicht man mit Einkommenspolitik statt Deregulierung.", s:"pk", ex:"Sozialpartner verzichten unter Vermittlung der Regierung auf Lohn-Preis-Spiralen."},
+ {id:"w19", t:"Mehr Beschäftigung ohne Inflation erfordert eine Deregulierung des Arbeitsmarkts.", s:"nc", alt:["mon","nk"], ex:"Angebotspolitik: Die Lohnsetzung verschiebt sich, die NAIRU sinkt."},
+ {id:"w20", t:"Der Kapitalismus führt zu wachsender Ungleichheit, erst die Vergesellschaftung der Produktionsmittel hilft.", s:"kl", ex:"Sozialphilosophie des Marxismus."},
+ {id:"w21", t:"Steigt die Pacht der Grundbesitzer, sinken bei gegebener Produktion Gewinne und Investitionen.", s:"kl", ex:"Ricardos Modell mit drei Klassen: Politik für die Kapitalisten, gegen die Grundbesitzer."},
+ {id:"w22", t:"Geld ist nur ein Schleier über einer realen Tauschwirtschaft.", s:"nk", alt:["mon"], ex:"Geld erleichtert nur den Tausch, an der Produktion ändert es nichts."},
+ {id:"w23", t:"Wegen fundamentaler Unsicherheit wird Geld gehortet, ohne dass Produktion entsteht.", s:"key", alt:["pk"], ex:"Monetäre Produktionswirtschaft bei Keynes."},
+ {id:"w24", t:"Wirtschaftspolitik kann die Menschen nicht systematisch täuschen.", s:"mon", alt:["nc"], ex:"Rationale Erwartungen der Neuklassik (Lucas)."},
+ {id:"w25", t:"Langfristig gelten neoklassische Prinzipien, kurzfristig keynesianische. Das war der Mainstream von 1945 bis Anfang der 1970er.", s:"syn", alt:["nc"], ex:"Neoklassische Synthese (Samuelson, Hicks)."},
+ {id:"w26", t:"„5 % Inflation sind mir lieber als 5 % Arbeitslosigkeit.“ Die Politik kann dauerhaft zwischen beiden wählen.", s:"syn", alt:["key"], ex:"Phillips-Kurve als dauerhafter Zielkonflikt (Helmut Schmidt)."},
+ {id:"w27", t:"Die anderen reduzieren Keynes auf die kurze Frist, das ist „Bastard-Keynesianismus“.", s:"pk", ex:"Kritik des Postkeynesianismus an Neoklassischer Synthese und Neuem Konsens."},
+ {id:"w28", t:"Wollen alle mehr sparen, sinken die Einkommen, und gespart wird am Ende nicht mehr.", s:"key", alt:["pk"], ex:"Das Sparparadox."},
+ {id:"w29", t:"Steigt die Ersparnis, sinkt der Zins, und die Investitionen steigen, bis I = S.", s:"nk", alt:["mon","syn"], ex:"Der neoklassische Zinsmechanismus."},
+ {id:"w30", t:"Die Output-Lücke lässt sich nicht seriös messen, weil das Potenzial selbst von der Nachfrage abhängt.", s:"pk", ex:"Hysterese und Randwertproblem: Schätzungen folgen dem tatsächlichen BIP."}
+];
+function whoOptions(x){
+  const pool=Object.keys(SCHOOLS).filter(k=>k!==x.s&&!(x.alt||[]).includes(k));
+  return shuffle([x.s].concat(shuffle(pool).slice(0,3)));
+}
+function whoPick(n){
+  const st=state.who||{};
+  const w=WHO.map(x=>{ const h=st[x.id]; return !h?3 : h.last?1:4; });
+  const pool=WHO.slice(), out=[];
+  while(out.length<Math.min(n,pool.length)){ let r=Math.random()*w.reduce((a,b)=>a+b,0), i=0; for(;i<pool.length;i++){ r-=w[i]; if(r<=0) break; } i=Math.min(i,pool.length-1); out.push(pool.splice(i,1)[0]); w.splice(i,1); }
+  return out;
+}
+function openWho(n){ cur.wh={list:whoPick(n||8).map(x=>({x,o:whoOptions(x)})), i:0, a:null, right:0}; go("who"); }
+function renderWho(){
+  const W=cur.wh, L=W.list;
+  if(W.i>=L.length){
+    $("#app").innerHTML=`${backTo("Üben")}<h1>Runde geschafft</h1><div class="block"><p>${W.right} von ${L.length} richtig zugeordnet.</p>
+      <p class="small muted">Falsch zugeordnete Aussagen kommen in den nächsten Runden häufiger.</p>
+      <div class="row">${sess?sessBtn():`<button class="btn" id="wAgain">Neue Runde</button><button class="btn ghost" id="wOut">Fertig</button>`}</div></div>`;
+    bindCrumb(()=>go("practice")); if($("#wAgain")) $("#wAgain").onclick=()=>openWho(8); if($("#wOut")) $("#wOut").onclick=()=>go("practice"); return;
+  }
+  const {x,o}=L[W.i];
+  $("#app").innerHTML=`${backTo("Üben")}
+    <p class="eyebrow">Wer sagt das? · ${W.i+1} von ${L.length}</p>
+    <div class="block"><p class="who">„${inl(x.t.replace(/^„|“$/g,""))}“</p>
+      <div class="mc">${o.map(k=>{ const cls=W.a===null?"":(k===x.s?"r":(k===W.a?"w":"")); return `<button data-s="${k}" class="${cls}" ${W.a!==null?"disabled":""}>${SCHOOLS[k]}</button>`; }).join("")}</div>
+      ${W.a===null?"":W.a===x.s?`<div class="fb good"><p class="fh">Richtig.</p><p style="margin:0">${inl(x.ex)}</p></div>`
+        :`<div class="fb bad"><p class="fh">Nicht ganz.</p><div class="dlist"><b>Richtig</b><span>${SCHOOLS[x.s]}</span><b>Warum</b><span>${inl(x.ex)}</span></div></div>`}</div>
+    ${W.a!==null?`<button class="btn" id="wNext">Weiter</button>`:`<p class="small muted">Tipp: Achte auf Schlüsselwörter wie Zins, Nachfrage, langfristig, Hysterese oder Klassen.</p>`}`;
+  bindCrumb(()=>go("practice"));
+  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{ if(W.a!==null) return; W.a=b.dataset.s; const ok=W.a===x.s; if(ok) W.right++;
+    state.who=state.who||{}; const h=state.who[x.id]||{n:0,r:0}; h.n++; if(ok) h.r++; h.last=ok; if(!ok) h.conf=W.a; state.who[x.id]=h; logDay(); save(); renderWho(); });
+  if($("#wNext")) $("#wNext").onclick=()=>{ W.i++; W.a=null; renderWho(); window.scrollTo(0,0); };
+}
+
+/* ================= Tägliche Einheit „Heute“ =================
+   Mischt, was heute dran ist: fällige Karten, Verständnisfragen, eine Rechenaufgabe,
+   abwechselnd „Wer sagt das?“, eine Kurzfrage oder eine Grafik, dazu die nächste neue Lektion.
+   Gemischtes Üben (Interleaving) und Abstände (Spacing) ohne eigene Planung. */
+let sess=null;
+const dayIndex=()=>Math.floor(dayStart()/864e5);
+function freshChapter(){ for(const ch of CHAPTERS){ const L=LESSONS[ch.n]||[]; if(L.some(x=>lessonState(x.id)) && (CARDS[ch.n]||[]).some(x=>!isSeen(x.id))) return ch.n; } return 0; }
+function graphForToday(){
+  const ready=CHAPTERS.filter(ch=>(LESSONS[ch.n]||[]).length&&(LESSONS[ch.n]||[]).every(x=>lessonState(x.id))&&(GRAPHS[ch.n]||[]).length);
+  const all=ready.flatMap(ch=>GRAPHS[ch.n].map((g,i)=>({n:ch.n,i,g,t:((state.graphs||{})[g.id]||{}).t||0})));
+  return all.sort((a,b)=>a.t-b.t)[0]||null;
+}
+function planToday(){
+  const S=[], dc=dueCards(0).length, dq=qDue().length;
+  if(dc) S.push({k:"cards", t:"Karten wiederholen", d:`${Math.min(dc,20)} fällige Karten`, min:Math.max(2,Math.round(Math.min(dc,20)*.4))});
+  else { const n=freshChapter(); if(n) S.push({k:"newcards", n, t:"Neue Karten", d:`5 neue Karten: ${CHAPTERS.find(c=>c.n===n).title}`, min:3}); }
+  if(dq) S.push({k:"recall", t:"Verständnisfragen", d:`${Math.min(dq,6)} fällige Fragen aus den Lektionen`, min:3});
+  S.push({k:"calc", t:"Eine Rechenaufgabe", d:"gemischt, bevorzugt was dir schwerfällt", min:5});
+  const rot=["who","kurz","graph"][dayIndex()%3], gr=graphForToday();
+  if(rot==="graph"&&gr) S.push({k:"graph", n:gr.n, i:gr.i, t:"Eine Grafik zeichnen", d:gr.g.t, min:4});
+  else if(rot==="kurz") S.push({k:"kurz", t:"Eine Kurzfrage schreiben", d:"wie Teil I der Klausur", min:4});
+  else S.push({k:"who", t:"Wer sagt das?", d:"5 Aussagen den Denkschulen zuordnen", min:3});
+  const nx=nextStep(); if(/Theorie/.test(nx.label)) S.push({k:"lesson", t:"Neu lernen", d:nx.title, min:5, go:nx.go});
+  return S;
+}
+function startSession(){ sess={steps:planToday(), i:0, t0:Date.now()}; runStep(); }
+function runStep(){
+  if(!sess) return; const s=sess.steps[sess.i]; updateSessBar();
+  if(!s){ return finishSession(); }
+  ({cards:()=>openCards(0,false,dueCards(0).slice(0,20)),
+    newcards:()=>openCards(s.n,false,allCards(s.n).filter(x=>!isSeen(x.id)).slice(0,5)),
+    recall:()=>openRecall(qDue().slice(0,6)),
+    calc:()=>startTask(recommend(),false),
+    who:()=>openWho(5),
+    kurz:()=>openKurz(),
+    graph:()=>openGraph(s.n,s.i),
+    lesson:()=>s.go()})[s.k]();
+  window.scrollTo(0,0);
+}
+function sessNext(){ if(!sess) return; sess.i++; runStep(); }
+function endSession(){ sess=null; updateSessBar(); go("home"); }
+function finishSession(){
+  const min=Math.max(1,Math.round((Date.now()-sess.t0)/60000)); state.sessions=state.sessions||{}; state.sessions[today()]=min; save();
+  sess=null; updateSessBar(); view="sessdone"; renderNav();
+  $("#app").innerHTML=`<p class="eyebrow">Heute</p><h1>Geschafft</h1><div class="block"><p>Deine Einheit ist fertig, etwa ${min} Minuten.</p>
+    <p class="small muted">Morgen stellt die App eine neue Einheit zusammen. Was du heute nicht sicher wusstest, ist dann wieder dabei.</p>
+    <div class="row"><button class="btn" id="sdHome">Zum Lernpfad</button></div></div>`;
+  $("#sdHome").onclick=()=>go("home"); window.scrollTo(0,0);
+}
+function updateSessBar(){
+  const b=$("#sessbar"); if(!b) return;
+  if(!sess||!sess.steps[sess.i]){ b.hidden=true; b.innerHTML=""; return; }
+  const s=sess.steps[sess.i];
+  b.hidden=false;
+  b.innerHTML=`<div class="sbin"><span class="sbt"><b>Heute ${sess.i+1}/${sess.steps.length}</b> · ${s.t}</span><button class="btn small" id="sbNext">${sess.i<sess.steps.length-1?"Nächster Schritt":"Abschließen"}</button><button class="btn ghost small" id="sbEnd" aria-label="Einheit beenden">✕</button></div>`;
+  $("#sbNext").onclick=sessNext; $("#sbEnd").onclick=endSession;
+}
+const sessBtn=()=>`<button class="btn" id="sessGo">${sess&&sess.i<sess.steps.length-1?"Weiter zum nächsten Schritt":"Einheit abschließen"}</button>`;
+document.addEventListener("click",e=>{ if(e.target.closest("#sessGo")) sessNext(); });
+/* Block auf der Startseite */
+function todayBlock(){
+  const done=(state.sessions||{})[today()], S=planToday(), min=S.reduce((a,s)=>a+s.min,0);
+  const plan=examPlanToday();
+  if(sess) return `<div class="block today"><p class="eyebrow">Heute</p><h2>Einheit läuft</h2><p class="small muted" style="margin-top:0">Schritt ${sess.i+1} von ${sess.steps.length}: ${sess.steps[sess.i]?sess.steps[sess.i].t:""}</p><button class="btn" id="goSess">Fortsetzen</button></div>`;
+  return `<div class="block today"><p class="eyebrow">Heute · etwa ${min} Minuten</p><h2>${done?"Für heute erledigt":"Deine Lerneinheit"}</h2>
+    ${done?`<p class="small muted" style="margin-top:0">Du hast heute schon gelernt. Eine zweite Runde schadet nicht, morgen geht es mit neuen Abständen weiter.</p>`:""}
+    <ol class="plan">${S.map(s=>`<li><b>${s.t}</b><span>${inl(s.d)}</span></li>`).join("")}</ol>
+    ${plan?`<p class="small" style="margin:0 0 10px"><b>Probeklausur:</b> ${plan}</p>`:""}
+    <button class="btn" id="goSess">${done?"Noch eine Runde":"Starten"}</button></div>`;
+}
+
+/* ================= Klausurtermin, Probeklausur-Plan und Schwachstellen ================= */
+const fmtDate=t=>{ const d=new Date(t); return ["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+"."; };
+const examDateTs=()=>{ const s=state.examDate; if(!s) return null; const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d).getTime(); };
+/* Plan: eine Probeklausur früh als Standortbestimmung, dann 21, 14 und 7 Tage vor dem Termin */
+function examPlan(){
+  const T=examDateTs(), ex=(state.exams||[]).map(e=>e.t).sort((a,b)=>a-b);
+  const P=[{lab:"Standortbestimmung", when:null}];
+  if(T) [21,14,7].forEach(d=>P.push({lab:`${d} Tage vor der Klausur`, when:T-d*864e5}));
+  // jede geschriebene Probeklausur hakt den frühesten offenen Termin ab, dessen Zeitpunkt schon (fast) erreicht ist
+  const used=new Set();
+  P.forEach(p=>{ const i=ex.findIndex((t,k)=>!used.has(k)&&(p.when==null||t>=p.when-3*864e5)); if(i>=0){ used.add(i); p.done=ex[i]; } });
+  return P;
+}
+function examPlanToday(){
+  const P=examPlan(), now=Date.now(), open=P.find(p=>!p.done);
+  if(!open) return "";
+  if(open.when==null) return "Schreib bald eine als Standortbestimmung (unter Üben).";
+  if(open.when-now<=864e5) return `Laut Plan ist jetzt die nächste dran (${open.lab}).`;
+  return "";
+}
+function examPlanBlock(){
+  const T=examDateTs(), P=examPlan(), days=T?Math.ceil((T-dayStart())/864e5):null;
+  return `<div class="block"><h2>Klausur und Probeklausuren</h2>
+    <div class="row" style="margin-bottom:8px"><label class="small" for="exD">Klausurtermin</label><input type="date" id="exD" value="${state.examDate||""}" class="dateinp"><button class="btn ghost small" id="exS">Speichern</button></div>
+    ${T?`<p class="small" style="margin:0 0 6px">${days>0?`Noch <b>${days} Tage</b> bis zur Klausur.`:days===0?"<b>Heute ist Klausur.</b> Viel Erfolg!":"Der Termin liegt in der Vergangenheit."}</p>`:`<p class="small muted" style="margin:0 0 6px">Trag den Termin ein, sobald er feststeht. Dann plant die App drei Probeklausuren in den letzten Wochen.</p>`}
+    <div class="klist">${P.map(p=>`<b>${p.done?"✓ ":""}${p.lab}</b><span>${p.done?`geschrieben am ${fmtDate(p.done)}`:p.when?fmtDate(p.when):"so bald wie möglich"}</span>`).join("")}</div></div>`;
+}
+function bindExamPlan(){ if($("#exS")) $("#exS").onclick=()=>{ const v=$("#exD").value; state.examDate=v||null; save(); toast(v?"Termin gespeichert":"Termin entfernt"); render(); }; }
+
+/* Schwachstellen aus allen Übungsformen */
+function weakBlock(){
+  const lap=Object.entries(state.lapses||{}).filter(([id,n])=>n>=2).sort((a,b)=>b[1]-a[1]);
+  const cardsAll=Object.values(CARDS).flat(), byId=Object.fromEntries(cardsAll.map(c=>[c.id,c]));
+  const weakCards=lap.map(([id])=>byId[id]).filter(Boolean);
+  const qs=allQuestions(), qById=Object.fromEntries(qs.map(q=>[q.id,q]));
+  const weakQ=Object.entries(state.qlapses||{}).filter(([id,n])=>n>=1&&qById[id]&&((state.qbox||{})[id]||{}).b<=2).sort((a,b)=>b[1]-a[1]).map(([id])=>qById[id]);
+  const weakCalc=calcTypes(0).filter(t=>{ const h=state.hist[t]; return h&&h.n>=2&&h.r/h.n<.7; }).sort((a,b)=>acc(a)-acc(b));
+  const conf={}; Object.entries(state.who||{}).forEach(([id,h])=>{ if(h.conf&&!h.last){ const x=WHO.find(w=>w.id===id); if(x){ const k=SCHOOLS[x.s]+" ↔ "+SCHOOLS[h.conf]; conf[k]=(conf[k]||0)+1; } } });
+  const confL=Object.entries(conf).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const none=!weakCards.length&&!weakQ.length&&!weakCalc.length&&!confL.length;
+  return `<div class="block"><h2>Deine Schwachstellen</h2>${none?`<p class="small muted" style="margin:0">Noch nichts Auffälliges. Die Übersicht füllt sich, sobald du übst: Karten, die du mehrmals nicht wusstest, falsche Verständnisfragen, Rechenaufgaben unter 70 % und verwechselte Denkschulen.</p>`:""}
+    ${weakCards.length?`<h3>Karten, die du mehrmals nicht wusstest</h3><ul class="weak">${weakCards.slice(0,5).map(c=>`<li>${inl(c.f)}</li>`).join("")}</ul><button class="btn ghost small" id="wkC">Diese ${Math.min(weakCards.length,15)} Karten üben</button>`:""}
+    ${weakQ.length?`<h3 style="margin-top:14px">Verständnisfragen mit Fehlern</h3><ul class="weak">${weakQ.slice(0,5).map(q=>`<li>${inl(q.c.q)}</li>`).join("")}</ul><button class="btn ghost small" id="wkQ">Diese Fragen üben</button>`:""}
+    ${weakCalc.length?`<h3 style="margin-top:14px">Rechenaufgaben unter 70 %</h3>${weakCalc.map(t=>`<div class="srow"><span>${TYPES[t].short}</span><span class="small muted">${Math.round(acc(t)*100)} %</span><button class="btn ghost small" data-wt="${t}">Üben</button></div>`).join("")}`:""}
+    ${confL.length?`<h3 style="margin-top:14px">Oft verwechselte Denkschulen</h3><ul class="weak">${confL.map(([k,n])=>`<li>${k} (${n}×)</li>`).join("")}</ul><button class="btn ghost small" id="wkW">„Wer sagt das?“ üben</button>`:""}
+  </div>`;
+}
+function bindWeak(){
+  const cardsAll=Object.values(CARDS).flat(), byId=Object.fromEntries(cardsAll.map(c=>[c.id,c]));
+  if($("#wkC")) $("#wkC").onclick=()=>openCards(0,true,Object.entries(state.lapses||{}).filter(([,n])=>n>=2).sort((a,b)=>b[1]-a[1]).map(([id])=>byId[id]).filter(Boolean).slice(0,15));
+  if($("#wkQ")) $("#wkQ").onclick=()=>{ const qById=Object.fromEntries(allQuestions().map(q=>[q.id,q])); openRecall(Object.entries(state.qlapses||{}).sort((a,b)=>b[1]-a[1]).map(([id])=>qById[id]).filter(Boolean).slice(0,8)); };
+  document.querySelectorAll("[data-wt]").forEach(b=>b.onclick=()=>startTask(b.dataset.wt,false));
+  if($("#wkW")) $("#wkW").onclick=()=>openWho(8);
 }
 
 /* ================= Grafiken Kapitel 3, 4, 6, 7 ================= */
@@ -2906,8 +3376,8 @@ function renderKurz(){
   bindCrumb(()=>go("practice"));
   if($("#kd")) $("#kd").onclick=()=>{ cur.kzt=$("#kt").value; cur.kzph="bewerten"; renderKurz(); window.scrollTo(0,0); };
   document.querySelectorAll(".check input").forEach(c=>c.onchange=()=>{ cur.kzc[+c.id.slice(1)]=c.checked; });
-  if($("#ks")) $("#ks").onclick=()=>{ state.kurz=state.kurz||{}; const p=x.k.filter((_,j)=>cur.kzc[j]).length; state.kurz[x.id]={p,t:Date.now()}; logDay(); save(); toast(`${p} von 3 Punkten gespeichert`); openKurz(); };
-  if($("#kn")) $("#kn").onclick=openKurz;
+  if($("#ks")) $("#ks").onclick=()=>{ state.kurz=state.kurz||{}; const p=x.k.filter((_,j)=>cur.kzc[j]).length; state.kurz[x.id]={p,t:Date.now()}; logDay(); save(); toast(`${p} von 3 Punkten gespeichert`); sess?sessNext():openKurz(); };
+  if($("#kn")) $("#kn").onclick=()=>sess?sessNext():openKurz();
 }
 
 /* ---------- Probeklausur ---------- */
@@ -3175,7 +3645,7 @@ function finishBox(ok){
   return `<div class="block" style="margin-top:14px">
     <h3>${ok?"Fehlerfrei":"Geschafft, mit Fehlern"}</h3>
     <p class="small muted">${ok?"Gut so.":"Schau dir den markierten Schritt nochmal an, die nächste Aufgabe hat neue Zahlen."} Stufe jetzt: ${LVL[l]}.</p>
-    <div class="row"><button class="btn" id="next">${task.mix?"Nächste Aufgabe":"Neue Zahlen"}</button><button class="btn ghost" id="list">Zur Liste</button></div></div>`;
+    <div class="row">${sess?sessBtn():`<button class="btn" id="next">${task.mix?"Nächste Aufgabe":"Neue Zahlen"}</button><button class="btn ghost" id="list">Zur Liste</button>`}</div></div>`;
 }
 function bindFinish(){ if($("#next")) $("#next").onclick=nextTask; if($("#list")) $("#list").onclick=()=>go("calc"); }
 

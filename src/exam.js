@@ -45,8 +45,8 @@ function renderKurz(){
   bindCrumb(()=>go("practice"));
   if($("#kd")) $("#kd").onclick=()=>{ cur.kzt=$("#kt").value; cur.kzph="bewerten"; renderKurz(); window.scrollTo(0,0); };
   document.querySelectorAll(".check input").forEach(c=>c.onchange=()=>{ cur.kzc[+c.id.slice(1)]=c.checked; });
-  if($("#ks")) $("#ks").onclick=()=>{ state.kurz=state.kurz||{}; const p=x.k.filter((_,j)=>cur.kzc[j]).length; state.kurz[x.id]={p,t:Date.now()}; logDay(); save(); toast(`${p} von 3 Punkten gespeichert`); openKurz(); };
-  if($("#kn")) $("#kn").onclick=openKurz;
+  if($("#ks")) $("#ks").onclick=()=>{ state.kurz=state.kurz||{}; const p=x.k.filter((_,j)=>cur.kzc[j]).length; state.kurz[x.id]={p,t:Date.now()}; logDay(); save(); toast(`${p} von 3 Punkten gespeichert`); sess?sessNext():openKurz(); };
+  if($("#kn")) $("#kn").onclick=()=>sess?sessNext():openKurz();
 }
 
 /* ---------- Probeklausur ---------- */
