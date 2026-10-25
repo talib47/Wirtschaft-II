@@ -42,3 +42,7 @@ python3 build.py      # erzeugt index.html neu
 3. Titel, Farbe, Icons, `manifest.webmanifest`, Pfade in `head.html` anpassen.
 4. `content*.js`, `cardinfo.js`, `wipocc.js`, Generatoren und Grafiken durch eigene Inhalte ersetzen.
 5. GitHub Pages aktivieren (Settings → Pages → Branch `main`, Ordner `/`) und dem GitHub-Schlüssel Zugriff auf das neue Repo geben.
+
+## Updates
+
+`build.py` schreibt neben `index.html` auch `version.txt` (Prüfsumme des Inhalts). Die App vergleicht beim Start und beim Zurückkehren ihre Version damit (`src/update.html`): beim Start lädt sie neu, mitten in einer Übung erscheint ein Hinweis zum Antippen. Deshalb immer über `build.py` bauen und `version.txt` mit hochladen.
