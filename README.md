@@ -14,7 +14,8 @@ python3 build.py      # erzeugt index.html neu
 
 | Datei | Inhalt |
 |---|---|
-| `head.html` | Kopf, Icons, Manifest, komplettes CSS (Farben als Tokens, Dunkelmodus), Zoom |
+| `head.html` | Kopf, Icons, Manifest, Bandfarbe Wirtschaft II (`--accent`, `--plate-top`, `--plate-bot`, `--numeral` „II“), Grund-CSS, Knopf „Aa“ |
+| `design.css` | Gemeinsames Design aller Apps („Die Reihe“, wortgleich): Farben hell/dunkel, Newsreader-Titel, Platte „Heute“, Tableiste aus Glas mit Symbolen, Knopf „Aa“, Lernkarte mit Stapel. `build.py` setzt sie in `head.html` ein. Schrift in `fonts/` (SIL OFL) |
 | `core.js` | Speicher (`localStorage`), Geräte-Abgleich über GitHub, Hilfsfunktionen, `judge()` |
 | `format.js` | Textformat: Karten-Rückseiten (Listen, Begriff: Erklärung, Formelbox, Vergleichstabelle), Beispielboxen, Kopierhilfe |
 | `model.js`, `model2.js` | Rechenaufgaben-Generatoren (Schritte mit Erklärung, 3 Stufen) |

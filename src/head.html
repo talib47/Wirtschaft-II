@@ -6,30 +6,19 @@
 <title>Wirtschaft II</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Wirtschaft II">
-<meta name="theme-color" content="#2D4F86">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F2F2F4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="apple-touch-icon" href="/Wirtschaft-II/apple-touch-icon.png?v=2">
 <link rel="icon" type="image/png" href="/Wirtschaft-II/icon-192.png?v=2">
 <link rel="manifest" href="/Wirtschaft-II/manifest.webmanifest?v=2">
 <style>
-/* Layout: eine schmale Lernspalte (max. 42rem) mit fester Tableiste unten, wie die W&G-I-App; eigene Akzentfarbe für Wirtschaft II */
-:root{
-  --bg:#EDEFF2; --surface:#F9FAFB; --ink:#1B2433; --muted:#5A6576; --line:#CBD1DA;
-  --accent:#2D4F86; --accent-ink:#FFFFFF; --accent-soft:#DCE4F1;
-  --good:#2F7A4A; --good-soft:#DDEEE2; --bad:#A3392B; --bad-soft:#F4DEDA; --gold:#A87B1F;
-  --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
-  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ color-scheme:dark;
-    --bg:#12161D; --surface:#1B212B; --ink:#E3E7EE; --muted:#9AA4B3; --line:#323C4A;
-    --accent:#8FB1E3; --accent-ink:#0E1626; --accent-soft:#25324A;
-    --good:#6CC28B; --good-soft:#1E3327; --bad:#E58373; --bad-soft:#3A2420; --gold:#D9AE55; }
-}
-:root[data-theme="dark"]{ color-scheme:dark;
-  --bg:#12161D; --surface:#1B212B; --ink:#E3E7EE; --muted:#9AA4B3; --line:#323C4A;
-  --accent:#8FB1E3; --accent-ink:#0E1626; --accent-soft:#25324A;
-  --good:#6CC28B; --good-soft:#1E3327; --bad:#E58373; --bad-soft:#3A2420; --gold:#D9AE55; }
+/* Layout: eine schmale Lernspalte (max. 42rem) mit Tableiste unten. Bandfarbe Wirtschaft II: Blau, Ziffer II wie das App-Symbol.
+   Nur diese fünf Werte sind je App verschieden; alle übrigen Farben, Schriften und Formen stehen im gemeinsamen Design (src/design.css). */
+:root{ --accent:#2D4F86; --accent-ink:#FFFFFF; --plate-top:#3C66A6; --plate-bot:#1A2F57; --numeral:"II"; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --accent:#93B4E6; --accent-ink:#0E1626; --plate-top:#2E5089; --plate-bot:#12203D; } }
+:root[data-theme="dark"]{ --accent:#93B4E6; --accent-ink:#0E1626; --plate-top:#2E5089; --plate-bot:#12203D; }
 *{box-sizing:border-box}
 html{font-size:calc(var(--base,100%) * var(--z,1))}
 @media (min-width:768px){:root{--base:106.25%}}
@@ -325,12 +314,15 @@ svg .sarrow{fill:var(--accent)}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;display:flex;justify-content:center;align-items:flex-end}
 .sheetin{background:var(--bg);width:100%;max-width:42rem;max-height:88vh;overflow-y:auto;border-radius:16px 16px 0 0;padding:16px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px))}
 </style>
+<style>
+/*__DESIGN__*/
+</style>
 <style>:root{padding-top:env(safe-area-inset-top,0px)}</style>
 </head>
 <body>
 <div id="sessbar" hidden></div>
 <main id="app"></main>
 <nav id="nav"></nav>
-<div class="zoom" role="group" aria-label="Schriftgröße"><button id="zIn" aria-label="Größer">+</button><button id="zOut" aria-label="Kleiner">−</button></div>
+<div class="zoom" id="zoom" role="group" aria-label="Schriftgröße"><button id="zOut" aria-label="Schrift kleiner">A</button><button id="zT" aria-label="Schriftgröße" aria-expanded="false">Aa</button><button id="zIn" aria-label="Schrift größer">A</button></div>
 
 <script>
