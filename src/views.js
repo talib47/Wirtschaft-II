@@ -113,7 +113,7 @@ function renderHome(){
     <div class="block">
       <h2>So ist die Klausur gebaut</h2>
       <div class="klist">
-        <b>Termin</b><span>${examDateTs()?`${fmtDate(examDateTs())} ${new Date(examDateTs()).getFullYear()}, noch ${Math.max(0,Math.ceil((examDateTs()-dayStart())/864e5))} Tage`:`steht noch nicht fest. Eintragen kannst du ihn unter Statistik.`}</span>
+        <b>Termin</b><span>${examAssumed()?`steht noch nicht fest. Bis dahin gilt der Stichtag ${fmtDate(examDateTs())} ${new Date(examDateTs()).getFullYear()}, noch ${Math.max(0,Math.ceil((examDateTs()-dayStart())/864e5))} Tage. Den echten Termin trägst du unter Statistik ein.`:`${fmtDate(examDateTs())} ${new Date(examDateTs()).getFullYear()}, noch ${Math.max(0,Math.ceil((examDateTs()-dayStart())/864e5))} Tage`}</span>
         <b>Dauer</b><span>90 Minuten laut Modul. Die Altklausuren 2024 hatten 60 Minuten, also kommt eher mehr Stoff dazu.</span>
         <b>Hilfsmittel</b><span>Taschenrechner, Geodreieck, Buntstifte</span>
       </div>

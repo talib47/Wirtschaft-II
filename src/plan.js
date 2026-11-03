@@ -1,11 +1,15 @@
 /* ================= Klausurtermin, Probeklausur-Plan und Schwachstellen ================= */
 const fmtDate=t=>{ const d=new Date(t); return ["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+"."; };
-const examDateTs=()=>{ const s=state.examDate; if(!s) return null; const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d).getTime(); };
+/* Termin steht noch nicht fest: Bis dahin gilt der Stichtag 31.01.2027 (Absprache mit Talib am 03.11.2026), bis dahin soll alles sitzen.
+   Ein eingetragener Termin geht immer vor. */
+const EXAM_STICHTAG="2027-01-31";
+const examAssumed=()=>!state.examDate;
+const examDateTs=()=>{ const s=state.examDate||EXAM_STICHTAG; const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d).getTime(); };
 /* Plan: eine Probeklausur früh als Standortbestimmung, dann 21, 14 und 7 Tage vor dem Termin */
 function examPlan(){
   const T=examDateTs(), ex=(state.exams||[]).map(e=>e.t).sort((a,b)=>a-b);
   const P=[{lab:"Standortbestimmung", when:null}];
-  if(T) [21,14,7].forEach(d=>P.push({lab:`${d} Tage vor der Klausur`, when:T-d*864e5}));
+  if(T) [21,14,7].forEach(d=>P.push({lab:`${d} Tage vor ${examAssumed()?"dem Stichtag":"der Klausur"}`, when:T-d*864e5}));
   // jede geschriebene Probeklausur hakt den frühesten offenen Termin ab, dessen Zeitpunkt schon (fast) erreicht ist
   const used=new Set();
   P.forEach(p=>{ const i=ex.findIndex((t,k)=>!used.has(k)&&(p.when==null||t>=p.when-3*864e5)); if(i>=0){ used.add(i); p.done=ex[i]; } });
@@ -22,7 +26,7 @@ function examPlanBlock(){
   const T=examDateTs(), P=examPlan(), days=T?Math.ceil((T-dayStart())/864e5):null;
   return `<div class="block"><h2>Klausur und Probeklausuren</h2>
     <div class="row" style="margin-bottom:8px"><label class="small" for="exD">Klausurtermin</label><input type="date" id="exD" value="${state.examDate||""}" class="dateinp"><button class="btn ghost small" id="exS">Speichern</button></div>
-    ${T?`<p class="small" style="margin:0 0 6px">${days>0?`Noch <b>${days} Tage</b> bis zur Klausur.`:days===0?"<b>Heute ist Klausur.</b> Viel Erfolg!":"Der Termin liegt in der Vergangenheit."}</p>`:`<p class="small muted" style="margin:0 0 6px">Trag den Termin ein, sobald er feststeht. Dann plant die App drei Probeklausuren in den letzten Wochen.</p>`}
+    ${examAssumed()?`<p class="small" style="margin:0 0 6px">Der Termin steht noch nicht fest. Bis dahin rechnet die App mit dem <b>Stichtag ${fmtDate(T)}</b>: Bis dahin soll alles sitzen. Noch <b>${days} Tage</b>. Trag den echten Termin ein, sobald er feststeht.</p>`:`<p class="small" style="margin:0 0 6px">${days>0?`Noch <b>${days} Tage</b> bis zur Klausur.`:days===0?"<b>Heute ist Klausur.</b> Viel Erfolg!":"Der Termin liegt in der Vergangenheit."}</p>`}
     <div class="klist">${P.map(p=>`<b>${p.done?"✓ ":""}${p.lab}</b><span>${p.done?`geschrieben am ${fmtDate(p.done)}`:p.when?fmtDate(p.when):"so bald wie möglich"}</span>`).join("")}</div></div>`;
 }
 function bindExamPlan(){ if($("#exS")) $("#exS").onclick=()=>{ const v=$("#exD").value; state.examDate=v||null; save(); toast(v?"Termin gespeichert":"Termin entfernt"); render(); }; }
