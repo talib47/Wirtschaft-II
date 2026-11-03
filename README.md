@@ -1,5 +1,7 @@
 # Wirtschaft II – Lern-App (Makroökonomik)
 
+Vor jeder Arbeit `CLAUDE.md` lesen (Claude-Brücke: gemeinsame Regeln, Aufbau, Bausteine aller Apps, Logbuch).
+
 Live: https://talib47.github.io/Wirtschaft-II/
 
 Eine Datei (`index.html`, Vanilla-JS, kein Framework), gebaut aus den Modulen in `src/`:
