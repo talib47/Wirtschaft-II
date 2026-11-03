@@ -13,7 +13,7 @@ function graphForToday(){
 function planToday(){
   const S=[], dc=dueCards(0).length, dq=qDue().length;
   if(dc) S.push({k:"cards", t:"Karten wiederholen", d:`${Math.min(dc,20)} fällige Karten`, min:Math.max(2,Math.round(Math.min(dc,20)*.4))});
-  else { const n=freshChapter(); if(n) S.push({k:"newcards", n, t:"Neue Karten", d:`5 neue Karten: ${CHAPTERS.find(c=>c.n===n).title}`, min:3}); }
+  if(dc<25){ const n=freshChapter(); if(n) S.push({k:"newcards", n, t:"Neue Karten", d:`5 neue Karten: ${CHAPTERS.find(c=>c.n===n).title}`, min:3}); }
   if(dq) S.push({k:"recall", t:"Verständnisfragen", d:`${Math.min(dq,6)} fällige Fragen aus den Lektionen`, min:3});
   S.push({k:"calc", t:"Eine Rechenaufgabe", d:"gemischt, bevorzugt was dir schwerfällt", min:5});
   const rot=["who","kurz","graph"][dayIndex()%3], gr=graphForToday();
@@ -43,7 +43,7 @@ function finishSession(){
   const min=Math.max(1,Math.round((Date.now()-sess.t0)/60000)); state.sessions=state.sessions||{}; state.sessions[today()]=min; save();
   sess=null; updateSessBar(); view="sessdone"; renderNav();
   $("#app").innerHTML=`<p class="eyebrow">Heute</p><h1>Geschafft</h1><div class="block"><p>Deine Einheit ist fertig, etwa ${min} Minuten.</p>
-    <p class="small muted">Morgen stellt die App eine neue Einheit zusammen. Was du heute nicht sicher wusstest, ist dann wieder dabei.</p>
+    <p class="small muted">Morgen stellt die App eine neue Einheit zusammen. Was du heute nicht sicher wusstest, ist dann wieder dabei.${new Date().getHours()>=18?" Abends gelernt? Dann mach morgen früh kurz die fälligen Karten: Mit Schlaf zwischen zwei Runden sitzt der Stoff schneller und länger.":""}</p>
     <div class="row"><button class="btn" id="sdHome">Zum Lernpfad</button></div></div>`;
   $("#sdHome").onclick=()=>go("home"); window.scrollTo(0,0);
 }

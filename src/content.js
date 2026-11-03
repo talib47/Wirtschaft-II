@@ -225,3 +225,9 @@ Fazit: Die Schuldenbremse kann vor einer unkontrollierten Zinslast schützen. Ob
 
 /* Rechenaufgaben pro Kapitel (Typen siehe TYPES) */
 const CALC={5:["herl","mult","gg","dG","dT","di","klausur","bs","schuld"]};
+
+/* Hochgeladen-Übersicht (status.js): alle Kapitel aus Skript und Folien, dazu Aufgabenblätter und Altklausuren */
+UPLOADS.push(
+ {base:true, known:false, items:[{k:"Übung", t:"Aufgabenblätter", ok:true},{k:"Altklausuren", t:"2024", ok:true}]},
+ ...CHAPTERS.map(c=>({ch:c.n, known:true, src:"Skript (komplett)", items:[{k:"Folien und Skript", t:c.title, ok:true}]}))
+);
