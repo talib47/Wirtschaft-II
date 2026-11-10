@@ -1,6 +1,7 @@
 /* ================= Einstellungen nur dieser App für die gemeinsamen Bausteine (status.js) ================= */
 const APP={
  name:"Wirtschaft II",
+ expect:()=>[],                                  /* Skript komplett: keine neuen Unterlagen erwartet */
  halves:false,
  chap:n=>CHAPTERS.find(c=>c.n===n),
  unit:()=>"Kapitel",
