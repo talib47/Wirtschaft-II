@@ -33,7 +33,29 @@ html{font-size:calc(var(--base,100%) * var(--z,1))}
 .cinfo .cl{display:block}
 .cinfo .cl+.cl{margin-top:3px}
 .cinfo b{color:var(--ink);font-weight:600}
-.cinfo .ci{flex:none;width:18px;height:18px;border-radius:50%;border:1px solid var(--muted);font:600 .7rem/16px var(--serif);font-style:italic;text-align:center;margin-top:1px}
+.cinfo .ci{flex:none;width:18px;height:18px;margin-top:1px;color:var(--muted)}
+/* Kartenansicht (Muster 17.11.): ruhiger, Karte mittig, Antwortzeilen nicht zu lang, Zurück als Wort mit großer Tippfläche */
+.crt .cundo{display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:0 10px;margin:-10px -10px -10px 0;font:600 .8125rem var(--sans);opacity:1}
+.card .back,.card .front,.card .cctx,.card .cinfo{max-width:62ch}
+@media (prefers-color-scheme:dark){ .card{box-shadow:var(--lift),inset 0 0 0 .5px rgba(255,255,255,.07)} }
+#sessbar #sbNext{background:transparent;color:var(--accent);padding-inline:10px}
+@media (min-width:768px){
+  main:has(#theCard){min-height:calc(100dvh - 72px);display:flex;flex-direction:column;justify-content:center;padding-bottom:20vh}
+}
+/* Touch (iPad, Handy): bewertet wird durch Wischen (auch neben der Karte), umgedreht durch Tippen.
+   Die Knöpfe bleiben für VoiceOver erhalten, sind aber unsichtbar; darunter ein leiser Hinweis zur Richtung. */
+.swipehint{display:none}
+@media (pointer:coarse){
+  main .grade,main .fliprow{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;margin:0;padding:0}
+  .swipehint{display:flex;justify-content:space-between;margin:10px 4px 0;font-size:.8125rem;color:var(--muted)}
+  body:has(#theCard),.swipewrap .card{touch-action:pan-y}
+}
+.wlink{color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem;line-height:1.4}
+.wlink:hover{text-decoration:underline}
+.mc .idk{border-style:dashed;color:var(--muted);text-align:center}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+main{max-width:42rem;margin:0 auto;padding-block:20px 120px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2;margin:0 0 .4em;text-wrap:balance}
 .wlink{color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem;line-height:1.4}
 .wlink:hover{text-decoration:underline}
 .mc .idk{border-style:dashed;color:var(--muted);text-align:center}
@@ -236,8 +258,20 @@ svg .sarrow{fill:var(--accent)}
 .swipewrap{position:relative;overflow-x:clip;overflow-y:visible;margin:0 -16px;padding:0 16px}
 .swipewrap .card{touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;will-change:transform;position:relative;overflow:hidden;backface-visibility:hidden}
 .card .tint{position:absolute;inset:0;opacity:0;pointer-events:none;border-radius:inherit;border:2px solid transparent;will-change:opacity}
-.card .tint.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 7%,transparent)}
-.card .tint.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 7%,transparent)}
+.card .tint.ok{border-color:var(--good);background:color-mix(in srgb,var(--good) 22%,transparent)}
+.card .tint.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 20%,transparent)}
+.card .tint{border-width:3px!important}
+/* Kopfschütteln, wenn auf der zugedeckten Karte gewischt wird (aus BiWi II) */
+.card.buzz{animation:buzz .4s cubic-bezier(.36,.07,.19,.97);box-shadow:var(--lift),inset 0 0 0 2.5px color-mix(in srgb,var(--bad) 75%,transparent)}
+@keyframes buzz{10%,90%{transform:translate3d(-2px,0,0)}20%,80%{transform:translate3d(5px,0,0)}30%,50%,70%{transform:translate3d(-9px,0,0)}40%,60%{transform:translate3d(9px,0,0)}}
+@media (prefers-reduced-motion:reduce){.card.buzz{animation:none}}
+/* Beispiel auf der Kartenrückseite: abgesetzt, mit Etikett und eigener Linie */
+.cb-ex{display:flex;flex-direction:column;gap:2px;margin:14px 0 0;padding:8px 0 8px 12px;border-left:3px solid var(--gold);background:color-mix(in srgb,var(--gold) 8%,transparent);border-radius:0 8px 8px 0}
+.cb-ex .exl{font-size:.75rem;font-weight:650;color:var(--gold)}
+.cb-ex + .cb-ex{margin-top:8px}
+.block.today{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease-out}
+.block.today:active{transform:scale(.985)}
+@media (prefers-reduced-motion:reduce){.block.today:active{transform:none}}
 .card.enter{animation:cardIn .22s ease-out}
 @keyframes cardIn{from{opacity:0;transform:translate3d(0,8px,0) scale(.985)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.card.enter{animation:none}}
@@ -769,7 +803,7 @@ function judge(step,raw){
       known:false = nur bekannt, dass das Hochgeladene dazugehört.
    2. Erledigt-Liste (APP.todos je Hälfte), abgehakt in state.todo[id] = Zeitstempel.
    3. Motivationssatz unter der Wochenübersicht.
-   4. Claude-Brücke: letzte Logbuch-Einträge dieser App aus CLAUDE.md (build.py ersetzt [{"d": "2026-11-10", "a": "alle", "w": "`design.css`: Im Lernmodus sind Tableiste und „Aa“ jetzt auch für VoiceOver und Tastatur verborgen (`visibility:hidden` nach der Animation), sichtbar ändert sich nichts", "y": "Prüfauftrag Politik I: unsichtbare Leiste war noch fokussierbar und wurde als Kontrastfehler gemessen"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Projekt öffnen“ wieder entfernt, Hinweis zeigt den Weg in der Claude-App", "y": "Aus der Web-App öffnet iOS einen Browser, in dem Talib nicht angemeldet ist"}, {"d": "2026-11-10", "a": "alle", "w": "Hochladen und Bescheid geben in einem Schritt: Dateien in einem neuen Chat im Projekt anhängen und senden, ohne Text; der Chat baut sie nach `UPDATE.md` ein und sichert die Textfassung als Projekt-Dokument; Knopf heißt „Projekt öffnen“", "y": "Talib: Upload, Knopf, Chat, Einfügen waren zu viele Schritte"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Unterlagen aktualisieren“ im Block „Unterlagen“ (öffnet das claude.ai-Projekt, kopiert „Update“), `UPDATE.md` als gründlicher Einbau-Auftrag (wortgleich in allen Repos), Regel 11 neu; fehlende `APP.projectUrl` trägt der nächste Update-Chat selbst ein", "y": "Talib: Hochladen allein ändert die App nicht, er will ein klares Signal und sorgfältigen Einbau"}, {"d": "2026-11-10", "a": "alle", "w": "Block „Unterlagen“ in allen Apps, Muster je App aus den bisherigen Uploads hergeleitet: BiWi II ein wachsender Foliensatz (immer die neueste ganze Datei), W&G I je Hälfte etwa wöchentlich wie bisher, Wirtschaft II komplett, Politik I nach Vorlesungs- und Verlaufsplan; unsicher heißt „vermutlich“ mit Bitte um Moodle-Screenshot; Regel 7 neu", "y": "Talib: Die Fächer laden sehr unterschiedlich hoch, Claude soll das selbst herleiten und in jedem Chat wissen"}, {"d": "2026-11-04", "a": "alle", "w": "`PRUEFAUFTRAG.md` verschlankt: erst Skripte, dann gezielt lesen, keine parallelen Agenten, Bericht im Chat", "y": "Talib: Das Limit wurde ständig erreicht"}]).
+   4. Claude-Brücke: letzte Logbuch-Einträge dieser App aus CLAUDE.md (build.py ersetzt [{"d": "2026-11-23", "a": "Wirtschaft II", "w": "Muster „Übernehmen aus BiWi II“, wartet auf Freigabe: Karten-Bedienung (Tippen dreht, Wischen bewertet nur aufgedeckt, auch neben der Karte, Schwung, Kopfschütteln, auf Touch ohne Knöpfe), ruhige iPad-Ansicht („Stufe x von 5“, Karte mittig, „Nächster Schritt“ nur als Text, i-Symbol als SVG), Platte „Heute“ ganz antippbar, Beispielzeilen abgesetzt (`EXRE`/`exHTML` in `views.js`, auch in `richText`); Kapitel 1 nach Lernprinzip 10: c1-06 geteilt (neu c1-19 Belege im Kernlehrplan), c1-10 ohne Kontextzeile (steht in c1-08), c1-11 Frage nennt Vertreter, 10 Karten mit Beispielzeile, Ricardo als „Beispiel Ricardo“", "y": "Talib will alle BiWi-II-Verbesserungen in Wirtschaft II, erst ein Muster"}, {"d": "2026-11-10", "a": "alle", "w": "`design.css`: Im Lernmodus sind Tableiste und „Aa“ jetzt auch für VoiceOver und Tastatur verborgen (`visibility:hidden` nach der Animation), sichtbar ändert sich nichts", "y": "Prüfauftrag Politik I: unsichtbare Leiste war noch fokussierbar und wurde als Kontrastfehler gemessen"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Projekt öffnen“ wieder entfernt, Hinweis zeigt den Weg in der Claude-App", "y": "Aus der Web-App öffnet iOS einen Browser, in dem Talib nicht angemeldet ist"}, {"d": "2026-11-10", "a": "alle", "w": "Hochladen und Bescheid geben in einem Schritt: Dateien in einem neuen Chat im Projekt anhängen und senden, ohne Text; der Chat baut sie nach `UPDATE.md` ein und sichert die Textfassung als Projekt-Dokument; Knopf heißt „Projekt öffnen“", "y": "Talib: Upload, Knopf, Chat, Einfügen waren zu viele Schritte"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Unterlagen aktualisieren“ im Block „Unterlagen“ (öffnet das claude.ai-Projekt, kopiert „Update“), `UPDATE.md` als gründlicher Einbau-Auftrag (wortgleich in allen Repos), Regel 11 neu; fehlende `APP.projectUrl` trägt der nächste Update-Chat selbst ein", "y": "Talib: Hochladen allein ändert die App nicht, er will ein klares Signal und sorgfältigen Einbau"}, {"d": "2026-11-10", "a": "alle", "w": "Block „Unterlagen“ in allen Apps, Muster je App aus den bisherigen Uploads hergeleitet: BiWi II ein wachsender Foliensatz (immer die neueste ganze Datei), W&G I je Hälfte etwa wöchentlich wie bisher, Wirtschaft II komplett, Politik I nach Vorlesungs- und Verlaufsplan; unsicher heißt „vermutlich“ mit Bitte um Moodle-Screenshot; Regel 7 neu", "y": "Talib: Die Fächer laden sehr unterschiedlich hoch, Claude soll das selbst herleiten und in jedem Chat wissen"}]).
    5. Abstände vor der Prüfung (spaceDays), siehe unten.
    6. Symbole der Tableiste (NAV_ICONS), Gestaltung in design.css.
    7. Lernmodus ohne Ablenkung (focusBar): Ansichten aus APP.focus.views und die ganze Tageseinheit blenden Tableiste und „Aa“ aus.
@@ -898,7 +932,7 @@ document.addEventListener("keydown",e=>{ if(e.key!=="Escape"||!document.body.cla
   const a=document.activeElement; if(a&&/^(TEXTAREA|INPUT|SELECT)$/.test(a.tagName)) return; const x=document.getElementById("fx"); if(x){ e.preventDefault(); x.click(); } });
 
 /* Claude-Brücke: was zuletzt an dieser App geändert wurde und warum (aus CLAUDE.md, beim Bauen übernommen) */
-const BRUECKE=[{"d": "2026-11-10", "a": "alle", "w": "`design.css`: Im Lernmodus sind Tableiste und „Aa“ jetzt auch für VoiceOver und Tastatur verborgen (`visibility:hidden` nach der Animation), sichtbar ändert sich nichts", "y": "Prüfauftrag Politik I: unsichtbare Leiste war noch fokussierbar und wurde als Kontrastfehler gemessen"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Projekt öffnen“ wieder entfernt, Hinweis zeigt den Weg in der Claude-App", "y": "Aus der Web-App öffnet iOS einen Browser, in dem Talib nicht angemeldet ist"}, {"d": "2026-11-10", "a": "alle", "w": "Hochladen und Bescheid geben in einem Schritt: Dateien in einem neuen Chat im Projekt anhängen und senden, ohne Text; der Chat baut sie nach `UPDATE.md` ein und sichert die Textfassung als Projekt-Dokument; Knopf heißt „Projekt öffnen“", "y": "Talib: Upload, Knopf, Chat, Einfügen waren zu viele Schritte"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Unterlagen aktualisieren“ im Block „Unterlagen“ (öffnet das claude.ai-Projekt, kopiert „Update“), `UPDATE.md` als gründlicher Einbau-Auftrag (wortgleich in allen Repos), Regel 11 neu; fehlende `APP.projectUrl` trägt der nächste Update-Chat selbst ein", "y": "Talib: Hochladen allein ändert die App nicht, er will ein klares Signal und sorgfältigen Einbau"}, {"d": "2026-11-10", "a": "alle", "w": "Block „Unterlagen“ in allen Apps, Muster je App aus den bisherigen Uploads hergeleitet: BiWi II ein wachsender Foliensatz (immer die neueste ganze Datei), W&G I je Hälfte etwa wöchentlich wie bisher, Wirtschaft II komplett, Politik I nach Vorlesungs- und Verlaufsplan; unsicher heißt „vermutlich“ mit Bitte um Moodle-Screenshot; Regel 7 neu", "y": "Talib: Die Fächer laden sehr unterschiedlich hoch, Claude soll das selbst herleiten und in jedem Chat wissen"}, {"d": "2026-11-04", "a": "alle", "w": "`PRUEFAUFTRAG.md` verschlankt: erst Skripte, dann gezielt lesen, keine parallelen Agenten, Bericht im Chat", "y": "Talib: Das Limit wurde ständig erreicht"}];
+const BRUECKE=[{"d": "2026-11-23", "a": "Wirtschaft II", "w": "Muster „Übernehmen aus BiWi II“, wartet auf Freigabe: Karten-Bedienung (Tippen dreht, Wischen bewertet nur aufgedeckt, auch neben der Karte, Schwung, Kopfschütteln, auf Touch ohne Knöpfe), ruhige iPad-Ansicht („Stufe x von 5“, Karte mittig, „Nächster Schritt“ nur als Text, i-Symbol als SVG), Platte „Heute“ ganz antippbar, Beispielzeilen abgesetzt (`EXRE`/`exHTML` in `views.js`, auch in `richText`); Kapitel 1 nach Lernprinzip 10: c1-06 geteilt (neu c1-19 Belege im Kernlehrplan), c1-10 ohne Kontextzeile (steht in c1-08), c1-11 Frage nennt Vertreter, 10 Karten mit Beispielzeile, Ricardo als „Beispiel Ricardo“", "y": "Talib will alle BiWi-II-Verbesserungen in Wirtschaft II, erst ein Muster"}, {"d": "2026-11-10", "a": "alle", "w": "`design.css`: Im Lernmodus sind Tableiste und „Aa“ jetzt auch für VoiceOver und Tastatur verborgen (`visibility:hidden` nach der Animation), sichtbar ändert sich nichts", "y": "Prüfauftrag Politik I: unsichtbare Leiste war noch fokussierbar und wurde als Kontrastfehler gemessen"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Projekt öffnen“ wieder entfernt, Hinweis zeigt den Weg in der Claude-App", "y": "Aus der Web-App öffnet iOS einen Browser, in dem Talib nicht angemeldet ist"}, {"d": "2026-11-10", "a": "alle", "w": "Hochladen und Bescheid geben in einem Schritt: Dateien in einem neuen Chat im Projekt anhängen und senden, ohne Text; der Chat baut sie nach `UPDATE.md` ein und sichert die Textfassung als Projekt-Dokument; Knopf heißt „Projekt öffnen“", "y": "Talib: Upload, Knopf, Chat, Einfügen waren zu viele Schritte"}, {"d": "2026-11-10", "a": "alle", "w": "Knopf „Unterlagen aktualisieren“ im Block „Unterlagen“ (öffnet das claude.ai-Projekt, kopiert „Update“), `UPDATE.md` als gründlicher Einbau-Auftrag (wortgleich in allen Repos), Regel 11 neu; fehlende `APP.projectUrl` trägt der nächste Update-Chat selbst ein", "y": "Talib: Hochladen allein ändert die App nicht, er will ein klares Signal und sorgfältigen Einbau"}, {"d": "2026-11-10", "a": "alle", "w": "Block „Unterlagen“ in allen Apps, Muster je App aus den bisherigen Uploads hergeleitet: BiWi II ein wachsender Foliensatz (immer die neueste ganze Datei), W&G I je Hälfte etwa wöchentlich wie bisher, Wirtschaft II komplett, Politik I nach Vorlesungs- und Verlaufsplan; unsicher heißt „vermutlich“ mit Bitte um Moodle-Screenshot; Regel 7 neu", "y": "Talib: Die Fächer laden sehr unterschiedlich hoch, Claude soll das selbst herleiten und in jedem Chat wissen"}];
 function bridgeBlock(){
   if(!BRUECKE.length) return "";
   const f=s=>{ const [y,m,d]=s.split("-"); return +d+"."+(+m)+"."; };
@@ -954,6 +988,7 @@ function richText(b){
     if(l.startsWith("|")){ flush(); const rows=[];
       while(i<L.length&&L[i].trim().startsWith("|")){ rows.push(L[i].trim().replace(/^\||\|$/g,"").split("|").map(x=>x.trim())); i++; }
       i--; out+=cmp(rows); continue; }
+    if(typeof EXRE!=="undefined"&&EXRE.test(l)){ flush(); out+=exHTML(l); continue; }
     if((m=l.match(/^[-•] (.*)$/))){ open("ul"); items.push(termInline(m[1])); continue; }
     if((m=l.match(/^\d+[.)] (.*)$/))){ open("ol"); items.push(termInline(m[1])); continue; }
     if((m=l.match(TERM))){ open("dl"); items.push(`<b>${inl(m[1])}</b><span>${inl(m[2])}</span>`); continue; }
@@ -1989,17 +2024,17 @@ check:[
 
 CARDS[1]=[
  {id:"c1-01", f:"Was ist Makroökonomik?", b:"Die Analyse gesamtwirtschaftlicher **Aggregate** (Größen, die für ganze Sektoren zusammengefasst werden).\nSektoren: private Haushalte, Unternehmen, Staat\nThemen: Wachstum, Inflation, Arbeitslosigkeit, Verteilung, Staatsverschuldung"},
- {id:"c1-02", f:"Methodologischer Individualismus", b:"Gesellschaft besteht nur aus **Individuen**. Jede Erklärung sozialer Fakten beruht auf individuellem Verhalten.\nBeispiel: Arbeitslosigkeit wird aus den Entscheidungen einzelner Arbeitnehmer:innen und Firmen erklärt.\nGrundlage der Neoklassik."},
+ {id:"c1-02", f:"Methodologischer Individualismus", b:"Gesellschaft besteht nur aus **Individuen**. Jede Erklärung sozialer Fakten beruht auf individuellem Verhalten.\nGrundlage der Neoklassik.\nBeispiel: Arbeitslosigkeit wird aus den Entscheidungen einzelner Arbeitnehmer:innen und Firmen erklärt."},
  {id:"c1-03", f:"Holismus", b:"**Soziale Ganzheiten** wie Klassen, Nationen oder Kulturen haben eigene Eigenschaften, die sich nicht auf Einzelne zurückführen lassen.\nSie bestimmen das Verhalten der Einzelnen.\nBeispiel: Die Klassenlage prägt, wie jemand denkt und handelt."},
- {id:"c1-04", f:"Systemismus", b:"Gesellschaft als **System aus Subsystemen**, die sich wandeln und gegenseitig beeinflussen (z. B. Familien, Unternehmen, Staat, Finanzmärkte).\nUntersucht werden Aufbau, Umfeld, Struktur und Mechanismen.\nIndividuen werden nicht geleugnet, Systemdynamiken gelten aber als prägender. Das ist die Sicht der Vorlesung."},
- {id:"c1-05", f:"Die drei Grundsätze des Beutelsbacher Konsenses", b:"- Überwältigungsverbot: keine Meinung aufdrängen, eigenes Urteil ermöglichen\n- Kontroversitätsgebot: Was in Wissenschaft und Politik kontrovers ist, muss im Unterricht kontrovers erscheinen.\n- Schülerorientierung: die eigene Interessenlage analysieren und Einfluss nehmen können"},
- {id:"c1-06", f:"Neoklassisches oder sozioökonomisches Leitbild im Kernlehrplan SoWi NRW?", b:"Laut Vorlesung **sozioökonomisch** (Wirtschaft und Gesellschaft zusammen, mehrere Theorien).\nBelege aus dem Lehrplan:\n- Leitbild: mündige Wirtschaftsbürger:innen\n- kontroverse Positionen zu staatlichen Eingriffen erörtern\n- den homo oeconomicus auf seine Tragfähigkeit prüfen"},
+ {id:"c1-04", f:"Systemismus", b:"Gesellschaft als **System aus Subsystemen**, die sich wandeln und gegenseitig beeinflussen (Familien, Unternehmen, Staat, Finanzmärkte).\nUntersucht werden Aufbau, Umfeld, Struktur und Mechanismen.\nIndividuen werden nicht geleugnet, Systemdynamiken gelten aber als prägender. Das ist die Sicht der Vorlesung.\nBeispiel: Die Finanzkrise 2008 wird aus dem Zusammenspiel von Banken, Haushaltsschulden und Staat erklärt, nicht aus der Gier Einzelner."},
+ {id:"c1-05", f:"Die drei Grundsätze des Beutelsbacher Konsenses", b:"- Überwältigungsverbot: keine Meinung aufdrängen, eigenes Urteil ermöglichen\n- Kontroversitätsgebot: Was in Wissenschaft und Politik kontrovers ist, muss im Unterricht kontrovers erscheinen.\n- Schülerorientierung: die eigene Interessenlage analysieren und Einfluss nehmen können\nBeispiel: Im SoWi-Unterricht zum Mindestlohn kommen Gewerkschaft und Arbeitgeberverband zu Wort, die Klasse bildet sich selbst ein Urteil."},
+ {id:"c1-06", f:"Neoklassisches oder sozioökonomisches Leitbild im Kernlehrplan SoWi NRW?", b:"**Sozioökonomisch**: Wirtschaft und Gesellschaft werden zusammen betrachtet, mit mehreren Theorien statt nur einer."},
  {id:"c1-07", f:"Wann war die Industrielle Revolution?", b:"Etwa **1760 bis 1850**.\nDanach steigt das BIP pro Kopf steil an. Die Kurve sieht aus wie ein Hockeyschläger („history's hockey stick“)."},
  {id:"c1-08", f:"Phasen hoher Arbeitslosigkeit und Inflation in Deutschland mit herrschendem Paradigma", b:"| Phase | Problem | Herrschendes Paradigma\n| bis 1923 | Hyperinflation (extreme Geldentwertung) | pluralistisch (mehrere Denkschulen)\n| ab 1929 | Deflation (sinkende Preise), Massenarbeitslosigkeit | pluralistisch, danach Keynesianismus\n| 1970er | Stagflation (Stillstand plus Inflation) | Wende zu Monetarismus und neoklassischer Dominanz\n| ab 2007 | Finanzkrise | Ende der neoklassischen Dominanz"},
  {id:"c1-09", f:"Kamen die Nationalsozialisten in Zeiten hoher Inflation oder Deflation an die Macht?", b:"**Deflation** (sinkende Preise).\nWeltwirtschaftskrise mit Massenarbeitslosigkeit, Machtergreifung 1933.\nDie Hyperinflation war schon 1923 vorbei."},
- {id:"c1-10", f:"Monetarismus und Neuklassik: Vertreter und Kernaussage", b:"Vertreter: Milton Friedman (Monetarismus), Robert Lucas (Neuklassik), 1960–80\nKernaussagen:\n- Der Markt findet von selbst ins Gleichgewicht (Selbstregelungskraft).\n- Geldpolitik ist Sache der Zentralbank.\n- Keine staatliche Konjunktursteuerung (kein Eingreifen gegen Auf- und Abschwünge).\nKontext: Stagflation der 1970er (Stillstand plus Inflation)"},
- {id:"c1-11", f:"Neukeynesianismus / Neuer Konsens: Kernaussage", b:"| | Kurze Frist | Lange Frist\n| Sicht | keynesianisch | neoklassisch\n| Politik | Konjunkturpolitik (gegen das Auf und Ab der Wirtschaft) | Strukturpolitik (Reformen an Arbeits- und Gütermärkten)\nVertreter: Krugman, Stiglitz, Mankiw"},
- {id:"c1-12", f:"Postkeynesianismus: Kernaussage", b:"- Fundamentale Unsicherheit: Die Zukunft ist nicht berechenbar, nicht einmal mit Wahrscheinlichkeiten.\n- Macht und Konflikt: etwa zwischen Gewerkschaften und Arbeitgebern\n- Instabilität: Ökonomien sind produktive, aber instabile Systeme.\nErweiterung des Keynesianismus um marxistische Elemente."},
+ {id:"c1-10", f:"Monetarismus und Neuklassik: Vertreter und Kernaussage", b:"Vertreter: Milton Friedman (Monetarismus), Robert Lucas (Neuklassik), 1960–80\nKernaussagen:\n- Der Markt findet von selbst ins Gleichgewicht (Selbstregelungskraft).\n- Geldpolitik ist Sache der Zentralbank.\n- Keine staatliche Konjunktursteuerung (kein Eingreifen gegen Auf- und Abschwünge)."},
+ {id:"c1-11", f:"Neukeynesianismus / Neuer Konsens: Kernaussage und Vertreter", b:"| | Kurze Frist | Lange Frist\n| Sicht | keynesianisch | neoklassisch\n| Politik | Konjunkturpolitik (gegen das Auf und Ab der Wirtschaft) | Strukturpolitik (Reformen an Arbeits- und Gütermärkten)\nVertreter: Krugman, Stiglitz, Mankiw\nBeispiel: In der Rezession legt der Staat ein Konjunkturprogramm auf, langfristig setzt er auf Reformen am Arbeitsmarkt."},
+ {id:"c1-12", f:"Postkeynesianismus: Kernaussage", b:"- Fundamentale Unsicherheit: Die Zukunft ist nicht berechenbar, nicht einmal mit Wahrscheinlichkeiten.\n- Macht und Konflikt: etwa zwischen Gewerkschaften und Arbeitgebern\n- Instabilität: Ökonomien sind produktive, aber instabile Systeme.\nErweiterung des Keynesianismus um marxistische Elemente.\nBeispiel: In einer Krise investieren Unternehmen trotz niedriger Zinsen nicht, weil niemand weiß, wie es weitergeht."},
  {id:"c1-13", f:"Drei Gründe der Vorlesung für Pluralismus", b:"- Wissenschaftstheorie: Fallibilismus (Wissen kann falsch sein) und Vielschichtigkeit (die Realität hat viele Ursachen)\n- Politische Bildung: Beutelsbacher Konsens und Kernlehrplan verlangen Kontroversität.\n- Krisen seit 2007: Ende der neoklassischen Dominanz"}
 ];
 CARDS[2]=[
@@ -2173,11 +2208,12 @@ check:[
  {q:"Der Stundenlohn steigt, und jemand arbeitet weniger. Welcher Effekt dominiert?", o:["Substitutionseffekt","Einkommenseffekt","Multiplikatoreffekt","Crowding-out"], a:1, ex:"Er kann sich mit weniger Arbeit denselben Lebensstandard leisten und nimmt mehr Freizeit.", w:["Der Substitutionseffekt führt zu mehr Arbeit: Freizeit wird teurer.", null, "Der Multiplikator beschreibt Ausgabenketten in der Makroökonomik, nicht das Arbeitsangebot.", "Crowding-out (Verdrängung) beschreibt, wie Staatsausgaben private Ausgaben verdrängen."]}
 ]});
 CARDS[1].push(
- {id:"c1-14", f:"Homo oeconomicus", b:"Der **wirtschaftende Mensch**: handelt rational und eigennützig, wägt Nutzen und Kosten ab und maximiert seinen Nutzen.\nMenschenbild der Neoklassik."},
- {id:"c1-15", f:"Grenzproduktivität der Arbeit und Arbeitsnachfrage", b:"Grenzproduktivität: zusätzlicher Output je zusätzlicher Arbeitsstunde, sinkt mit mehr Arbeit\nRegel: Unternehmen stellen ein, solange der Reallohn w/p (Lohn geteilt durch Preisniveau) nicht über der Grenzproduktivität liegt.\nFolge: Die Arbeitsnachfrage fällt, wenn der Reallohn steigt."},
- {id:"c1-16", f:"Einkommens- vs. Substitutionseffekt beim Arbeitsangebot", b:"| | Substitutionseffekt | Einkommenseffekt\n| Logik | Freizeit wird teurer | Man ist reicher\n| Folge | mehr arbeiten | weniger arbeiten\nKeynes erwartete langfristig, dass der Einkommenseffekt überwiegt."},
- {id:"c1-17", f:"Lebenszyklushypothese", b:"Konsum richtet sich nach dem **erwarteten Lebenseinkommen**, nicht nach dem laufenden.\nBeispiel: Eine Studentin leiht sich Geld, weil sie später mehr verdienen wird.\nNeoklassische Gegenposition zur keynesianischen Konsumfunktion C = c₀ + c₁Y."},
- {id:"c1-18", f:"Komparative Kostenvorteile", b:"Jedes Land spezialisiert sich auf das, was es **relativ** am günstigsten produziert.\nRicardos Beispiel: England Tuch, Portugal Wein, obwohl Portugal beides billiger herstellen konnte.\nGrundlage der neoklassischen Position: Freihandel steigert die Wohlfahrt."}
+ {id:"c1-14", f:"Homo oeconomicus", b:"Der **wirtschaftende Mensch**: handelt rational und eigennützig, wägt Nutzen und Kosten ab und maximiert seinen Nutzen.\nMenschenbild der Neoklassik.\nBeispiel: Ein Schüler lernt nur so viel, wie sich der Notengewinn gegenüber der Freizeit lohnt."},
+ {id:"c1-15", f:"Grenzproduktivität der Arbeit und Arbeitsnachfrage", b:"Grenzproduktivität: zusätzlicher Output je zusätzlicher Arbeitsstunde, sinkt mit mehr Arbeit\nRegel: Unternehmen stellen ein, solange der Reallohn w/p (Lohn geteilt durch Preisniveau) nicht über der Grenzproduktivität liegt.\nFolge: Die Arbeitsnachfrage fällt, wenn der Reallohn steigt.\nBeispiel: Ein Café stellt die dritte Aushilfe nur ein, wenn sie mindestens so viel zusätzlich erwirtschaftet, wie sie real kostet."},
+ {id:"c1-16", f:"Einkommens- vs. Substitutionseffekt beim Arbeitsangebot", b:"| | Substitutionseffekt | Einkommenseffekt\n| Logik | Freizeit wird teurer | Man ist reicher\n| Folge | mehr arbeiten | weniger arbeiten\nKeynes erwartete langfristig, dass der Einkommenseffekt überwiegt.\nBeispiel: Steigt die Vergütung, übernimmt eine Lehrkraft mehr Vertretungsstunden (Substitution) oder reduziert ihr Deputat (Einkommen)."},
+ {id:"c1-17", f:"Lebenszyklushypothese", b:"Konsum richtet sich nach dem **erwarteten Lebenseinkommen**, nicht nach dem laufenden.\nNeoklassische Gegenposition zur keynesianischen Konsumfunktion C = c₀ + c₁Y.\nBeispiel: Eine Studentin leiht sich Geld, weil sie später mehr verdienen wird."},
+ {id:"c1-18", f:"Komparative Kostenvorteile", b:"Jedes Land spezialisiert sich auf das, was es **relativ** am günstigsten produziert.\nGrundlage der neoklassischen Position: Freihandel steigert die Wohlfahrt.\nBeispiel Ricardo: England Tuch, Portugal Wein, obwohl Portugal beides billiger herstellen konnte."},
+ {id:"c1-19", f:"Drei Belege im Kernlehrplan SoWi NRW für das sozioökonomische Leitbild", b:"- Leitbild: mündige Wirtschaftsbürger:innen\n- kontroverse Positionen zu staatlichen Eingriffen erörtern\n- den homo oeconomicus auf seine Tragfähigkeit prüfen"}
 );
 
 /* ================= Kapitel 6–8 ================= */
@@ -2614,13 +2650,14 @@ const CARD_INFO={
 function cardInfoHTML(id){
   const t=CARD_INFO[id]; if(!t) return "";
   const lines=t.split("\n").map(l=>{ const m=l.match(/^([^:]{1,32}): (.*)$/); return m?`<span class="cl"><b>${m[1]}</b> ${m[2]}</span>`:`<span class="cl">${l}</span>`; }).join("");
-  return `<div class="cinfo"><span class="ci">i</span><div>${lines}</div></div>`;
+  return `<div class="cinfo"><svg class="ci" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="10" cy="5.9" r="1.15" fill="currentColor"/><rect x="9.1" y="8.4" width="1.8" height="6.4" rx=".9" fill="currentColor"/></svg><div>${lines}</div></div>`;
 }
 
 /* Kontext auf der Vorderseite: worum es bei der Frage überhaupt geht */
 const CARD_CTX={
  "c1-05":"Politische Bildung im Schulunterricht",
  "c1-06":"Wie die Vorlesung den NRW-Lehrplan für Sozialwissenschaften einordnet",
+ "c1-19":"Wie die Vorlesung den NRW-Lehrplan für Sozialwissenschaften einordnet",
  "c1-10":"Denkschulen gegen Keynes ab den 1960er Jahren",
  "c1-11":"Heutiger Mainstream der Makroökonomik",
  "c1-12":"Weiterentwicklung von Keynes",
@@ -3214,6 +3251,8 @@ function renderHome(){
   bindReview();
   $("#goNext").onclick=nx.go;
   $("#goSess").onclick=()=>{ if(sess) runStep(); else startSession(); };
+  /* Die ganze Platte „Heute“ startet die Einheit, nicht nur der Knopf */
+  const td=$(".block.today"); if(td) td.onclick=e=>{ if(e.target.closest("a,button")) return; $("#goSess").click(); };
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
 }
 
@@ -3328,6 +3367,10 @@ function homeReview(){
 function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
+/* Beispiele heben sich von Aufzählungen ab (aus BiWi II, 23.11.): eigener Absatz mit Etikett und goldener Linie.
+   „Beispiel Ricardo: …“ (Name der Quelle) steht so in den Unterlagen, „Beispiel: …“ ohne Zusatz hat Claude ergänzt. */
+const EXRE=/^(Beispiele?|Bsp\.|z\. ?B\.)(\s+[^:]{1,24})?:?\s+/i;
+function exHTML(l){ const m=l.match(EXRE), lab=(m[1]+(m[2]||"")).replace(/^Bsp\.$/i,"Beispiel").replace(/^z\. ?B\.$/i,"Beispiel"); return `<div class="cb-ex"><span class="exl">${inl(lab)}</span><span>${inl(l.slice(m[0].length))}</span></div>`; }
 const deckLabel=n=>DECK_NAME[n]?"Symbole":n?"Kapitel "+n:"Üben";
 const deckBack=n=>DECK_NAME[n]?go("sym"):n?go("chapter"):go("practice");
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
@@ -3363,38 +3406,61 @@ function renderCards(){
     bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); if($("#free")) $("#free").onclick=()=>openCards(n,true); if($("#out")) $("#out").onclick=()=>deckBack(n); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
+  const ctx=CARD_CTX[c.id]||chapterOfCard(c.id);
   const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  $("#app").innerHTML=`${backTo(deckLabel(n))}
-    <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="crt">${cur.hist.length?`<button class="cundo" id="cprev" aria-label="Eine Karte zurück" title="Eine Karte zurück"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>`:""}<span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></span></div>
+  $("#app").innerHTML=`
+    <div class="row between ctop"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?` · Stufe ${b} von 5`:" · neu"}</p><span class="crt">${cur.hist.length?`<button class="cundo" id="cprev" aria-label="Eine Karte zurück" title="Eine Karte zurück"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Zurück</span></button>`:""}</span></div>
     <div class="swipewrap">
-    <div class="block card${cur.enter?" enter":""}" id="theCard" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><i class="tint" aria-hidden="true"></i><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p>${n==="sym"?`<div class="front symf">${fx(symMain(c.f))}${symIn(c.f)?`<span class="symin">in ${fx(symIn(c.f))}</span>`:""}</div>`:`<div class="front">${inl(c.f)}</div>`}${cur.flip?`${cur.typed.trim()?`<div class="typed"><span class="small muted">Deine Antwort</span><p>${esc(cur.typed)}</p></div>`:""}<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div></div>
-    ${cur.flip?`<div class="grade"><button class="btn ghost" id="mid">← Nicht sicher</button><button class="btn" id="yes">Sicher →</button></div>`
+    <div class="block card${cur.enter?" enter":""}" id="theCard" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><i class="tint" aria-hidden="true"></i>
+      ${ctx?`<p class="cctx">${inl(ctx)}</p>`:""}
+      ${n==="sym"?`<div class="front symf">${fx(symMain(c.f))}${symIn(c.f)?`<span class="symin">in ${fx(symIn(c.f))}</span>`:""}</div>`:`<div class="front">${inl(c.f)}${c.erg?` <span class="erg">Ergänzung</span>`:""}</div>`}
+      ${cur.flip?`${cur.typed.trim()?`<div class="typed"><span class="small muted">Deine Antwort</span><p>${esc(cur.typed)}</p></div>`:""}<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:""}</div></div>
+    ${cur.flip?`<div class="grade"><button class="btn ghost" id="mid"><span class="arr">← </span>Nicht sicher</button><button class="btn" id="yes">Sicher<span class="arr"> →</span></button></div>`
       :`${cur.tyOpen||cur.typed?`<textarea id="cty" class="cty" rows="1" placeholder="Deine Antwort …" aria-label="Antwort tippen">${esc(cur.typed)}</textarea>`:""}
-      <div class="row"><button class="btn" id="flip" style="flex:1">Antwort zeigen</button>${cur.tyOpen||cur.typed?"":`<button class="tylink" id="tyO">Tippen</button>`}</div><p class="hint">Erst antworten, dann aufdecken.</p>`}`;
+      <div class="row fliprow"><button class="btn" id="flip" style="flex:1">Antwort zeigen</button></div>`}`;
   bindCrumb(()=>deckBack(n));
   if($("#tyO")) $("#tyO").onclick=()=>{ cur.tyOpen=true; renderCards(); $("#cty").focus(); };
   const ta=$("#cty"); if(ta){ const fit=()=>{ ta.style.height="auto"; ta.style.height=ta.scrollHeight+"px"; }; fit(); ta.oninput=()=>{ cur.typed=ta.value; fit(); }; }
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
-  const cd=$("#theCard"); let moved=false;
+  const cd=$("#theCard"); let moved=false; cur.drag=null;
   cd.onclick=e=>{ if(e.target.closest("a")||moved) return; cur.flip=!cur.flip; renderCards(); };
   cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } else if(cur.flip&&e.key==="ArrowRight") grade(2); else if(cur.flip&&e.key==="ArrowLeft") grade(1); };
   /* Wischen wie bei Dating-Apps, erst nach dem Aufdecken: rechts sicher, links nicht sicher.
      Die Karte folgt dem Finger, eine leichte Tönung zeigt die Richtung an. */
-  if(cur.flip){ const tint=cd.querySelector(".tint"); let x0=null, y0=0, dx=0, raf=0, w=360, dir=0;
-    /* Pro Bild nur transform und opacity ändern: beides läuft auf dem Grafikchip, nichts wird neu gezeichnet */
-    const paint=()=>{ raf=0; const k=Math.min(1,Math.abs(dx)/(w*.35)), d=dx>0?1:-1;
+  /* Zugedeckt: Wischen bewertet noch nicht. Die Karte schüttelt kurz den Kopf (rot), auf Android vibriert es dazu. */
+  if(!cur.flip){ let fx=null,fy=0,shook=false;
+    cd.onpointerdown=e=>{ fx=e.clientX; fy=e.clientY; shook=false; };
+    cd.onpointermove=e=>{ if(fx===null||shook) return; const d=e.clientX-fx; if(Math.abs(d)>28&&Math.abs(d)>1.4*Math.abs(e.clientY-fy)){ shook=true; buzz(); } };
+    cd.onpointerup=cd.onpointercancel=()=>{ if(shook) window.__noClick=Date.now(); fx=null; };
+  }
+  if(cur.flip){ const tint=cd.querySelector(".tint");
+    let x0=null, y0=0, dx=0, raf=0, w=360, dir=0, hist=[], done=false;
+    /* Pro Bild nur transform und opacity ändern (läuft auf dem Grafikchip). Die Tönung erreicht schon bei einem Fünftel
+       der Kartenbreite volle Stärke. */
+    const paint=()=>{ raf=0; const k=Math.min(1,Math.abs(dx)/(w*.2)), d=dx>0?1:-1;
       if(d!==dir){ dir=d; tint.className="tint "+(d>0?"ok":"no"); }
-      cd.style.transform=`translate3d(${dx}px,0,0) rotate(${dx/45}deg)`; tint.style.opacity=k; };
-    cd.onpointerdown=e=>{ if(e.target.closest("a")) return; x0=e.clientX; y0=e.clientY; dx=0; moved=false; w=cd.offsetWidth||360; };
+      cd.style.transform=`translate3d(${dx}px,0,0) rotate(${dx/40}deg)`; tint.style.opacity=k; };
+    const track=x=>{ const t=performance.now(); hist.push([t,x]); while(hist.length>2&&t-hist[0][0]>90) hist.shift(); };
+    const speed=()=>{ if(hist.length<2) return 0; const [t1,x1]=hist[0],[t2,x2]=hist[hist.length-1]; return t2>t1?(x2-x1)/(t2-t1):0; };  /* px pro ms */
+    const begin=()=>{ dx=0; hist=[]; w=cd.offsetWidth||360; cd.style.transition="none"; tint.style.transition="none"; cd.classList.add("drag"); };
+    const release=()=>{ if(raf){ cancelAnimationFrame(raf); raf=0; paint(); }
+      const v=speed(), lim=Math.min(90,w*.22);
+      /* Ausgelöst wird durch Weite oder durch einen schnellen Schwung in dieselbe Richtung */
+      const go=Math.abs(dx)>lim || (Math.abs(v)>.45 && Math.abs(dx)>24 && Math.sign(v)===Math.sign(dx));
+      if(go&&!done){ done=true; const sgn=Math.sign(dx)||Math.sign(v), out=sgn*(window.innerWidth*.6+w);
+        const ms=Math.round(Math.max(160,Math.min(320,Math.abs(out-dx)/Math.max(1.4,Math.abs(v)))));
+        tint.style.opacity=1; cd.style.transition=`transform ${ms}ms cubic-bezier(.25,.8,.35,1), opacity ${ms}ms linear`;
+        cd.style.transform=`translate3d(${out}px,0,0) rotate(${sgn*16}deg)`; cd.style.opacity="0";
+        let fired=false; const fin=()=>{ if(fired) return; fired=true; cur.enter=true; grade(sgn>0?2:1); };
+        cd.addEventListener("transitionend",fin,{once:true}); setTimeout(fin,ms+40); }
+      else { cd.classList.remove("drag"); cd.style.transition="transform .42s cubic-bezier(.2,1.5,.4,1)"; tint.style.transition="opacity .2s"; cd.style.transform=""; tint.style.opacity="0"; setTimeout(()=>{ moved=false; },0); } };
+    /* Wischen auch außerhalb der Karte (iPad: Daumen rechts neben der Karte): cur.drag nimmt die Bewegung an */
+    cur.drag={start:begin, move:d=>{ dx=d; track(d); if(!raf) raf=requestAnimationFrame(paint); }, end:()=>{ moved=true; release(); }};
+    cd.onpointerdown=e=>{ if(e.target.closest("a")||done) return; x0=e.clientX; y0=e.clientY; dx=0; moved=false; };
     cd.onpointermove=e=>{ if(x0===null) return; const d=e.clientX-x0;
-      if(!moved){ if(Math.abs(d)>6&&Math.abs(d)>Math.abs(e.clientY-y0)){ moved=true; x0+=d>0?6:-6; try{cd.setPointerCapture(e.pointerId);}catch(x){} cd.style.transition="none"; tint.style.transition="none"; } else return; }
-      e.preventDefault(); dx=e.clientX-x0; if(!raf) raf=requestAnimationFrame(paint); };
-    cd.onpointerup=cd.onpointercancel=()=>{ if(x0===null) return; x0=null; if(!moved) return; if(raf){ cancelAnimationFrame(raf); raf=0; }
-      const lim=Math.min(100,w*.25);
-      if(Math.abs(dx)>lim){ const out=(dx>0?1:-1)*(window.innerWidth+100);
-        cd.style.transition="transform .3s cubic-bezier(.2,.7,.3,1), opacity .3s ease-out"; cd.style.transform=`translate3d(${out}px,0,0) rotate(${dx>0?12:-12}deg)`; cd.style.opacity="0";
-        setTimeout(()=>{ cur.enter=true; grade(dx>0?2:1); },220); }
-      else { cd.style.transition="transform .35s cubic-bezier(.3,1.4,.5,1)"; tint.style.transition="opacity .25s"; cd.style.transform=""; tint.style.opacity="0"; setTimeout(()=>{ moved=false; },0); } };
+      if(!moved){ if(Math.abs(d)>6&&Math.abs(d)>Math.abs(e.clientY-y0)){ moved=true; x0+=d>0?6:-6; try{cd.setPointerCapture(e.pointerId);}catch(x){} begin(); } else return; }
+      e.preventDefault(); dx=e.clientX-x0; track(dx); if(!raf) raf=requestAnimationFrame(paint); };
+    cd.onpointerup=cd.onpointercancel=()=>{ if(x0===null) return; x0=null; if(!moved) return; release(); };
   }
   /* Bewertung: 2 sicher (nächstes Fach), 1 nicht sicher (ein Fach zurück, morgen wieder, in dieser Runde noch einmal) */
   function grade(lv){ state.box=state.box||{}; state.due=state.due||{}; state.lapses=state.lapses||{};
@@ -3565,6 +3631,29 @@ document.addEventListener("keydown",e=>{
   if(k===" "||k==="Enter"){ e.preventDefault(); c.click(); }
   else if(k==="ArrowRight") hit("#yes"); else if(k==="ArrowLeft") hit("#mid"); else if(k==="z"||k==="Z") hit("#cprev");
 });
+
+/* Tippen und Wischen getrennt (Muster 17.11.): Auf dem Touch-Bildschirm dreht ein Tippen irgendwo außerhalb der Karte
+   die Karte um, hin und zurück, genau wie ein Tipp auf die Karte. Waagerechtes Wischen bewertet nur
+   die aufgedeckte Karte, auf oder neben ihr: rechts sicher, links nicht sicher. Zugedeckt bewirkt Wischen nichts. */
+/* Kurzes Kopfschütteln der Karte: Hinweis, dass sie noch zugedeckt ist */
+function buzz(){ const cd=$("#theCard"); if(!cd||cd.classList.contains("buzz")) return;
+  cd.classList.add("buzz"); try{ navigator.vibrate&&navigator.vibrate([18,40,18]); }catch(x){}
+  setTimeout(()=>cd.classList.remove("buzz"),420); }
+(function(){ let x0=null,y0=0,t0=0,on=false,id=null,shook=false;
+  const ok=e=>view==="cards"&&e.pointerType!=="mouse"&&$("#theCard")&&!e.target.closest("#theCard,textarea,input,a,button,#sessbar,#focusbar,nav");
+  document.addEventListener("pointerdown",e=>{ if(!ok(e)) return; x0=e.clientX; y0=e.clientY; t0=performance.now(); on=false; shook=false; id=e.pointerId; },{passive:true});
+  document.addEventListener("pointermove",e=>{ if(x0===null||e.pointerId!==id) return;
+    if(!cur.flip){ const d=e.clientX-x0; if(!shook&&Math.abs(d)>28&&Math.abs(d)>1.4*Math.abs(e.clientY-y0)){ shook=true; buzz(); } return; }
+    const d=e.clientX-x0;
+    if(!on){ if(Math.abs(d)>12&&Math.abs(d)>1.4*Math.abs(e.clientY-y0)){ on=true; x0+=d>0?12:-12; if(cur.drag) cur.drag.start(); } else return; }
+    if(cur.drag) cur.drag.move(e.clientX-x0); },{passive:true});
+  const up=e=>{ if(x0===null) return; if(shook){ x0=null; shook=false; window.__noClick=Date.now(); return; } const was=on, far=Math.hypot(e.clientX-x0,e.clientY-y0), quick=performance.now()-t0<500; x0=null; on=false;
+    if(was){ window.__noClick=Date.now(); if(cur.drag) cur.drag.end(); return; }
+    if(e.type==="pointerup"&&far<10&&quick){ window.__noClick=Date.now(); cur.flip=!cur.flip; renderCards(); } };
+  document.addEventListener("pointerup",up); document.addEventListener("pointercancel",up);
+  /* Nach einem Wisch oder Tipp kein zusätzlicher Klick auf etwas darunter */
+  document.addEventListener("click",e=>{ if(window.__noClick&&Date.now()-window.__noClick<400){ e.stopPropagation(); e.preventDefault(); } },true);
+})();
 
 /* ================= Verständnisfragen: erst selbst abrufen, dann Auswahl; Wiederholung mit Abstand =================
    Jede Frage aus den Lektionen bekommt ein eigenes Fach wie eine Karteikarte (state.qbox).
@@ -3743,7 +3832,7 @@ function updateSessBar(){
   if(!sess||!sess.steps[sess.i]){ b.hidden=true; b.innerHTML=""; return; }
   const s=sess.steps[sess.i];
   b.hidden=false;
-  b.innerHTML=`<div class="sbin"><span class="sbt"><b>Heute ${sess.i+1}/${sess.steps.length}</b> · ${s.t}</span><button class="btn small" id="sbNext">${sess.i<sess.steps.length-1?"Nächster Schritt":"Abschließen"}</button><button class="btn ghost small" id="sbEnd" aria-label="Einheit beenden">✕</button></div><div class="sbs" aria-hidden="true">${sess.steps.map((_,j)=>`<i class="${j<sess.i?"on":j===sess.i?"now":""}"></i>`).join("")}</div>`;
+  b.innerHTML=`<div class="sbin"><span class="sbt"><b>Heute ${sess.i+1}/${sess.steps.length}</b> · ${s.t}</span><button class="btn ghost small" id="sbNext">${sess.i<sess.steps.length-1?"Nächster Schritt":"Abschließen"}</button><button class="btn ghost small" id="sbEnd" aria-label="Einheit beenden">✕</button></div><div class="sbs" aria-hidden="true">${sess.steps.map((_,j)=>`<i class="${j<sess.i?"on":j===sess.i?"now":""}"></i>`).join("")}</div>`;
   $("#sbNext").onclick=sessNext; $("#sbEnd").onclick=endSession;
 }
 const sessBtn=()=>`<button class="btn" id="sessGo">${sess&&sess.i<sess.steps.length-1?"Weiter zum nächsten Schritt":"Einheit abschließen"}</button>`;
@@ -4249,7 +4338,7 @@ if("serviceWorker" in navigator){ window.addEventListener("load", ()=>navigator.
    Beim Start lädt die App eine neue Version sofort. Beim Zurückkehren nur, wenn gerade nichts läuft;
    mitten in Karten, Aufgaben oder Probeklausur erscheint stattdessen ein Hinweis zum Antippen. Der Lernstand liegt im Gerät und wird vorher abgeglichen. */
 (function(){
-  var V="fa2eb3acf777", BUSY=["task","exam","essay","graph","kurz","lesson","cards","kreuz","recall","who","outline"];
+  var V="756faf10535e", BUSY=["task","exam","essay","graph","kurz","lesson","cards","kreuz","recall","who","outline"];
   function busy(){ try{ return BUSY.indexOf(view)>=0; }catch(e){ return false; } }
   function syncing(){ try{ return !!(pushTimer||pushing); }catch(e){ return false; } }
   function reload(t){ try{ sessionStorage.setItem("upd-"+t,"1"); }catch(e){} location.replace(location.pathname+"?v="+t+location.hash); }

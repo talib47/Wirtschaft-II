@@ -127,6 +127,8 @@ function renderHome(){
   bindReview();
   $("#goNext").onclick=nx.go;
   $("#goSess").onclick=()=>{ if(sess) runStep(); else startSession(); };
+  /* Die ganze Platte „Heute“ startet die Einheit, nicht nur der Knopf */
+  const td=$(".block.today"); if(td) td.onclick=e=>{ if(e.target.closest("a,button")) return; $("#goSess").click(); };
   document.querySelectorAll(".chap").forEach(b=>b.onclick=()=>{ if(b.disabled) return; cur.ch=+b.dataset.n; go("chapter"); });
 }
 
@@ -241,6 +243,10 @@ function homeReview(){
 function bindReview(){ document.querySelectorAll(".rv").forEach(b=>b.onclick=()=>openLesson(+b.dataset.n,+b.dataset.i)); }
 
 /* ================= Karten (Karteikasten, Fächer 0–5) ================= */
+/* Beispiele heben sich von Aufzählungen ab (aus BiWi II, 23.11.): eigener Absatz mit Etikett und goldener Linie.
+   „Beispiel Ricardo: …“ (Name der Quelle) steht so in den Unterlagen, „Beispiel: …“ ohne Zusatz hat Claude ergänzt. */
+const EXRE=/^(Beispiele?|Bsp\.|z\. ?B\.)(\s+[^:]{1,24})?:?\s+/i;
+function exHTML(l){ const m=l.match(EXRE), lab=(m[1]+(m[2]||"")).replace(/^Bsp\.$/i,"Beispiel").replace(/^z\. ?B\.$/i,"Beispiel"); return `<div class="cb-ex"><span class="exl">${inl(lab)}</span><span>${inl(l.slice(m[0].length))}</span></div>`; }
 const deckLabel=n=>DECK_NAME[n]?"Symbole":n?"Kapitel "+n:"Üben";
 const deckBack=n=>DECK_NAME[n]?go("sym"):n?go("chapter"):go("practice");
 function allCards(n){ return n? (CARDS[n]||[]) : Object.values(CARDS).flat(); }
@@ -276,38 +282,61 @@ function renderCards(){
     bindCrumb(()=>deckBack(n)); if($("#again")) $("#again").onclick=()=>openCards(n); if($("#free")) $("#free").onclick=()=>openCards(n,true); if($("#out")) $("#out").onclick=()=>deckBack(n); return;
   }
   const c=D[cur.ci], b=cardBox(c.id);
+  const ctx=CARD_CTX[c.id]||chapterOfCard(c.id);
   const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  $("#app").innerHTML=`${backTo(deckLabel(n))}
-    <div class="row between"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?" · fällig":" · neu"}</p><span class="crt">${cur.hist.length?`<button class="cundo" id="cprev" aria-label="Eine Karte zurück" title="Eine Karte zurück"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>`:""}<span class="dots" aria-label="Fach ${b} von 5">${[1,2,3,4,5].map(i=>`<i class="${i<=b?"on":""}"></i>`).join("")}</span></span></div>
+  $("#app").innerHTML=`
+    <div class="row between ctop"><p class="eyebrow" style="margin:0">Karte ${cur.ci+1} von ${D.length}${cur.free?" · freiwillig":isSeen(c.id)?` · Stufe ${b} von 5`:" · neu"}</p><span class="crt">${cur.hist.length?`<button class="cundo" id="cprev" aria-label="Eine Karte zurück" title="Eine Karte zurück"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Zurück</span></button>`:""}</span></div>
     <div class="swipewrap">
-    <div class="block card${cur.enter?" enter":""}" id="theCard" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><i class="tint" aria-hidden="true"></i><p class="cctx">${inl(CARD_CTX[c.id]||chapterOfCard(c.id))}</p>${n==="sym"?`<div class="front symf">${fx(symMain(c.f))}${symIn(c.f)?`<span class="symin">in ${fx(symIn(c.f))}</span>`:""}</div>`:`<div class="front">${inl(c.f)}</div>`}${cur.flip?`${cur.typed.trim()?`<div class="typed"><span class="small muted">Deine Antwort</span><p>${esc(cur.typed)}</p></div>`:""}<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:`<p class="tap">Tippen zum Umdrehen</p>`}</div></div>
-    ${cur.flip?`<div class="grade"><button class="btn ghost" id="mid">← Nicht sicher</button><button class="btn" id="yes">Sicher →</button></div>`
+    <div class="block card${cur.enter?" enter":""}" id="theCard" style="margin-top:8px" role="button" tabindex="0" aria-label="Karte umdrehen"><i class="tint" aria-hidden="true"></i>
+      ${ctx?`<p class="cctx">${inl(ctx)}</p>`:""}
+      ${n==="sym"?`<div class="front symf">${fx(symMain(c.f))}${symIn(c.f)?`<span class="symin">in ${fx(symIn(c.f))}</span>`:""}</div>`:`<div class="front">${inl(c.f)}${c.erg?` <span class="erg">Ergänzung</span>`:""}</div>`}
+      ${cur.flip?`${cur.typed.trim()?`<div class="typed"><span class="small muted">Deine Antwort</span><p>${esc(cur.typed)}</p></div>`:""}<div class="back">${richText(c.b)}</div>${cardInfoHTML(c.id)}`:""}</div></div>
+    ${cur.flip?`<div class="grade"><button class="btn ghost" id="mid"><span class="arr">← </span>Nicht sicher</button><button class="btn" id="yes">Sicher<span class="arr"> →</span></button></div>`
       :`${cur.tyOpen||cur.typed?`<textarea id="cty" class="cty" rows="1" placeholder="Deine Antwort …" aria-label="Antwort tippen">${esc(cur.typed)}</textarea>`:""}
-      <div class="row"><button class="btn" id="flip" style="flex:1">Antwort zeigen</button>${cur.tyOpen||cur.typed?"":`<button class="tylink" id="tyO">Tippen</button>`}</div><p class="hint">Erst antworten, dann aufdecken.</p>`}`;
+      <div class="row fliprow"><button class="btn" id="flip" style="flex:1">Antwort zeigen</button></div>`}`;
   bindCrumb(()=>deckBack(n));
   if($("#tyO")) $("#tyO").onclick=()=>{ cur.tyOpen=true; renderCards(); $("#cty").focus(); };
   const ta=$("#cty"); if(ta){ const fit=()=>{ ta.style.height="auto"; ta.style.height=ta.scrollHeight+"px"; }; fit(); ta.oninput=()=>{ cur.typed=ta.value; fit(); }; }
   if($("#flip")) $("#flip").onclick=()=>{ cur.flip=true; renderCards(); };
-  const cd=$("#theCard"); let moved=false;
+  const cd=$("#theCard"); let moved=false; cur.drag=null;
   cd.onclick=e=>{ if(e.target.closest("a")||moved) return; cur.flip=!cur.flip; renderCards(); };
   cd.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); cd.click(); } else if(cur.flip&&e.key==="ArrowRight") grade(2); else if(cur.flip&&e.key==="ArrowLeft") grade(1); };
   /* Wischen wie bei Dating-Apps, erst nach dem Aufdecken: rechts sicher, links nicht sicher.
      Die Karte folgt dem Finger, eine leichte Tönung zeigt die Richtung an. */
-  if(cur.flip){ const tint=cd.querySelector(".tint"); let x0=null, y0=0, dx=0, raf=0, w=360, dir=0;
-    /* Pro Bild nur transform und opacity ändern: beides läuft auf dem Grafikchip, nichts wird neu gezeichnet */
-    const paint=()=>{ raf=0; const k=Math.min(1,Math.abs(dx)/(w*.35)), d=dx>0?1:-1;
+  /* Zugedeckt: Wischen bewertet noch nicht. Die Karte schüttelt kurz den Kopf (rot), auf Android vibriert es dazu. */
+  if(!cur.flip){ let fx=null,fy=0,shook=false;
+    cd.onpointerdown=e=>{ fx=e.clientX; fy=e.clientY; shook=false; };
+    cd.onpointermove=e=>{ if(fx===null||shook) return; const d=e.clientX-fx; if(Math.abs(d)>28&&Math.abs(d)>1.4*Math.abs(e.clientY-fy)){ shook=true; buzz(); } };
+    cd.onpointerup=cd.onpointercancel=()=>{ if(shook) window.__noClick=Date.now(); fx=null; };
+  }
+  if(cur.flip){ const tint=cd.querySelector(".tint");
+    let x0=null, y0=0, dx=0, raf=0, w=360, dir=0, hist=[], done=false;
+    /* Pro Bild nur transform und opacity ändern (läuft auf dem Grafikchip). Die Tönung erreicht schon bei einem Fünftel
+       der Kartenbreite volle Stärke. */
+    const paint=()=>{ raf=0; const k=Math.min(1,Math.abs(dx)/(w*.2)), d=dx>0?1:-1;
       if(d!==dir){ dir=d; tint.className="tint "+(d>0?"ok":"no"); }
-      cd.style.transform=`translate3d(${dx}px,0,0) rotate(${dx/45}deg)`; tint.style.opacity=k; };
-    cd.onpointerdown=e=>{ if(e.target.closest("a")) return; x0=e.clientX; y0=e.clientY; dx=0; moved=false; w=cd.offsetWidth||360; };
+      cd.style.transform=`translate3d(${dx}px,0,0) rotate(${dx/40}deg)`; tint.style.opacity=k; };
+    const track=x=>{ const t=performance.now(); hist.push([t,x]); while(hist.length>2&&t-hist[0][0]>90) hist.shift(); };
+    const speed=()=>{ if(hist.length<2) return 0; const [t1,x1]=hist[0],[t2,x2]=hist[hist.length-1]; return t2>t1?(x2-x1)/(t2-t1):0; };  /* px pro ms */
+    const begin=()=>{ dx=0; hist=[]; w=cd.offsetWidth||360; cd.style.transition="none"; tint.style.transition="none"; cd.classList.add("drag"); };
+    const release=()=>{ if(raf){ cancelAnimationFrame(raf); raf=0; paint(); }
+      const v=speed(), lim=Math.min(90,w*.22);
+      /* Ausgelöst wird durch Weite oder durch einen schnellen Schwung in dieselbe Richtung */
+      const go=Math.abs(dx)>lim || (Math.abs(v)>.45 && Math.abs(dx)>24 && Math.sign(v)===Math.sign(dx));
+      if(go&&!done){ done=true; const sgn=Math.sign(dx)||Math.sign(v), out=sgn*(window.innerWidth*.6+w);
+        const ms=Math.round(Math.max(160,Math.min(320,Math.abs(out-dx)/Math.max(1.4,Math.abs(v)))));
+        tint.style.opacity=1; cd.style.transition=`transform ${ms}ms cubic-bezier(.25,.8,.35,1), opacity ${ms}ms linear`;
+        cd.style.transform=`translate3d(${out}px,0,0) rotate(${sgn*16}deg)`; cd.style.opacity="0";
+        let fired=false; const fin=()=>{ if(fired) return; fired=true; cur.enter=true; grade(sgn>0?2:1); };
+        cd.addEventListener("transitionend",fin,{once:true}); setTimeout(fin,ms+40); }
+      else { cd.classList.remove("drag"); cd.style.transition="transform .42s cubic-bezier(.2,1.5,.4,1)"; tint.style.transition="opacity .2s"; cd.style.transform=""; tint.style.opacity="0"; setTimeout(()=>{ moved=false; },0); } };
+    /* Wischen auch außerhalb der Karte (iPad: Daumen rechts neben der Karte): cur.drag nimmt die Bewegung an */
+    cur.drag={start:begin, move:d=>{ dx=d; track(d); if(!raf) raf=requestAnimationFrame(paint); }, end:()=>{ moved=true; release(); }};
+    cd.onpointerdown=e=>{ if(e.target.closest("a")||done) return; x0=e.clientX; y0=e.clientY; dx=0; moved=false; };
     cd.onpointermove=e=>{ if(x0===null) return; const d=e.clientX-x0;
-      if(!moved){ if(Math.abs(d)>6&&Math.abs(d)>Math.abs(e.clientY-y0)){ moved=true; x0+=d>0?6:-6; try{cd.setPointerCapture(e.pointerId);}catch(x){} cd.style.transition="none"; tint.style.transition="none"; } else return; }
-      e.preventDefault(); dx=e.clientX-x0; if(!raf) raf=requestAnimationFrame(paint); };
-    cd.onpointerup=cd.onpointercancel=()=>{ if(x0===null) return; x0=null; if(!moved) return; if(raf){ cancelAnimationFrame(raf); raf=0; }
-      const lim=Math.min(100,w*.25);
-      if(Math.abs(dx)>lim){ const out=(dx>0?1:-1)*(window.innerWidth+100);
-        cd.style.transition="transform .3s cubic-bezier(.2,.7,.3,1), opacity .3s ease-out"; cd.style.transform=`translate3d(${out}px,0,0) rotate(${dx>0?12:-12}deg)`; cd.style.opacity="0";
-        setTimeout(()=>{ cur.enter=true; grade(dx>0?2:1); },220); }
-      else { cd.style.transition="transform .35s cubic-bezier(.3,1.4,.5,1)"; tint.style.transition="opacity .25s"; cd.style.transform=""; tint.style.opacity="0"; setTimeout(()=>{ moved=false; },0); } };
+      if(!moved){ if(Math.abs(d)>6&&Math.abs(d)>Math.abs(e.clientY-y0)){ moved=true; x0+=d>0?6:-6; try{cd.setPointerCapture(e.pointerId);}catch(x){} begin(); } else return; }
+      e.preventDefault(); dx=e.clientX-x0; track(dx); if(!raf) raf=requestAnimationFrame(paint); };
+    cd.onpointerup=cd.onpointercancel=()=>{ if(x0===null) return; x0=null; if(!moved) return; release(); };
   }
   /* Bewertung: 2 sicher (nächstes Fach), 1 nicht sicher (ein Fach zurück, morgen wieder, in dieser Runde noch einmal) */
   function grade(lv){ state.box=state.box||{}; state.due=state.due||{}; state.lapses=state.lapses||{};
@@ -478,3 +507,27 @@ document.addEventListener("keydown",e=>{
   if(k===" "||k==="Enter"){ e.preventDefault(); c.click(); }
   else if(k==="ArrowRight") hit("#yes"); else if(k==="ArrowLeft") hit("#mid"); else if(k==="z"||k==="Z") hit("#cprev");
 });
+
+/* Tippen und Wischen getrennt (Muster 17.11.): Auf dem Touch-Bildschirm dreht ein Tippen irgendwo außerhalb der Karte
+   die Karte um, hin und zurück, genau wie ein Tipp auf die Karte. Waagerechtes Wischen bewertet nur
+   die aufgedeckte Karte, auf oder neben ihr: rechts sicher, links nicht sicher. Zugedeckt bewirkt Wischen nichts. */
+/* Kurzes Kopfschütteln der Karte: Hinweis, dass sie noch zugedeckt ist */
+function buzz(){ const cd=$("#theCard"); if(!cd||cd.classList.contains("buzz")) return;
+  cd.classList.add("buzz"); try{ navigator.vibrate&&navigator.vibrate([18,40,18]); }catch(x){}
+  setTimeout(()=>cd.classList.remove("buzz"),420); }
+(function(){ let x0=null,y0=0,t0=0,on=false,id=null,shook=false;
+  const ok=e=>view==="cards"&&e.pointerType!=="mouse"&&$("#theCard")&&!e.target.closest("#theCard,textarea,input,a,button,#sessbar,#focusbar,nav");
+  document.addEventListener("pointerdown",e=>{ if(!ok(e)) return; x0=e.clientX; y0=e.clientY; t0=performance.now(); on=false; shook=false; id=e.pointerId; },{passive:true});
+  document.addEventListener("pointermove",e=>{ if(x0===null||e.pointerId!==id) return;
+    if(!cur.flip){ const d=e.clientX-x0; if(!shook&&Math.abs(d)>28&&Math.abs(d)>1.4*Math.abs(e.clientY-y0)){ shook=true; buzz(); } return; }
+    const d=e.clientX-x0;
+    if(!on){ if(Math.abs(d)>12&&Math.abs(d)>1.4*Math.abs(e.clientY-y0)){ on=true; x0+=d>0?12:-12; if(cur.drag) cur.drag.start(); } else return; }
+    if(cur.drag) cur.drag.move(e.clientX-x0); },{passive:true});
+  const up=e=>{ if(x0===null) return; if(shook){ x0=null; shook=false; window.__noClick=Date.now(); return; } const was=on, far=Math.hypot(e.clientX-x0,e.clientY-y0), quick=performance.now()-t0<500; x0=null; on=false;
+    if(was){ window.__noClick=Date.now(); if(cur.drag) cur.drag.end(); return; }
+    if(e.type==="pointerup"&&far<10&&quick){ window.__noClick=Date.now(); cur.flip=!cur.flip; renderCards(); } };
+  document.addEventListener("pointerup",up); document.addEventListener("pointercancel",up);
+  /* Nach einem Wisch oder Tipp kein zusätzlicher Klick auf etwas darunter */
+  document.addEventListener("click",e=>{ if(window.__noClick&&Date.now()-window.__noClick<400){ e.stopPropagation(); e.preventDefault(); } },true);
+})();
+
